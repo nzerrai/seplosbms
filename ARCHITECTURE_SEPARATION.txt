@@ -1,0 +1,589 @@
++===========================================================================+
+|                                                                           |
+|        ARCHITECTURE - SEPARATION DES PROJETS                             |
+|                                                                           |
+|        COBOL to Java Spring Batch Translator v1.0.0                      |
+|                                                                           |
++===========================================================================+
+
+Date implementation : 2026-01-01
+Statut              : [OK] COMPLET
+
+
++===========================================================================+
+  CONCEPT
++===========================================================================+
+
+Le systeme est maintenant compose de DEUX projets distincts et separes :
+
+  1. LE CONVERTISSEUR
+     +-------------------------------------------------------------------+
+     Projet  : cobol-to-java-translator/
+     Role    : Outil de traduction COBOL vers Java
+     Nature  : Application standalone
+     Utilise : Une seule fois pour chaque conversion
+
+  2. LE(S) PROJET(S) GENERE(S)
+     +-------------------------------------------------------------------+
+     Projets : ../generated-projects/<nom-projet>/
+     Role    : Applications Spring Batch resultantes
+     Nature  : Projets Maven autonomes
+     Utilise : En production, independamment du convertisseur
+
+
++===========================================================================+
+  ARBORESCENCE COMPLETE
++===========================================================================+
+
+workspace/
+│
+├── cobol-to-java-translator/           ### PROJET DU CONVERTISSEUR ###
+│   │
+│   ├── translator.properties           <-- FICHIER DE CONFIGURATION
+│   │                                        (nom du projet cible, packages, etc.)
+│   │
+│   ├── src/main/java/com/cobol/translator/
+│   │   ├── parser/                     Analyseurs COBOL
+│   │   ├── generator/                  Generateurs de code Java
+│   │   ├── model/                      Modele AST
+│   │   ├── config/                     Configuration du traducteur
+│   │   │   ├── TranslationConfig.java
+│   │   │   └── TranslatorConfiguration.java  <-- Charge translator.properties
+│   │   ├── project/                    Generateur de projet
+│   │   │   └── ProjectGenerator.java   <-- Cree la structure Maven
+│   │   ├── report/                     Systeme de rapport
+│   │   └── CobolTranslator.java        Orchestrateur principal
+│   │
+│   ├── pom.xml                         Dependencies du convertisseur
+│   ├── README.md
+│   └── docs/
+│       ├── COMPLETE_DOCUMENTATION.md
+│       ├── PROJECT_SEPARATION.md       <-- Documentation de cette architecture
+│       └── CONVERSION_REPORT_FEATURE.md
+│
+│
+└── generated-projects/                  ### PROJETS GENERES ###
+    │
+    ├── customer-batch-processing/       === PROJET 1 (AUTONOME) ===
+    │   │
+    │   ├── pom.xml                      <-- POM Maven independant
+    │   │                                     (Spring Boot parent)
+    │   │
+    │   ├── src/main/java/com/mycompany/batch/
+    │   │   ├── model/
+    │   │   │   ├── CustomerRecord.java
+    │   │   │   └── OrderRecord.java
+    │   │   ├── processor/
+    │   │   │   ├── CustomerProcessor.java
+    │   │   │   └── OrderProcessor.java
+    │   │   ├── config/
+    │   │   │   ├── CustomerJobConfig.java
+    │   │   │   └── BatchConfiguration.java
+    │   │   ├── tasklet/
+    │   │   │   └── ValidationTasklet.java
+    │   │   └── listener/
+    │   │       └── JobCompletionListener.java
+    │   │
+    │   ├── src/main/resources/
+    │   │   ├── application.properties   <-- Config Spring Boot
+    │   │   └── cobol-original/          (Sources COBOL optionnelles)
+    │   │       ├── CUSTOMER.cob
+    │   │       └── ORDER.cob
+    │   │
+    │   ├── src/test/java/               Tests unitaires
+    │   │   ├── CustomerProcessorTest.java
+    │   │   └── OrderProcessorTest.java
+    │   │
+    │   ├── data/
+    │   │   ├── input/                   Fichiers d'entree
+    │   │   ├── output/                  Fichiers de sortie
+    │   │   └── archive/                 Archives
+    │   │
+    │   ├── docs/
+    │   │   ├── CUSTOMER_CONVERSION_REPORT.txt
+    │   │   └── ORDER_CONVERSION_REPORT.txt
+    │   │
+    │   ├── README.md                    Documentation du projet
+    │   ├── .gitignore
+    │   ├── build.sh
+    │   ├── build.bat
+    │   └── Dockerfile                   (optionnel)
+    │
+    │
+    ├── order-processing/                === PROJET 2 (AUTONOME) ===
+    │   └── (meme structure...)
+    │
+    │
+    └── inventory-batch/                 === PROJET 3 (AUTONOME) ===
+        └── (meme structure...)
+
+
++===========================================================================+
+  FICHIER DE CONFIGURATION : translator.properties
++===========================================================================+
+
+Emplacement : cobol-to-java-translator/translator.properties
+
+Ce fichier definit TOUS les parametres du projet cible :
+
+  [PROJECT CONFIGURATION]
+  +-----------------------------------------------------------------------+
+  target.project.name              = customer-batch-processing
+  target.projects.directory        = ../generated-projects
+  target.project.groupId           = com.mycompany.batch
+  target.project.version           = 1.0.0-SNAPSHOT
+  target.project.description       = Batch processing from COBOL
+
+  [JAVA CODE GENERATION]
+  +-----------------------------------------------------------------------+
+  target.package.base              = com.mycompany.batch
+  target.package.model             = model
+  target.package.processor         = processor
+  target.package.config            = config
+  naming.entity.suffix             = Record
+  naming.processor.suffix          = Processor
+  code.style                       = SPRING
+
+  [SPRING BOOT]
+  +-----------------------------------------------------------------------+
+  spring.boot.version              = 3.2.0
+  spring.batch.version             = 5.1.0
+  java.version                     = 17
+
+  [GENERATION OPTIONS]
+  +-----------------------------------------------------------------------+
+  generate.tests                   = true
+  generate.docs                    = true
+  generate.report                  = true
+  generate.readme                  = true
+  generate.gitignore               = true
+  generate.spring.config           = true
+  generate.dockerfile              = false
+  generate.build.scripts           = true
+
+  [DATABASE]
+  +-----------------------------------------------------------------------+
+  database.type                    = POSTGRESQL
+  database.url                     = jdbc:postgresql://localhost:5432/batch_db
+  database.username                = batch_user
+  database.password                = changeme
+
+  [BATCH PROCESSING]
+  +-----------------------------------------------------------------------+
+  batch.chunk.size                 = 100
+  batch.thread.pool.size           = 4
+  batch.skip.limit                 = 10
+
+  [FILE PROCESSING]
+  +-----------------------------------------------------------------------+
+  file.encoding                    = UTF-8
+  file.input.directory             = data/input
+  file.output.directory            = data/output
+  file.archive.directory           = data/archive
+
+  [CONVERSION RULES]
+  +-----------------------------------------------------------------------+
+  convert.dates.to.localdate       = true
+  date.pivot.year                  = 50
+  use.bigdecimal.for.financials    = true
+  bigdecimal.default.scale         = 2
+  bigdecimal.rounding.mode         = HALF_UP
+
+  [ADVANCED OPTIONS]
+  +-----------------------------------------------------------------------+
+  copy.cobol.sources               = true
+  cobol.sources.directory          = src/main/resources/cobol-original
+  include.cobol.comments           = true
+  optimize.generated.code          = false
+  generate.interfaces              = true
+
+
++===========================================================================+
+  WORKFLOW DE CONVERSION
++===========================================================================+
+
+ETAPE 1 : Configuration du projet cible
++-----------------------------------------------------------------------+
+
+  $ cd cobol-to-java-translator
+  $ vim translator.properties
+
+  Modifier :
+    target.project.name=my-new-project
+    target.project.groupId=com.company.batch
+    target.package.base=com.company.batch
+
+
+ETAPE 2 : Lancer la conversion
++-----------------------------------------------------------------------+
+
+  # Conversion d'un fichier
+  $ java -jar target/cobol-translator.jar translate \
+      --input ../cobol-sources/CUSTOMER.cob
+
+  # Conversion d'un repertoire complet
+  $ java -jar target/cobol-translator.jar translate-all \
+      --input-dir ../cobol-sources/
+
+
+ETAPE 3 : Le projet est genere
++-----------------------------------------------------------------------+
+
+  Resultat : ../generated-projects/my-new-project/
+
+  Contient :
+    [v] Structure Maven complete
+    [v] Code Java genere
+    [v] Configuration Spring Boot
+    [v] Tests unitaires
+    [v] README.md
+    [v] .gitignore
+    [v] Scripts de build
+    [v] Rapports de conversion
+
+
+ETAPE 4 : Utiliser le projet genere
++-----------------------------------------------------------------------+
+
+  $ cd ../generated-projects/my-new-project
+
+  # Compiler
+  $ mvn clean install
+
+  # Executer les tests
+  $ mvn test
+
+  # Lancer l'application
+  $ java -jar target/my-new-project-1.0.0-SNAPSHOT.jar
+
+
++===========================================================================+
+  FICHIERS GENERES DANS LE PROJET CIBLE
++===========================================================================+
+
+1. pom.xml
+   +-----------------------------------------------------------------------+
+   Maven POM complet avec :
+     - Spring Boot parent
+     - Dependencies Spring Batch
+     - Driver de base de donnees (PostgreSQL, MySQL, Oracle, DB2, H2)
+     - Lombok (optionnel)
+     - DevTools (optionnel)
+     - Dependencies de test
+
+2. application.properties
+   +-----------------------------------------------------------------------+
+   Configuration Spring Boot complete :
+     - Nom de l'application
+     - Connexion base de donnees
+     - Configuration Spring Batch
+     - Chemins des fichiers
+     - Parametres du batch (chunk size, threads, skip limit)
+     - Logging
+
+3. README.md
+   +-----------------------------------------------------------------------+
+   Documentation du projet genere :
+     - Description
+     - Structure du projet
+     - Prerequis (Java version, Maven, DB)
+     - Instructions d'installation
+     - Instructions d'execution
+     - Configuration
+
+4. .gitignore
+   +-----------------------------------------------------------------------+
+   Fichier .gitignore adapte :
+     - Maven (target/, *.iml, etc.)
+     - IDE (.idea/, .vscode/, .settings/)
+     - Logs
+     - OS (.DS_Store, Thumbs.db)
+
+5. build.sh / build.bat
+   +-----------------------------------------------------------------------+
+   Scripts de compilation :
+     - mvn clean package
+     - Instructions d'execution
+
+6. Dockerfile (optionnel)
+   +-----------------------------------------------------------------------+
+   Conteneurisation Docker :
+     - Base image OpenJDK
+     - COPY du JAR
+     - ENTRYPOINT
+
+
++===========================================================================+
+  CLASSES JAVA
++===========================================================================+
+
+1. TranslatorConfiguration.java
+   +-----------------------------------------------------------------------+
+   Fichier : src/main/java/com/cobol/translator/config/TranslatorConfiguration.java
+
+   Classe qui charge et gere la configuration depuis translator.properties.
+
+   Methodes principales :
+     + load()                          : Charge translator.properties
+     + load(String configFile)         : Charge un fichier specifique
+     + getTargetProjectPath()          : Chemin complet du projet cible
+     + getFullPackage(String)          : Package complet
+     + getModelPackage()               : Package des entites
+     + getProcessorPackage()           : Package des processors
+     + getConfigPackage()              : Package de la config
+
+   Attributs (90+ parametres) :
+     - Project configuration (nom, groupId, version)
+     - Package configuration (base, sous-packages)
+     - Spring Boot versions
+     - Generation options
+     - Database configuration
+     - Batch processing parameters
+     - File processing
+     - Conversion rules
+     - Advanced options
+
+
+2. ProjectGenerator.java
+   +-----------------------------------------------------------------------+
+   Fichier : src/main/java/com/cobol/translator/project/ProjectGenerator.java
+
+   Classe qui genere la structure complete du projet Maven cible.
+
+   Methodes principales :
+     + generateProject()               : Point d'entree principal
+     - createDirectoryStructure()      : Cree l'arborescence
+     - generatePomXml()                : Genere pom.xml
+     - generateSpringConfiguration()   : Genere application.properties
+     - generateReadme()                : Genere README.md
+     - generateGitignore()             : Genere .gitignore
+     - generateBuildScripts()          : Genere build.sh/bat
+     - generateDockerfile()            : Genere Dockerfile
+
+   Responsabilites :
+     - Creation de la structure de repertoires Maven
+     - Generation du pom.xml avec dependencies
+     - Generation des fichiers de configuration
+     - Generation de la documentation
+     - Generation des scripts utilitaires
+
+
++===========================================================================+
+  AVANTAGES DE LA SEPARATION
++===========================================================================+
+
+[1] INDEPENDANCE COMPLETE
+    +-----------------------------------------------------------------------+
+    - Le projet genere est autonome
+    - Aucune dependance vers le convertisseur
+    - Peut etre versionne separement (git init)
+    - Peut etre deploye independamment
+    - Peut etre modifie librement
+
+[2] PLUSIEURS PROJETS
+    +-----------------------------------------------------------------------+
+    Vous pouvez generer plusieurs projets differents :
+
+      generated-projects/
+      ├── customer-batch/       (COBOL clients -> Java)
+      ├── order-batch/          (COBOL commandes -> Java)
+      └── inventory-batch/      (COBOL inventaire -> Java)
+
+    Chaque projet est independant avec sa propre configuration.
+
+[3] PERSONNALISATION PAR PROJET
+    +-----------------------------------------------------------------------+
+    Chaque projet genere a :
+      - Son propre pom.xml
+      - Sa propre configuration Spring
+      - Sa propre structure de packages
+      - Ses propres dependances
+      - Son propre versionnement Git
+
+[4] FACILITE DE MAINTENANCE
+    +-----------------------------------------------------------------------+
+    - Le convertisseur peut evoluer sans impacter les projets generes
+    - Les projets generes peuvent etre modifies independamment
+    - Pas de couplage entre l'outil et le resultat
+    - Les projets generes peuvent etre partages sans le convertisseur
+
+[5] PORTABILITE
+    +-----------------------------------------------------------------------+
+    Le projet genere est un projet Maven Spring Boot STANDARD :
+      - Fonctionne sur n'importe quelle machine avec Java + Maven
+      - Peut etre importe dans n'importe quel IDE
+      - Peut etre deploye sur n'importe quel serveur
+      - Pas besoin du convertisseur en production
+
+
++===========================================================================+
+  EXEMPLE COMPLET
++===========================================================================+
+
+Scenario : Convertir un systeme de paie COBOL vers Java Spring Batch
+
+ETAPE 1 : Configuration
++-----------------------------------------------------------------------+
+
+  Fichier translator.properties :
+
+    target.project.name=payroll-batch
+    target.projects.directory=../generated-projects
+    target.project.groupId=com.acme.payroll
+    target.package.base=com.acme.payroll.batch
+    java.version=17
+    database.type=POSTGRESQL
+    database.url=jdbc:postgresql://prod-db:5432/payroll
+    generate.tests=true
+    generate.report=true
+    copy.cobol.sources=true
+
+ETAPE 2 : Conversion
++-----------------------------------------------------------------------+
+
+  $ cd cobol-to-java-translator
+  $ java -jar target/cobol-translator.jar translate-all \
+      --input-dir ../cobol-mainframe/payroll/
+
+  Output :
+    Parsing COBOL program: PAYROLL.cob
+    Parsing COBOL program: EMPLOYEE.cob
+    Parsing COBOL program: DEDUCTION.cob
+
+    Creating project structure...
+    Generating pom.xml...
+    Generating application.properties...
+    Generating README.md...
+    Generating entity classes...
+    Generating processors...
+    Generating job configurations...
+    Generating tests...
+    Generating conversion reports...
+
+    SUCCESS! Project created at:
+    ../generated-projects/payroll-batch/
+
+ETAPE 3 : Structure generee
++-----------------------------------------------------------------------+
+
+  generated-projects/payroll-batch/
+  ├── pom.xml
+  ├── README.md
+  ├── src/main/java/com/acme/payroll/batch/
+  │   ├── model/
+  │   │   ├── PayrollRecord.java
+  │   │   ├── EmployeeRecord.java
+  │   │   └── DeductionRecord.java
+  │   ├── processor/
+  │   │   ├── PayrollProcessor.java
+  │   │   ├── EmployeeProcessor.java
+  │   │   └── DeductionProcessor.java
+  │   └── config/
+  │       ├── PayrollJobConfig.java
+  │       ├── EmployeeJobConfig.java
+  │       └── BatchConfiguration.java
+  ├── src/main/resources/
+  │   ├── application.properties
+  │   └── cobol-original/
+  │       ├── PAYROLL.cob
+  │       ├── EMPLOYEE.cob
+  │       └── DEDUCTION.cob
+  └── docs/
+      ├── PAYROLL_CONVERSION_REPORT.txt
+      ├── EMPLOYEE_CONVERSION_REPORT.txt
+      └── DEDUCTION_CONVERSION_REPORT.txt
+
+ETAPE 4 : Compilation et execution
++-----------------------------------------------------------------------+
+
+  $ cd ../generated-projects/payroll-batch
+
+  $ mvn clean install
+  [INFO] BUILD SUCCESS
+
+  $ java -jar target/payroll-batch-1.0.0-SNAPSHOT.jar
+
+    .   ____          _            __ _ _
+   /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+  ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+   \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+    '  |____| .__|_| |_|_| |_\__, | / / / /
+   =========|_|==============|___/=/_/_/_/
+   :: Spring Boot ::                (v3.2.0)
+
+  Starting PayrollBatchApplication...
+  Job: [SimpleJob: [name=payrollJob]] launched
+  Job: [SimpleJob: [name=payrollJob]] completed with status=COMPLETED
+
+
++===========================================================================+
+  VERSIONNEMENT GIT
++===========================================================================+
+
+CONVERTISSEUR (Repositoire 1)
++-----------------------------------------------------------------------+
+
+  $ cd cobol-to-java-translator
+  $ git init
+  $ git add .
+  $ git commit -m "COBOL to Java Translator v1.0.0"
+  $ git remote add origin https://github.com/company/cobol-translator.git
+  $ git push -u origin main
+
+
+PROJET GENERE (Repositoire 2 - SEPARE)
++-----------------------------------------------------------------------+
+
+  $ cd ../generated-projects/payroll-batch
+  $ git init
+  $ git add .
+  $ git commit -m "Initial migration from COBOL mainframe"
+  $ git remote add origin https://github.com/company/payroll-batch.git
+  $ git push -u origin main
+
+  -> Deux repositoires Git INDEPENDANTS
+  -> Le projet genere n'a AUCUNE reference au convertisseur
+
+
++===========================================================================+
+  DOCUMENTATION
++===========================================================================+
+
+docs/PROJECT_SEPARATION.md              Documentation complete de l'architecture
+translator.properties                   Fichier de configuration (exemple complet)
+ARCHITECTURE_SEPARATION.txt             Ce document (vue d'ensemble)
+COMPLETE_DOCUMENTATION.md               Documentation technique du traducteur
+CONVERSION_REPORT_FEATURE.md            Systeme de rapport de conversion
+
+
++===========================================================================+
+  SIGNATURE DE LIVRAISON
++===========================================================================+
+
+Projet         : COBOL to Java Spring Batch Translator
+Feature        : Separation des projets (Convertisseur vs Generes)
+Version        : 1.0.0
+Date           : 2026-01-01
+
+Fichiers crees :
+  [v] translator.properties                 (Configuration complete)
+  [v] TranslatorConfiguration.java          (Chargement de la config)
+  [v] ProjectGenerator.java                 (Generation de projet Maven)
+  [v] PROJECT_SEPARATION.md                 (Documentation)
+  [v] ARCHITECTURE_SEPARATION.txt           (Ce document)
+
+Capacites :
+  [v] Configuration via fichier properties
+  [v] Generation de projet Maven complet
+  [v] Separation totale convertisseur/generes
+  [v] Support multi-projets
+  [v] Personnalisation par projet
+  [v] Independence complete des projets generes
+
+STATUT : [OK] ARCHITECTURE COMPLETE ET OPERATIONNELLE
+
++===========================================================================+
+
+FIN DU DOCUMENT
+
++===========================================================================+

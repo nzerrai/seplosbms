@@ -1,0 +1,59 @@
+========================================================================================================================
+COMPTES BANCAIRES - VERSION LISIBLE
+========================================================================================================================
+
+Numéro          Client                         Type             Solde    Découvert Statut   Agence
+------------------------------------------------------------------------------------------------------------------------
+000000000001    Isabelle Durand                IN            2,580.08       500.00 A        BR003
+000000000002    Robert Lefebvre                CK           27,958.65     2,000.00 C        BR003
+000000000003    Luc Robert                     IN           29,891.27         0.00 F        BR003
+000000000004    Michel Leroy                   IN           30,205.63         0.00 A        BR002
+000000000005    Catherine Laurent              CK           33,290.55       500.00 A        BR002
+000000000006    Isabelle Richard               CK           38,953.34         0.00 A        BR001
+000000000007    Francoise Bertrand             CK           31,445.19     2,000.00 A        BR002
+000000000008    Henri Durand                   CK           46,866.57       500.00 F        BR005
+000000000009    Marie Robert                   IN            6,399.33       500.00 A        BR004
+000000000010    Louis Robert                   IN           36,562.26     5,000.00 F        BR002
+000000000011    Monique Moreau                 IN           31,450.99     1,000.00 C        BR003
+000000000012    Isabelle Garcia                SV           21,329.46     5,000.00 A        BR003
+000000000013    Sophie Bernard                 SV           47,575.72         0.00 F        BR001
+000000000014    Nicole Simon                   IN           32,875.21       500.00 A        BR003
+000000000015    Marc Richard                   SV           48,202.02       500.00 A        BR001
+000000000016    Isabelle Andre                 CK           27,935.83     5,000.00 F        BR003
+000000000017    Philippe Durand                SV           17,070.73       500.00 A        BR002
+000000000018    Bernard Mercier                CK           16,747.49       500.00 A        BR002
+000000000019    Monique Richard                SV           34,435.85     1,000.00 F        BR005
+000000000020    Brigitte Morel                 IN           31,445.63       500.00 A        BR003
+000000000021    Andre Andre                    SV            9,787.50     1,000.00 F        BR004
+000000000022    Dominique Thomas               IN           37,400.34     1,000.00 A        BR005
+000000000023    Isabelle Roux                  CK           18,479.86     5,000.00 A        BR004
+000000000024    Monique Andre                  IN            5,002.72         0.00 C        BR005
+000000000025    Francoise Garcia               SV           10,145.39         0.00 A        BR001
+000000000026    Brigitte Girard                IN           42,507.25         0.00 A        BR003
+000000000027    Monique Roux                   SV           29,604.85       500.00 A        BR003
+000000000028    Isabelle Michel                SV           47,085.30     5,000.00 A        BR004
+000000000029    Claire Lefebvre                IN           32,907.16     5,000.00 C        BR001
+000000000030    Jean Michel                    CK           15,881.85     1,000.00 A        BR004
+000000000031    Sylvie Dubois                  SV           19,195.87     2,000.00 C        BR005
+000000000032    Marie Garcia                   CK           28,425.21     1,000.00 A        BR001
+000000000033    Monique Robert                 CK           18,429.96     1,000.00 A        BR004
+000000000034    Brigitte Morel                 SV           43,182.16     2,000.00 C        BR002
+000000000035    Bernard Bertrand               SV           20,485.22     1,000.00 A        BR005
+000000000036    Claire Michel                  CK           32,998.84     5,000.00 A        BR004
+000000000037    Jean Moreau                    CK           24,575.68       500.00 C        BR003
+000000000038    Marie Leroy                    IN           30,280.57     5,000.00 F        BR005
+000000000039    Bernard Thomas                 SV           18,335.28     1,000.00 F        BR003
+000000000040    Pierre Richard                 CK           47,444.53       500.00 F        BR003
+000000000041    Michel Moreau                  SV           11,503.01       500.00 F        BR004
+000000000042    Nicole Girard                  CK           22,374.51     1,000.00 A        BR005
+000000000043    Anne Garcia                    CK           39,993.92         0.00 C        BR003
+000000000044    Brigitte Bertrand              IN           23,406.86     2,000.00 A        BR004
+000000000045    Jacques Vincent                CK            6,882.53         0.00 C        BR001
+000000000046    Louis Andre                    IN           28,681.73     1,000.00 A        BR004
+000000000047    Isabelle Roux                  SV           36,286.96     1,000.00 A        BR002
+000000000048    Philippe Michel                SV            9,600.14       500.00 C        BR005
+000000000049    Brigitte Richard               SV           31,168.34     1,000.00 A        BR001
+000000000050    Andre Laurent                  SV            8,111.70     2,000.00 A        BR004
+
+========================================================================================================================
+Total: 1000 comptes

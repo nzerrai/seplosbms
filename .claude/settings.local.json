@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mvn compile:*)",
+      "Bash(mvn clean compile:*)",
+      "Bash(mvn clean package:*)",
+      "Bash(java -jar target/cobol-translator.jar translate:*)",
+      "Bash(java -jar:*)",
+      "Bash(chmod:*)",
+      "Bash(python3:*)",
+      "Bash(ls:*)",
+      "Bash(mkdir:*)",
+      "Bash(mvn clean compile:compile:*)",
+      "Bash(mvn test:*)",
+      "Bash(cat:*)",
+      "Bash(./generate-pdf.sh:*)",
+      "Bash(jar -tf:*)",
+      "Bash(jar:*)",
+      "Bash(lsof:*)",
+      "Bash(xargs kill:*)",
+      "Bash(pkill:*)",
+      "Bash(grep:*)",
+      "Bash(./generate_all_test_data.sh:*)",
+      "Bash(mvn package:*)",
+      "Bash(tree:*)",
+      "Bash(xargs:*)"
+    ]
+  }
+}

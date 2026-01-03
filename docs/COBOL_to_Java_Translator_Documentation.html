@@ -1,0 +1,1837 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="COBOL Migration Team" />
+  <meta name="dcterms.date" content="2026-01-01" />
+  <title>COBOL to Java Spring Batch Translator - Documentation</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {  background-color: #f8f8f8; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ef2929; } /* Alert */
+    code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #c4a000; } /* Attribute */
+    code span.bn { color: #0000cf; } /* BaseN */
+    code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4e9a06; } /* Char */
+    code span.cn { color: #000000; } /* Constant */
+    code span.co { color: #8f5902; font-style: italic; } /* Comment */
+    code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+    code span.dt { color: #204a87; } /* DataType */
+    code span.dv { color: #0000cf; } /* DecVal */
+    code span.er { color: #a40000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #0000cf; } /* Float */
+    code span.fu { color: #000000; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+    code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+    code span.ot { color: #8f5902; } /* Other */
+    code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+    code span.sc { color: #000000; } /* SpecialChar */
+    code span.ss { color: #4e9a06; } /* SpecialString */
+    code span.st { color: #4e9a06; } /* String */
+    code span.va { color: #000000; } /* Variable */
+    code span.vs { color: #4e9a06; } /* VerbatimString */
+    code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.css" />
+  <style>
+      body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+          line-height: 1.6;
+          color: #24292e;
+          background-color: #f6f8fa;
+          margin: 0;
+          padding: 20px;
+      }
+      .container {
+          max-width: 980px;
+          margin: 0 auto;
+          padding: 45px;
+          background: white;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+      }
+      h1 {
+          color: #0366d6;
+          border-bottom: 2px solid #0366d6;
+          padding-bottom: 10px;
+      }
+      h2 {
+          color: #0366d6;
+          border-bottom: 1px solid #eaecef;
+          padding-bottom: 8px;
+          margin-top: 24px;
+      }
+      h3 {
+          color: #24292e;
+          margin-top: 20px;
+      }
+      code {
+          background-color: #f6f8fa;
+          padding: 2px 6px;
+          border-radius: 3px;
+          font-family: 'Courier New', monospace;
+          font-size: 0.9em;
+      }
+      pre {
+          background-color: #f6f8fa;
+          padding: 16px;
+          border-radius: 6px;
+          overflow-x: auto;
+          border: 1px solid #e1e4e8;
+      }
+      pre code {
+          background-color: transparent;
+          padding: 0;
+      }
+      table {
+          border-collapse: collapse;
+          width: 100%;
+          margin: 20px 0;
+      }
+      th, td {
+          border: 1px solid #dfe2e5;
+          padding: 12px;
+          text-align: left;
+      }
+      th {
+          background-color: #f6f8fa;
+          font-weight: 600;
+      }
+      tr:nth-child(even) {
+          background-color: #f9f9f9;
+      }
+      #TOC {
+          background-color: #f6f8fa;
+          padding: 20px;
+          border-radius: 6px;
+          margin-bottom: 30px;
+          border: 1px solid #e1e4e8;
+      }
+      #TOC ul {
+          list-style: none;
+          padding-left: 20px;
+      }
+      #TOC > ul {
+          padding-left: 0;
+      }
+      #TOC a {
+          color: #0366d6;
+          text-decoration: none;
+      }
+      #TOC a:hover {
+          text-decoration: underline;
+      }
+      .mermaid {
+          text-align: center;
+          margin: 20px 0;
+          background: white;
+      }
+      @media print {
+          .container {
+              box-shadow: none;
+          }
+      }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+      mermaid.initialize({ startOnLoad: true, theme: 'default' });
+  </script>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">COBOL to Java Spring Batch Translator -
+Documentation</h1>
+<p class="subtitle">Documentation Technique Complète</p>
+<p class="author">COBOL Migration Team</p>
+<p class="date">2026</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#introduction"><span class="toc-section-number">1</span>
+Introduction</a>
+<ul>
+<li><a href="#objectif-du-projet"><span
+class="toc-section-number">1.1</span> Objectif du projet</a>
+<ul>
+<li><a href="#problématique"><span
+class="toc-section-number">1.1.1</span> Problématique</a></li>
+<li><a href="#solution-proposée"><span
+class="toc-section-number">1.1.2</span> Solution proposée</a></li>
+</ul></li>
+<li><a href="#cas-dusage"><span class="toc-section-number">1.2</span>
+Cas d’usage</a></li>
+</ul></li>
+<li><a href="#architecture-du-système"><span
+class="toc-section-number">2</span> Architecture du système</a>
+<ul>
+<li><a href="#vue-densemble"><span class="toc-section-number">2.1</span>
+Vue d’ensemble</a></li>
+<li><a href="#pipeline-de-traduction"><span
+class="toc-section-number">2.2</span> Pipeline de traduction</a></li>
+</ul></li>
+<li><a href="#algorithmes-détaillés"><span
+class="toc-section-number">3</span> Algorithmes détaillés</a>
+<ul>
+<li><a href="#algorithme-de-parsing-cobol"><span
+class="toc-section-number">3.1</span> Algorithme de parsing COBOL</a>
+<ul>
+<li><a href="#phase-1-analyse-lexicale"><span
+class="toc-section-number">3.1.1</span> Phase 1 : Analyse
+lexicale</a></li>
+<li><a href="#phase-2-analyse-syntaxique"><span
+class="toc-section-number">3.1.2</span> Phase 2 : Analyse
+syntaxique</a></li>
+</ul></li>
+<li><a href="#algorithme-de-conversion-de-types"><span
+class="toc-section-number">3.2</span> Algorithme de conversion de
+types</a>
+<ul>
+<li><a href="#mapping-cobol-java"><span
+class="toc-section-number">3.2.1</span> Mapping COBOL → Java</a></li>
+</ul></li>
+<li><a href="#algorithme-de-génération-dentités"><span
+class="toc-section-number">3.3</span> Algorithme de génération
+d’entités</a>
+<ul>
+<li><a href="#processus-de-génération"><span
+class="toc-section-number">3.3.1</span> Processus de génération</a></li>
+</ul></li>
+<li><a href="#algorithme-de-traduction-des-instructions"><span
+class="toc-section-number">3.4</span> Algorithme de traduction des
+instructions</a>
+<ul>
+<li><a href="#conversion-cobol-java"><span
+class="toc-section-number">3.4.1</span> Conversion COBOL → Java</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#guide-dutilisation"><span
+class="toc-section-number">4</span> Guide d’utilisation</a>
+<ul>
+<li><a href="#installation"><span class="toc-section-number">4.1</span>
+Installation</a>
+<ul>
+<li><a href="#prérequis"><span class="toc-section-number">4.1.1</span>
+Prérequis</a></li>
+<li><a href="#compilation-du-projet"><span
+class="toc-section-number">4.1.2</span> Compilation du projet</a></li>
+</ul></li>
+<li><a href="#utilisation-en-ligne-de-commande"><span
+class="toc-section-number">4.2</span> Utilisation en ligne de
+commande</a>
+<ul>
+<li><a href="#commande-1-traduire-un-fichier-unique"><span
+class="toc-section-number">4.2.1</span> Commande 1 : Traduire un fichier
+unique</a></li>
+<li><a href="#commande-2-traduire-un-répertoire-complet"><span
+class="toc-section-number">4.2.2</span> Commande 2 : Traduire un
+répertoire complet</a></li>
+</ul></li>
+<li><a href="#utilisation-via-api-java"><span
+class="toc-section-number">4.3</span> Utilisation via API Java</a>
+<ul>
+<li><a href="#exemple-basique"><span
+class="toc-section-number">4.3.1</span> Exemple basique</a></li>
+<li><a href="#exemple-avancé-traduction-batch"><span
+class="toc-section-number">4.3.2</span> Exemple avancé : Traduction
+batch</a></li>
+</ul></li>
+<li><a href="#configuration-avancée"><span
+class="toc-section-number">4.4</span> Configuration avancée</a>
+<ul>
+<li><a href="#personnalisation-des-noms"><span
+class="toc-section-number">4.4.1</span> Personnalisation des
+noms</a></li>
+<li><a href="#options-de-génération"><span
+class="toc-section-number">4.4.2</span> Options de génération</a></li>
+</ul></li>
+<li><a href="#exemples-de-traduction"><span
+class="toc-section-number">4.5</span> Exemples de traduction</a>
+<ul>
+<li><a href="#exemple-1-programme-simple"><span
+class="toc-section-number">4.5.1</span> Exemple 1 : Programme
+simple</a></li>
+<li><a href="#exemple-2-fichier-avec-données"><span
+class="toc-section-number">4.5.2</span> Exemple 2 : Fichier avec
+données</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#limites-et-restrictions"><span
+class="toc-section-number">5</span> Limites et restrictions</a>
+<ul>
+<li><a href="#limitations-actuelles"><span
+class="toc-section-number">5.1</span> Limitations actuelles</a>
+<ul>
+<li><a href="#constructions-cobol-non-supportées"><span
+class="toc-section-number">5.1.1</span> 1. Constructions COBOL non
+supportées</a></li>
+<li><a href="#limites-techniques"><span
+class="toc-section-number">5.1.2</span> 2. Limites techniques</a></li>
+<li><a href="#précautions-et-avertissements"><span
+class="toc-section-number">5.1.3</span> 3. Précautions et
+avertissements</a></li>
+<li><a href="#différences-de-comportement"><span
+class="toc-section-number">5.1.4</span> 4. Différences de
+comportement</a></li>
+</ul></li>
+<li><a href="#recommandations"><span
+class="toc-section-number">5.2</span> Recommandations</a>
+<ul>
+<li><a href="#workflow-de-migration"><span
+class="toc-section-number">5.2.1</span> Workflow de migration</a></li>
+<li><a href="#checklist-de-validation"><span
+class="toc-section-number">5.2.2</span> Checklist de validation</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#annexes"><span class="toc-section-number">6</span>
+Annexes</a>
+<ul>
+<li><a href="#annexe-a-table-de-correspondance-complète"><span
+class="toc-section-number">6.1</span> Annexe A : Table de correspondance
+complète</a>
+<ul>
+<li><a href="#types-de-données"><span
+class="toc-section-number">6.1.1</span> Types de données</a></li>
+<li><a href="#instructions"><span
+class="toc-section-number">6.1.2</span> Instructions</a></li>
+</ul></li>
+<li><a href="#annexe-b-fichier-de-configuration"><span
+class="toc-section-number">6.2</span> Annexe B : Fichier de
+configuration</a>
+<ul>
+<li><a href="#translator.properties"><span
+class="toc-section-number">6.2.1</span> translator.properties</a></li>
+</ul></li>
+<li><a href="#annexe-c-glossaire"><span
+class="toc-section-number">6.3</span> Annexe C : Glossaire</a></li>
+<li><a href="#annexe-d-références"><span
+class="toc-section-number">6.4</span> Annexe D : Références</a>
+<ul>
+<li><a href="#documentation-cobol"><span
+class="toc-section-number">6.4.1</span> Documentation COBOL</a></li>
+<li><a href="#documentation-javaspring"><span
+class="toc-section-number">6.4.2</span> Documentation
+Java/Spring</a></li>
+<li><a href="#outils"><span class="toc-section-number">6.4.3</span>
+Outils</a></li>
+<li><a href="#articles-et-guides"><span
+class="toc-section-number">6.4.4</span> Articles et guides</a></li>
+</ul></li>
+<li><a href="#annexe-e-support-et-contact"><span
+class="toc-section-number">6.5</span> Annexe E : Support et contact</a>
+<ul>
+<li><a href="#repository-github"><span
+class="toc-section-number">6.5.1</span> Repository GitHub</a></li>
+<li><a href="#issues-et-bugs"><span
+class="toc-section-number">6.5.2</span> Issues et bugs</a></li>
+<li><a href="#contributions"><span
+class="toc-section-number">6.5.3</span> Contributions</a></li>
+<li><a href="#license"><span class="toc-section-number">6.5.4</span>
+License</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+<h1 data-number="1" id="introduction"><span
+class="header-section-number">1</span> Introduction</h1>
+<h2 data-number="1.1" id="objectif-du-projet"><span
+class="header-section-number">1.1</span> Objectif du projet</h2>
+<p>Le <strong>COBOL to Java Spring Batch Translator</strong> est un
+outil de migration automatique qui traduit des programmes COBOL legacy
+vers des applications Java modernes basées sur Spring Batch.</p>
+<h3 data-number="1.1.1" id="problématique"><span
+class="header-section-number">1.1.1</span> Problématique</h3>
+<p>Les entreprises possèdent des millions de lignes de code COBOL dans
+leurs systèmes mainframe. La migration manuelle est : -
+<strong>Coûteuse</strong> : 100-200€ par ligne de code -
+<strong>Risquée</strong> : Erreurs de traduction -
+<strong>Lente</strong> : 6-12 mois par application</p>
+<h3 data-number="1.1.2" id="solution-proposée"><span
+class="header-section-number">1.1.2</span> Solution proposée</h3>
+<p>Automatisation de la traduction COBOL → Java avec : - Parsing
+automatique des programmes COBOL - Génération de code Java idiomatique -
+Intégration Spring Batch native - Conservation de la logique métier</p>
+<h2 data-number="1.2" id="cas-dusage"><span
+class="header-section-number">1.2</span> Cas d’usage</h2>
+<ol type="1">
+<li><strong>Migration mainframe vers cloud</strong></li>
+<li><strong>Modernisation d’applications batch</strong></li>
+<li><strong>Réduction des coûts d’infrastructure</strong></li>
+<li><strong>Formation des équipes Java</strong></li>
+</ol>
+<h1 data-number="2" id="architecture-du-système"><span
+class="header-section-number">2</span> Architecture du système</h1>
+<h2 data-number="2.1" id="vue-densemble"><span
+class="header-section-number">2.1</span> Vue d’ensemble</h2>
+<pre class="mermaid"><code>graph TB
+    A[Programme COBOL] --&gt; B[Lexer]
+    B --&gt; C[Tokens]
+    C --&gt; D[Parser]
+    D --&gt; E[AST - Abstract Syntax Tree]
+    E --&gt; F[Analyseur Sémantique]
+    F --&gt; G[Modèle Intermédiaire]
+    G --&gt; H[Générateur Entités]
+    G --&gt; I[Générateur Processor]
+    G --&gt; J[Générateur Job Config]
+    H --&gt; K[Code Java]
+    I --&gt; K
+    J --&gt; K
+    K --&gt; L[Application Spring Batch]</code></pre>
+<h2 data-number="2.2" id="pipeline-de-traduction"><span
+class="header-section-number">2.2</span> Pipeline de traduction</h2>
+<pre class="mermaid"><code>flowchart LR
+    A[COBOL Source] --&gt; B{Parser}
+    B --&gt;|Success| C[AST]
+    B --&gt;|Error| D[Error Report]
+    C --&gt; E[Type Converter]
+    E --&gt; F[Data Model]
+    F --&gt; G[Code Generator]
+    G --&gt; H[Java Files]
+    H --&gt; I[Compilation Check]
+    I --&gt;|OK| J[Success]
+    I --&gt;|Error| K[Warnings]</code></pre>
+<h1 data-number="3" id="algorithmes-détaillés"><span
+class="header-section-number">3</span> Algorithmes détaillés</h1>
+<h2 data-number="3.1" id="algorithme-de-parsing-cobol"><span
+class="header-section-number">3.1</span> Algorithme de parsing
+COBOL</h2>
+<h3 data-number="3.1.1" id="phase-1-analyse-lexicale"><span
+class="header-section-number">3.1.1</span> Phase 1 : Analyse
+lexicale</h3>
+<pre class="mermaid"><code>stateDiagram-v2
+    [*] --&gt; ReadLine
+    ReadLine --&gt; CheckComment
+    CheckComment --&gt; SkipLine : Column 7 = *
+    CheckComment --&gt; ParseLine : Column 7 ≠ *
+    SkipLine --&gt; ReadLine
+    ParseLine --&gt; ExtractTokens
+    ExtractTokens --&gt; ReadLine : More lines
+    ExtractTokens --&gt; [*] : EOF</code></pre>
+<p><strong>Algorithme :</strong></p>
+<pre><code>FONCTION analyserLexical(sourceCOBOL):
+    tokens = []
+    lignes = découperEnLignes(sourceCOBOL)
+
+    POUR CHAQUE ligne DANS lignes:
+        SI ligne[6] == &#39;*&#39; ALORS
+            CONTINUER  // Commentaire
+        FIN SI
+
+        // Extraire zone de codage (colonnes 8-72)
+        zoneCode = ligne[7:72]
+
+        // Tokeniser
+        motsClés = rechercherMotsClés(zoneCode)
+        identifiants = rechercherIdentifiants(zoneCode)
+        nombres = rechercherNombres(zoneCode)
+
+        tokens.ajouter(motsClés + identifiants + nombres)
+    FIN POUR
+
+    RETOURNER tokens
+FIN FONCTION</code></pre>
+<h3 data-number="3.1.2" id="phase-2-analyse-syntaxique"><span
+class="header-section-number">3.1.2</span> Phase 2 : Analyse
+syntaxique</h3>
+<pre class="mermaid"><code>graph TD
+    A[Tokens] --&gt; B{Type Division}
+    B --&gt;|IDENTIFICATION| C[Parse Program Info]
+    B --&gt;|ENVIRONMENT| D[Parse File Assignments]
+    B --&gt;|DATA| E[Parse Data Structures]
+    B --&gt;|PROCEDURE| F[Parse Statements]
+
+    E --&gt; E1[File Section]
+    E --&gt; E2[Working Storage]
+    E1 --&gt; G[Build AST]
+    E2 --&gt; G
+
+    F --&gt; F1[Control Flow]
+    F --&gt; F2[Data Movement]
+    F --&gt; F3[Arithmetic]
+    F1 --&gt; G
+    F2 --&gt; G
+    F3 --&gt; G</code></pre>
+<p><strong>Algorithme :</strong></p>
+<pre><code>FONCTION construireAST(tokens):
+    ast = nouvelAST()
+
+    // Identifier les divisions
+    POUR CHAQUE token DANS tokens:
+        SI token == &quot;IDENTIFICATION DIVISION&quot; ALORS
+            ast.identification = parseIdentification(tokens)
+        SINON SI token == &quot;DATA DIVISION&quot; ALORS
+            ast.dataDivision = parseDataDivision(tokens)
+        SINON SI token == &quot;PROCEDURE DIVISION&quot; ALORS
+            ast.procedureDivision = parseProcedureDivision(tokens)
+        FIN SI
+    FIN POUR
+
+    RETOURNER ast
+FIN FONCTION
+
+FONCTION parseDataDivision(tokens):
+    dataDivision = nouveauDataDivision()
+
+    POUR CHAQUE ligne DANS tokens:
+        SI ligne commence par &quot;FD&quot; ALORS
+            fichier = parseFD(ligne)
+            dataDivision.fichiers.ajouter(fichier)
+        SINON SI ligne commence par niveau (01-49) ALORS
+            champ = parseDataItem(ligne)
+            dataDivision.champs.ajouter(champ)
+        FIN SI
+    FIN POUR
+
+    RETOURNER dataDivision
+FIN FONCTION</code></pre>
+<h2 data-number="3.2" id="algorithme-de-conversion-de-types"><span
+class="header-section-number">3.2</span> Algorithme de conversion de
+types</h2>
+<h3 data-number="3.2.1" id="mapping-cobol-java"><span
+class="header-section-number">3.2.1</span> Mapping COBOL → Java</h3>
+<pre class="mermaid"><code>graph LR
+    A[COBOL Type] --&gt; B{Analyse PICTURE}
+    B --&gt;|PIC 9 sans V| C[Integer/Long]
+    B --&gt;|PIC 9 avec V| D[BigDecimal]
+    B --&gt;|PIC X| E[String]
+    B --&gt;|PIC 9 + COMP-3| F[BigDecimal]
+    B --&gt;|PIC 9-8- date| G[LocalDate]
+
+    C --&gt; H{Taille}
+    H --&gt;|≤ 9 digits| I[Integer]
+    H --&gt;|&gt; 9 digits| J[Long]</code></pre>
+<p><strong>Algorithme de conversion :</strong></p>
+<pre><code>FONCTION convertirTypeJava(dataItem):
+    SI dataItem.estGroupe() ALORS
+        RETOURNER null  // Pas de type pour un groupe
+    FIN SI
+
+    picture = dataItem.pictureClause
+    usage = dataItem.usage
+
+    // Détection décimales ou COMP-3
+    SI picture.contient(&#39;V&#39;) OU usage == &#39;COMP-3&#39; ALORS
+        RETOURNER &quot;BigDecimal&quot;
+    FIN SI
+
+    // Détection date
+    SI estChampDate(dataItem) ALORS
+        RETOURNER &quot;LocalDate&quot;
+    FIN SI
+
+    // Numérique sans décimales
+    SI picture.contient(&#39;9&#39;) ALORS
+        taille = extraireTaille(picture)
+        SI taille &lt;= 9 ALORS
+            RETOURNER &quot;Integer&quot;
+        SINON
+            RETOURNER &quot;Long&quot;
+        FIN SI
+    FIN SI
+
+    // Alphanumérique
+    SI picture.contient(&#39;X&#39;) ALORS
+        RETOURNER &quot;String&quot;
+    FIN SI
+
+    // Par défaut
+    RETOURNER &quot;String&quot;
+FIN FONCTION
+
+FONCTION estChampDate(dataItem):
+    nom = dataItem.nom.majuscules()
+    picture = dataItem.pictureClause
+
+    // PIC 9(8) ou 9(6) et nom contient DATE ou DT
+    SI (picture == &quot;9(8)&quot; OU picture == &quot;9(6)&quot;) ET
+       (nom.contient(&quot;DATE&quot;) OU nom.contient(&quot;DT&quot;)) ALORS
+        RETOURNER vrai
+    FIN SI
+
+    RETOURNER faux
+FIN FONCTION</code></pre>
+<h2 data-number="3.3" id="algorithme-de-génération-dentités"><span
+class="header-section-number">3.3</span> Algorithme de génération
+d’entités</h2>
+<h3 data-number="3.3.1" id="processus-de-génération"><span
+class="header-section-number">3.3.1</span> Processus de génération</h3>
+<pre class="mermaid"><code>sequenceDiagram
+    participant G as Generator
+    participant AST as AST Model
+    participant T as Template Engine
+    participant F as File System
+
+    G-&gt;&gt;AST: Récupérer FileDefinition
+    AST--&gt;&gt;G: Liste des champs
+
+    loop Pour chaque fichier
+        G-&gt;&gt;G: Extraire champs élémentaires
+        G-&gt;&gt;G: Convertir types COBOL→Java
+        G-&gt;&gt;G: Générer noms Java (camelCase)
+        G-&gt;&gt;T: Appliquer template entité
+        T--&gt;&gt;G: Code Java généré
+        G-&gt;&gt;F: Écrire fichier .java
+    end</code></pre>
+<p><strong>Algorithme :</strong></p>
+<pre><code>FONCTION générerEntité(fileDefinition, config):
+    nomClasse = toCamelCase(fileDefinition.nom) + &quot;Record&quot;
+
+    code = nouveauStringBuilder()
+
+    // Package
+    code.ajouter(&quot;package &quot; + config.packageName + &quot;;\n\n&quot;)
+
+    // Imports
+    code.ajouter(&quot;import java.math.BigDecimal;\n&quot;)
+    code.ajouter(&quot;import java.time.LocalDate;\n\n&quot;)
+
+    // Classe
+    code.ajouter(&quot;public class &quot; + nomClasse + &quot; {\n\n&quot;)
+
+    // Champs
+    champsElementaires = extraireChampsElementaires(fileDefinition)
+    POUR CHAQUE champ DANS champsElementaires:
+        typeJava = convertirTypeJava(champ)
+        nomJava = toCamelCase(champ.nom)
+
+        code.ajouter(&quot;    private &quot; + typeJava + &quot; &quot; + nomJava + &quot;;\n&quot;)
+        code.ajouter(&quot;    // COBOL: &quot; + champ.picture)
+        SI champ.usage != null ALORS
+            code.ajouter(&quot; &quot; + champ.usage)
+        FIN SI
+        code.ajouter(&quot;\n\n&quot;)
+    FIN POUR
+
+    // Getters/Setters
+    POUR CHAQUE champ DANS champsElementaires:
+        code.ajouter(générerGetter(champ))
+        code.ajouter(générerSetter(champ))
+    FIN POUR
+
+    code.ajouter(&quot;}\n&quot;)
+
+    // Écrire fichier
+    écrireFichier(config.outputDir + &quot;/&quot; + nomClasse + &quot;.java&quot;, code)
+
+    RETOURNER fichierGénéré
+FIN FONCTION</code></pre>
+<h2 data-number="3.4"
+id="algorithme-de-traduction-des-instructions"><span
+class="header-section-number">3.4</span> Algorithme de traduction des
+instructions</h2>
+<h3 data-number="3.4.1" id="conversion-cobol-java"><span
+class="header-section-number">3.4.1</span> Conversion COBOL → Java</h3>
+<pre class="mermaid"><code>graph TD
+    A[Statement COBOL] --&gt; B{Type?}
+
+    B --&gt;|MOVE| C[Assignment =]
+    B --&gt;|COMPUTE| D[BigDecimal.operations]
+    B --&gt;|IF| E[if statement]
+    B --&gt;|PERFORM UNTIL| F[while loop]
+    B --&gt;|PERFORM TIMES| G[for loop]
+    B --&gt;|EVALUATE| H[switch statement]
+    B --&gt;|READ| I[reader.read-]
+    B --&gt;|WRITE| J[writer.write-]
+
+    C --&gt; K[Code Java]
+    D --&gt; K
+    E --&gt; K
+    F --&gt; K
+    G --&gt; K
+    H --&gt; K
+    I --&gt; K
+    J --&gt; K</code></pre>
+<p><strong>Exemples de conversion :</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>COBOL</th>
+<th>Java</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>MOVE A TO B</code></td>
+<td><code>b = a;</code></td>
+</tr>
+<tr class="even">
+<td><code>ADD A TO B</code></td>
+<td><code>b = b.add(a);</code> (BigDecimal)</td>
+</tr>
+<tr class="odd">
+<td><code>COMPUTE C = A * B</code></td>
+<td><code>c = a.multiply(b).setScale(2);</code></td>
+</tr>
+<tr class="even">
+<td><code>IF A &gt; 100</code></td>
+<td><code>if (a.compareTo(new BigDecimal("100")) &gt; 0)</code></td>
+</tr>
+<tr class="odd">
+<td><code>PERFORM UNTIL EOF</code></td>
+<td><code>while (!eof)</code></td>
+</tr>
+<tr class="even">
+<td><code>PERFORM 10 TIMES</code></td>
+<td><code>for (int i = 0; i &lt; 10; i++)</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Algorithme :</strong></p>
+<pre><code>FONCTION traduireInstruction(statement):
+    SELON statement.type:
+        CAS MOVE:
+            RETOURNER statement.cible + &quot; = &quot; + statement.source + &quot;;&quot;
+
+        CAS COMPUTE:
+            expression = traduireExpression(statement.expression)
+            RETOURNER statement.cible + &quot; = &quot; + expression + &quot;;&quot;
+
+        CAS IF:
+            condition = traduireCondition(statement.condition)
+            corps = traduireBloc(statement.enfants)
+            RETOURNER &quot;if (&quot; + condition + &quot;) {\n&quot; + corps + &quot;\n}&quot;
+
+        CAS PERFORM_UNTIL:
+            condition = traduireCondition(statement.conditionUntil)
+            RETOURNER &quot;while (!(&quot; + condition + &quot;))&quot;
+
+        CAS PERFORM_TIMES:
+            fois = statement.performTimes
+            RETOURNER &quot;for (int i = 0; i &lt; &quot; + fois + &quot;; i++)&quot;
+
+        CAS EVALUATE:
+            RETOURNER traduireSwitch(statement)
+
+        DÉFAUT:
+            RETOURNER &quot;// TODO: &quot; + statement.cobolOriginal
+    FIN SELON
+FIN FONCTION
+
+FONCTION traduireCondition(conditionCobol):
+    // Exemple: &quot;AMOUNT &gt; 1000&quot; → &quot;amount.compareTo(new BigDecimal(&quot;1000&quot;)) &gt; 0&quot;
+
+    SI conditionCobol.contient(&quot;BigDecimal&quot;) ALORS
+        RETOURNER traduireConditionDecimal(conditionCobol)
+    SINON
+        RETOURNER traduireConditionSimple(conditionCobol)
+    FIN SI
+FIN FONCTION</code></pre>
+<h1 data-number="4" id="guide-dutilisation"><span
+class="header-section-number">4</span> Guide d’utilisation</h1>
+<h2 data-number="4.1" id="installation"><span
+class="header-section-number">4.1</span> Installation</h2>
+<h3 data-number="4.1.1" id="prérequis"><span
+class="header-section-number">4.1.1</span> Prérequis</h3>
+<ul>
+<li><strong>Java 17</strong> ou supérieur</li>
+<li><strong>Maven 3.8+</strong></li>
+<li><strong>Git</strong> (optionnel)</li>
+</ul>
+<h3 data-number="4.1.2" id="compilation-du-projet"><span
+class="header-section-number">4.1.2</span> Compilation du projet</h3>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cloner le repository</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/your-org/cobol-to-java-translator.git</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> cobol-to-java-translator</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Compiler avec Maven</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="ex">mvn</span> clean package</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Le JAR exécutable sera dans target/</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-l</span> target/cobol-translator.jar</span></code></pre></div>
+<p><strong>Sortie attendue :</strong></p>
+<pre><code>[INFO] BUILD SUCCESS
+[INFO] Total time: 45.678 s
+[INFO] Finished at: 2026-01-01T10:30:00Z</code></pre>
+<h2 data-number="4.2" id="utilisation-en-ligne-de-commande"><span
+class="header-section-number">4.2</span> Utilisation en ligne de
+commande</h2>
+<h3 data-number="4.2.1" id="commande-1-traduire-un-fichier-unique"><span
+class="header-section-number">4.2.1</span> Commande 1 : Traduire un
+fichier unique</h3>
+<p><strong>Syntaxe :</strong></p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">java</span> <span class="at">-jar</span> target/cobol-translator.jar translate <span class="op">&lt;</span>fichier.cob<span class="op">&gt;</span> [options]</span></code></pre></div>
+<p><strong>Options disponibles :</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Alias</th>
+<th>Description</th>
+<th>Défaut</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>--output</code></td>
+<td><code>-o</code></td>
+<td>Répertoire de sortie</td>
+<td><code>src/main/java</code></td>
+</tr>
+<tr class="even">
+<td><code>--package</code></td>
+<td><code>-p</code></td>
+<td>Package Java</td>
+<td><code>com.generated.batch</code></td>
+</tr>
+<tr class="odd">
+<td><code>--no-tests</code></td>
+<td></td>
+<td>Désactiver génération tests</td>
+<td>false</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Exemple complet :</strong></p>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">java</span> <span class="at">-jar</span> target/cobol-translator.jar translate <span class="dt">\</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  examples/CUSTPROC.cob <span class="dt">\</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--package</span> com.mycompany.customer <span class="dt">\</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--output</span> generated/src/main/java <span class="dt">\</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--no-tests</span></span></code></pre></div>
+<p><strong>Sortie console :</strong></p>
+<pre><code>╔════════════════════════════════════════════════════════╗
+║   COBOL to Java Spring Batch Translator v1.0.0        ║
+╚════════════════════════════════════════════════════════╝
+
+📄 Source file: examples/CUSTPROC.cob
+📦 Package: com.mycompany.customer
+📂 Output directory: generated/src/main/java
+
+🔄 Starting translation...
+
+✅ Translation completed successfully!
+
+📊 Metrics:
+   Metrics: COBOL lines=42, Java lines=156, Data items=6, Statements=8, Files=3
+
+📝 Generated files:
+   ✓ CustomerFileRecord.java
+   ✓ CustprocProcessor.java
+   ✓ CustprocJobConfiguration.java</code></pre>
+<h3 data-number="4.2.2"
+id="commande-2-traduire-un-répertoire-complet"><span
+class="header-section-number">4.2.2</span> Commande 2 : Traduire un
+répertoire complet</h3>
+<p><strong>Syntaxe :</strong></p>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">java</span> <span class="at">-jar</span> target/cobol-translator.jar translate-all <span class="op">&lt;</span>répertoire<span class="op">&gt;</span> [options]</span></code></pre></div>
+<p><strong>Exemple :</strong></p>
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">java</span> <span class="at">-jar</span> target/cobol-translator.jar translate-all <span class="dt">\</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  /path/to/cobol/programs <span class="dt">\</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--package</span> com.mycompany.batch <span class="dt">\</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--output</span> generated/src/main/java</span></code></pre></div>
+<p><strong>Sortie :</strong></p>
+<pre><code>╔════════════════════════════════════════════════════════╗
+║   COBOL to Java Spring Batch Translator v1.0.0        ║
+╚════════════════════════════════════════════════════════╝
+
+📂 Input directory: /path/to/cobol/programs
+📦 Package: com.mycompany.batch
+📂 Output directory: generated/src/main/java
+
+📊 Summary:
+
+✅ CUSTPROC.cob
+✅ INVPROC.cob
+✅ ORDRECON.cob
+❌ LEGACY.cob: Unsupported CICS commands
+
+Total: 4 | Success: 3 | Failed: 1</code></pre>
+<h2 data-number="4.3" id="utilisation-via-api-java"><span
+class="header-section-number">4.3</span> Utilisation via API Java</h2>
+<h3 data-number="4.3.1" id="exemple-basique"><span
+class="header-section-number">4.3.1</span> Exemple basique</h3>
+<div class="sourceCode" id="cb21"><pre
+class="sourceCode java"><code class="sourceCode java"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">com</span><span class="op">.</span><span class="im">cobol</span><span class="op">.</span><span class="im">translator</span><span class="op">.</span><span class="im">CobolTranslator</span><span class="op">;</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">com</span><span class="op">.</span><span class="im">cobol</span><span class="op">.</span><span class="im">translator</span><span class="op">.</span><span class="im">config</span><span class="op">.</span><span class="im">TranslationConfig</span><span class="op">;</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">com</span><span class="op">.</span><span class="im">cobol</span><span class="op">.</span><span class="im">translator</span><span class="op">.</span><span class="im">result</span><span class="op">.</span><span class="im">TranslationResult</span><span class="op">;</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="kw">class</span> TranslatorExample <span class="op">{</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">static</span> <span class="dt">void</span> <span class="fu">main</span><span class="op">(</span><span class="bu">String</span><span class="op">[]</span> args<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>        <span class="co">// 1. Configuration</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>        TranslationConfig config <span class="op">=</span> TranslationConfig<span class="op">.</span><span class="fu">builder</span><span class="op">()</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">sourceFile</span><span class="op">(</span><span class="st">&quot;src/cobol/CUSTPROC.cob&quot;</span><span class="op">)</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">outputPackage</span><span class="op">(</span><span class="st">&quot;com.mycompany.batch.customer&quot;</span><span class="op">)</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">targetDirectory</span><span class="op">(</span><span class="st">&quot;src/main/java&quot;</span><span class="op">)</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">generateTests</span><span class="op">(</span><span class="kw">true</span><span class="op">)</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">generateDocs</span><span class="op">(</span><span class="kw">true</span><span class="op">)</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">build</span><span class="op">();</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>        <span class="co">// 2. Créer le traducteur</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>        CobolTranslator translator <span class="op">=</span> <span class="kw">new</span> <span class="fu">CobolTranslator</span><span class="op">();</span></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>        <span class="co">// 3. Traduire</span></span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>        TranslationResult result <span class="op">=</span> translator<span class="op">.</span><span class="fu">translate</span><span class="op">(</span>config<span class="op">);</span></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>        <span class="co">// 4. Vérifier le résultat</span></span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>result<span class="op">.</span><span class="fu">isSuccess</span><span class="op">())</span> <span class="op">{</span></span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>            <span class="bu">System</span><span class="op">.</span><span class="fu">out</span><span class="op">.</span><span class="fu">println</span><span class="op">(</span><span class="st">&quot;✅ Traduction réussie!&quot;</span><span class="op">);</span></span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>            <span class="co">// Afficher les fichiers générés</span></span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>            <span class="bu">System</span><span class="op">.</span><span class="fu">out</span><span class="op">.</span><span class="fu">println</span><span class="op">(</span><span class="st">&quot;</span><span class="sc">\n</span><span class="st">Fichiers générés:&quot;</span><span class="op">);</span></span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a>            result<span class="op">.</span><span class="fu">getGeneratedFiles</span><span class="op">().</span><span class="fu">forEach</span><span class="op">(</span>file <span class="op">-&gt;</span></span>
+<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a>                <span class="bu">System</span><span class="op">.</span><span class="fu">out</span><span class="op">.</span><span class="fu">println</span><span class="op">(</span><span class="st">&quot;  - &quot;</span> <span class="op">+</span> file<span class="op">.</span><span class="fu">getAbsolutePath</span><span class="op">())</span></span>
+<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a>            <span class="op">);</span></span>
+<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a>            <span class="co">// Afficher les métriques</span></span>
+<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a>            <span class="bu">System</span><span class="op">.</span><span class="fu">out</span><span class="op">.</span><span class="fu">println</span><span class="op">(</span><span class="st">&quot;</span><span class="sc">\n</span><span class="st">Métriques:&quot;</span><span class="op">);</span></span>
+<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a>            <span class="bu">System</span><span class="op">.</span><span class="fu">out</span><span class="op">.</span><span class="fu">println</span><span class="op">(</span>result<span class="op">.</span><span class="fu">getMetrics</span><span class="op">());</span></span>
+<span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-37"><a href="#cb21-37" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb21-38"><a href="#cb21-38" aria-hidden="true" tabindex="-1"></a>            <span class="bu">System</span><span class="op">.</span><span class="fu">err</span><span class="op">.</span><span class="fu">println</span><span class="op">(</span><span class="st">&quot;❌ Échec: &quot;</span> <span class="op">+</span> result<span class="op">.</span><span class="fu">getErrorMessage</span><span class="op">());</span></span>
+<span id="cb21-39"><a href="#cb21-39" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb21-40"><a href="#cb21-40" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb21-41"><a href="#cb21-41" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 data-number="4.3.2" id="exemple-avancé-traduction-batch"><span
+class="header-section-number">4.3.2</span> Exemple avancé : Traduction
+batch</h3>
+<div class="sourceCode" id="cb22"><pre
+class="sourceCode java"><code class="sourceCode java"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">java</span><span class="op">.</span><span class="im">io</span><span class="op">.</span><span class="im">File</span><span class="op">;</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">java</span><span class="op">.</span><span class="im">util</span><span class="op">.</span><span class="im">List</span><span class="op">;</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="kw">class</span> BatchTranslation <span class="op">{</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">static</span> <span class="dt">void</span> <span class="fu">main</span><span class="op">(</span><span class="bu">String</span><span class="op">[]</span> args<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>        CobolTranslator translator <span class="op">=</span> <span class="kw">new</span> <span class="fu">CobolTranslator</span><span class="op">();</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Configuration de base</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>        TranslationConfig baseConfig <span class="op">=</span> TranslationConfig<span class="op">.</span><span class="fu">builder</span><span class="op">()</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">outputPackage</span><span class="op">(</span><span class="st">&quot;com.mycompany.batch&quot;</span><span class="op">)</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">targetDirectory</span><span class="op">(</span><span class="st">&quot;generated/src/main/java&quot;</span><span class="op">)</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">generateTests</span><span class="op">(</span><span class="kw">true</span><span class="op">)</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">build</span><span class="op">();</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Traduire tous les fichiers d&#39;un répertoire</span></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>        <span class="bu">String</span> inputDir <span class="op">=</span> <span class="st">&quot;src/cobol/programs&quot;</span><span class="op">;</span></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>        <span class="bu">List</span><span class="op">&lt;</span>TranslationResult<span class="op">&gt;</span> results <span class="op">=</span></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>            translator<span class="op">.</span><span class="fu">translateDirectory</span><span class="op">(</span>inputDir<span class="op">,</span> baseConfig<span class="op">);</span></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Statistiques</span></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>        <span class="dt">long</span> successCount <span class="op">=</span> results<span class="op">.</span><span class="fu">stream</span><span class="op">()</span></span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">filter</span><span class="op">(</span>TranslationResult<span class="op">::</span>isSuccess<span class="op">)</span></span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">count</span><span class="op">();</span></span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>        <span class="dt">long</span> failureCount <span class="op">=</span> results<span class="op">.</span><span class="fu">size</span><span class="op">()</span> <span class="op">-</span> successCount<span class="op">;</span></span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>        <span class="bu">System</span><span class="op">.</span><span class="fu">out</span><span class="op">.</span><span class="fu">println</span><span class="op">(</span><span class="st">&quot;Résultats:&quot;</span><span class="op">);</span></span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>        <span class="bu">System</span><span class="op">.</span><span class="fu">out</span><span class="op">.</span><span class="fu">println</span><span class="op">(</span><span class="st">&quot;  Succès: &quot;</span> <span class="op">+</span> successCount<span class="op">);</span></span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a>        <span class="bu">System</span><span class="op">.</span><span class="fu">out</span><span class="op">.</span><span class="fu">println</span><span class="op">(</span><span class="st">&quot;  Échecs: &quot;</span> <span class="op">+</span> failureCount<span class="op">);</span></span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Détails des échecs</span></span>
+<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>failureCount <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a>            <span class="bu">System</span><span class="op">.</span><span class="fu">out</span><span class="op">.</span><span class="fu">println</span><span class="op">(</span><span class="st">&quot;</span><span class="sc">\n</span><span class="st">Échecs détaillés:&quot;</span><span class="op">);</span></span>
+<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a>            results<span class="op">.</span><span class="fu">stream</span><span class="op">()</span></span>
+<span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a>                <span class="op">.</span><span class="fu">filter</span><span class="op">(</span>r <span class="op">-&gt;</span> <span class="op">!</span>r<span class="op">.</span><span class="fu">isSuccess</span><span class="op">())</span></span>
+<span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a>                <span class="op">.</span><span class="fu">forEach</span><span class="op">(</span>r <span class="op">-&gt;</span> <span class="bu">System</span><span class="op">.</span><span class="fu">out</span><span class="op">.</span><span class="fu">println</span><span class="op">(</span></span>
+<span id="cb22-38"><a href="#cb22-38" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&quot;  - &quot;</span> <span class="op">+</span> r<span class="op">.</span><span class="fu">getSourceFile</span><span class="op">()</span> <span class="op">+</span> <span class="st">&quot;: &quot;</span> <span class="op">+</span></span>
+<span id="cb22-39"><a href="#cb22-39" aria-hidden="true" tabindex="-1"></a>                    r<span class="op">.</span><span class="fu">getErrorMessage</span><span class="op">()</span></span>
+<span id="cb22-40"><a href="#cb22-40" aria-hidden="true" tabindex="-1"></a>                <span class="op">));</span></span>
+<span id="cb22-41"><a href="#cb22-41" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb22-42"><a href="#cb22-42" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb22-43"><a href="#cb22-43" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h2 data-number="4.4" id="configuration-avancée"><span
+class="header-section-number">4.4</span> Configuration avancée</h2>
+<h3 data-number="4.4.1" id="personnalisation-des-noms"><span
+class="header-section-number">4.4.1</span> Personnalisation des
+noms</h3>
+<div class="sourceCode" id="cb23"><pre
+class="sourceCode java"><code class="sourceCode java"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>TranslationConfig config <span class="op">=</span> TranslationConfig<span class="op">.</span><span class="fu">builder</span><span class="op">()</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">sourceFile</span><span class="op">(</span><span class="st">&quot;CUSTPROC.cob&quot;</span><span class="op">)</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">outputPackage</span><span class="op">(</span><span class="st">&quot;com.mycompany.batch&quot;</span><span class="op">)</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Personnaliser les suffixes</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">namingEntitySuffix</span><span class="op">(</span><span class="st">&quot;Entity&quot;</span><span class="op">)</span>      <span class="co">// Par défaut: &quot;Record&quot;</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">namingProcessorSuffix</span><span class="op">(</span><span class="st">&quot;Handler&quot;</span><span class="op">)</span>  <span class="co">// Par défaut: &quot;Processor&quot;</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">namingJobSuffix</span><span class="op">(</span><span class="st">&quot;BatchJob&quot;</span><span class="op">)</span>       <span class="co">// Par défaut: &quot;Job&quot;</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Style de code</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">codeStyle</span><span class="op">(</span>TranslationConfig<span class="op">.</span><span class="fu">CodeStyle</span><span class="op">.</span><span class="fu">GOOGLE</span><span class="op">)</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">build</span><span class="op">();</span></span></code></pre></div>
+<p><strong>Résultat :</strong> - <code>CustomerFileRecord.java</code> →
+<code>CustomerFileEntity.java</code> -
+<code>CustprocProcessor.java</code> → <code>CustprocHandler.java</code>
+- <code>custprocJob</code> → <code>custprocBatchJob</code></p>
+<h3 data-number="4.4.2" id="options-de-génération"><span
+class="header-section-number">4.4.2</span> Options de génération</h3>
+<div class="sourceCode" id="cb24"><pre
+class="sourceCode java"><code class="sourceCode java"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>TranslationConfig config <span class="op">=</span> TranslationConfig<span class="op">.</span><span class="fu">builder</span><span class="op">()</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">sourceFile</span><span class="op">(</span><span class="st">&quot;CUSTPROC.cob&quot;</span><span class="op">)</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">outputPackage</span><span class="op">(</span><span class="st">&quot;com.mycompany.batch&quot;</span><span class="op">)</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Contrôle de la génération</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">generateTests</span><span class="op">(</span><span class="kw">false</span><span class="op">)</span>    <span class="co">// Désactiver tests</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">generateDocs</span><span class="op">(</span><span class="kw">true</span><span class="op">)</span>      <span class="co">// Générer Javadoc</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">build</span><span class="op">();</span></span></code></pre></div>
+<h2 data-number="4.5" id="exemples-de-traduction"><span
+class="header-section-number">4.5</span> Exemples de traduction</h2>
+<h3 data-number="4.5.1" id="exemple-1-programme-simple"><span
+class="header-section-number">4.5.1</span> Exemple 1 : Programme
+simple</h3>
+<p><strong>Fichier COBOL : <code>SIMPLE.cob</code></strong></p>
+<pre class="cobol"><code>       IDENTIFICATION DIVISION.
+       PROGRAM-ID. SIMPLE.
+
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01  WS-COUNTER      PIC 9(5) VALUE 0.
+       01  WS-TOTAL        PIC 9(7)V99 VALUE 0.
+
+       PROCEDURE DIVISION.
+       0000-MAIN.
+           PERFORM 100 TIMES
+               ADD 1 TO WS-COUNTER
+               ADD 10.50 TO WS-TOTAL
+           END-PERFORM
+           DISPLAY &#39;TOTAL: &#39; WS-TOTAL
+           STOP RUN.</code></pre>
+<p><strong>Commande :</strong></p>
+<div class="sourceCode" id="cb26"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="ex">java</span> <span class="at">-jar</span> cobol-translator.jar translate SIMPLE.cob <span class="dt">\</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--package</span> com.example <span class="at">--output</span> generated</span></code></pre></div>
+<p><strong>Fichier Java généré :
+<code>SimpleProcessor.java</code></strong></p>
+<div class="sourceCode" id="cb27"><pre
+class="sourceCode java"><code class="sourceCode java"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">package</span><span class="im"> com</span><span class="op">.</span><span class="im">example</span><span class="op">;</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">org</span><span class="op">.</span><span class="im">springframework</span><span class="op">.</span><span class="im">batch</span><span class="op">.</span><span class="im">item</span><span class="op">.</span><span class="im">ItemProcessor</span><span class="op">;</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">java</span><span class="op">.</span><span class="im">math</span><span class="op">.</span><span class="im">BigDecimal</span><span class="op">;</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">java</span><span class="op">.</span><span class="im">math</span><span class="op">.</span><span class="im">RoundingMode</span><span class="op">;</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="kw">class</span> SimpleProcessor <span class="kw">implements</span> ItemProcessor<span class="op">&lt;</span>Record<span class="op">,</span> Record<span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">private</span> <span class="bu">Integer</span> wsCounter <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">private</span> <span class="bu">BigDecimal</span> wsTotal <span class="op">=</span> <span class="bu">BigDecimal</span><span class="op">.</span><span class="fu">ZERO</span><span class="op">;</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">@Override</span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> Record <span class="fu">process</span><span class="op">(</span>Record record<span class="op">)</span> <span class="kw">throws</span> <span class="bu">Exception</span> <span class="op">{</span></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>        <span class="co">// PERFORM 100 TIMES</span></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">100</span><span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>            <span class="co">// ADD 1 TO WS-COUNTER</span></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>            wsCounter <span class="op">=</span> wsCounter <span class="op">+</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>            <span class="co">// ADD 10.50 TO WS-TOTAL</span></span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>            wsTotal <span class="op">=</span> wsTotal<span class="op">.</span><span class="fu">add</span><span class="op">(</span></span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>                <span class="kw">new</span> <span class="bu">BigDecimal</span><span class="op">(</span><span class="st">&quot;10.50&quot;</span><span class="op">)</span></span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>            <span class="op">).</span><span class="fu">setScale</span><span class="op">(</span><span class="dv">2</span><span class="op">,</span> <span class="bu">RoundingMode</span><span class="op">.</span><span class="fu">HALF_UP</span><span class="op">);</span></span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>        <span class="co">// DISPLAY &#39;TOTAL: &#39; WS-TOTAL</span></span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>        <span class="bu">System</span><span class="op">.</span><span class="fu">out</span><span class="op">.</span><span class="fu">println</span><span class="op">(</span><span class="st">&quot;TOTAL: &quot;</span> <span class="op">+</span> wsTotal<span class="op">);</span></span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> record<span class="op">;</span></span>
+<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 data-number="4.5.2" id="exemple-2-fichier-avec-données"><span
+class="header-section-number">4.5.2</span> Exemple 2 : Fichier avec
+données</h3>
+<p><strong>Fichier COBOL : <code>CUSTOMER.cob</code></strong></p>
+<pre class="cobol"><code>       IDENTIFICATION DIVISION.
+       PROGRAM-ID. CUSTOMER.
+
+       DATA DIVISION.
+       FILE SECTION.
+       FD  CUSTOMER-FILE.
+       01  CUSTOMER-RECORD.
+           05  CUST-ID         PIC 9(6).
+           05  CUST-NAME       PIC X(30).
+           05  CUST-BALANCE    PIC 9(9)V99 COMP-3.
+           05  CUST-DATE       PIC 9(8).
+           05  CUST-STATUS     PIC X(1).
+
+       PROCEDURE DIVISION.
+       0000-MAIN.
+           OPEN INPUT CUSTOMER-FILE
+           READ CUSTOMER-FILE
+           IF CUST-BALANCE &gt; 1000.00
+               DISPLAY &#39;HIGH BALANCE&#39;
+           END-IF
+           CLOSE CUSTOMER-FILE
+           STOP RUN.</code></pre>
+<p><strong>Fichier Java généré :
+<code>CustomerFileRecord.java</code></strong></p>
+<div class="sourceCode" id="cb29"><pre
+class="sourceCode java"><code class="sourceCode java"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="kw">package</span><span class="im"> com</span><span class="op">.</span><span class="im">example</span><span class="op">;</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">java</span><span class="op">.</span><span class="im">math</span><span class="op">.</span><span class="im">BigDecimal</span><span class="op">;</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">java</span><span class="op">.</span><span class="im">time</span><span class="op">.</span><span class="im">LocalDate</span><span class="op">;</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="co">/**</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a> <span class="co">*</span> Entity for COBOL file<span class="co">:</span> CUSTOMER<span class="co">-</span>FILE</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a> <span class="co">*</span> Generated from program<span class="co">:</span> CUSTOMER</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a> <span class="co">*/</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="kw">class</span> CustomerFileRecord <span class="op">{</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">private</span> <span class="bu">Integer</span> custId<span class="op">;</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">// COBOL: PIC 9(6)</span></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">private</span> <span class="bu">String</span> custName<span class="op">;</span></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>    <span class="co">// COBOL: PIC X(30)</span></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">private</span> <span class="bu">BigDecimal</span> custBalance<span class="op">;</span></span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>    <span class="co">// COBOL: PIC 9(9)V99 COMP-3</span></span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">private</span> LocalDate custDate<span class="op">;</span></span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>    <span class="co">// COBOL: PIC 9(8)</span></span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>    <span class="kw">private</span> <span class="bu">String</span> custStatus<span class="op">;</span></span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>    <span class="co">// COBOL: PIC X(1)</span></span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Getters and Setters</span></span>
+<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="bu">Integer</span> <span class="fu">getCustId</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> custId<span class="op">;</span></span>
+<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">void</span> <span class="fu">setCustId</span><span class="op">(</span><span class="bu">Integer</span> custId<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb29-34"><a href="#cb29-34" aria-hidden="true" tabindex="-1"></a>        <span class="kw">this</span><span class="op">.</span><span class="fu">custId</span> <span class="op">=</span> custId<span class="op">;</span></span>
+<span id="cb29-35"><a href="#cb29-35" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb29-36"><a href="#cb29-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-37"><a href="#cb29-37" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="bu">String</span> <span class="fu">getCustName</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb29-38"><a href="#cb29-38" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> custName<span class="op">;</span></span>
+<span id="cb29-39"><a href="#cb29-39" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb29-40"><a href="#cb29-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-41"><a href="#cb29-41" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">void</span> <span class="fu">setCustName</span><span class="op">(</span><span class="bu">String</span> custName<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb29-42"><a href="#cb29-42" aria-hidden="true" tabindex="-1"></a>        <span class="kw">this</span><span class="op">.</span><span class="fu">custName</span> <span class="op">=</span> custName<span class="op">;</span></span>
+<span id="cb29-43"><a href="#cb29-43" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb29-44"><a href="#cb29-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-45"><a href="#cb29-45" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="bu">BigDecimal</span> <span class="fu">getCustBalance</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb29-46"><a href="#cb29-46" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> custBalance<span class="op">;</span></span>
+<span id="cb29-47"><a href="#cb29-47" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb29-48"><a href="#cb29-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-49"><a href="#cb29-49" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">void</span> <span class="fu">setCustBalance</span><span class="op">(</span><span class="bu">BigDecimal</span> custBalance<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb29-50"><a href="#cb29-50" aria-hidden="true" tabindex="-1"></a>        <span class="kw">this</span><span class="op">.</span><span class="fu">custBalance</span> <span class="op">=</span> custBalance<span class="op">;</span></span>
+<span id="cb29-51"><a href="#cb29-51" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb29-52"><a href="#cb29-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-53"><a href="#cb29-53" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> LocalDate <span class="fu">getCustDate</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb29-54"><a href="#cb29-54" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> custDate<span class="op">;</span></span>
+<span id="cb29-55"><a href="#cb29-55" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb29-56"><a href="#cb29-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-57"><a href="#cb29-57" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">void</span> <span class="fu">setCustDate</span><span class="op">(</span>LocalDate custDate<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb29-58"><a href="#cb29-58" aria-hidden="true" tabindex="-1"></a>        <span class="kw">this</span><span class="op">.</span><span class="fu">custDate</span> <span class="op">=</span> custDate<span class="op">;</span></span>
+<span id="cb29-59"><a href="#cb29-59" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb29-60"><a href="#cb29-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-61"><a href="#cb29-61" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="bu">String</span> <span class="fu">getCustStatus</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb29-62"><a href="#cb29-62" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> custStatus<span class="op">;</span></span>
+<span id="cb29-63"><a href="#cb29-63" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb29-64"><a href="#cb29-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-65"><a href="#cb29-65" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">void</span> <span class="fu">setCustStatus</span><span class="op">(</span><span class="bu">String</span> custStatus<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb29-66"><a href="#cb29-66" aria-hidden="true" tabindex="-1"></a>        <span class="kw">this</span><span class="op">.</span><span class="fu">custStatus</span> <span class="op">=</span> custStatus<span class="op">;</span></span>
+<span id="cb29-67"><a href="#cb29-67" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb29-68"><a href="#cb29-68" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h1 data-number="5" id="limites-et-restrictions"><span
+class="header-section-number">5</span> Limites et restrictions</h1>
+<h2 data-number="5.1" id="limitations-actuelles"><span
+class="header-section-number">5.1</span> Limitations actuelles</h2>
+<h3 data-number="5.1.1" id="constructions-cobol-non-supportées"><span
+class="header-section-number">5.1.1</span> 1. Constructions COBOL non
+supportées</h3>
+<pre class="mermaid"><code>graph TD
+    A[COBOL Features] --&gt; B[✅ Supporté]
+    A --&gt; C[⚠️ Partiellement supporté]
+    A --&gt; D[❌ Non supporté]
+
+    B --&gt; B1[Sequential files]
+    B --&gt; B2[Basic arithmetic]
+    B --&gt; B3[IF/ELSE]
+    B --&gt; B4[PERFORM loops]
+    B --&gt; B5[MOVE statements]
+
+    C --&gt; C1[EVALUATE]
+    C --&gt; C2[SEARCH]
+    C --&gt; C3[REDEFINES]
+
+    D --&gt; D1[CICS commands]
+    D --&gt; D2[DB2 SQL]
+    D --&gt; D3[SORT statements]
+    D --&gt; D4[Complex REDEFINES]</code></pre>
+<h4 data-number="5.1.1.1" id="non-supporté"><span
+class="header-section-number">5.1.1.1</span> ❌ Non supporté</h4>
+<p><strong>1. Programmes CICS (transactions online)</strong></p>
+<pre class="cobol"><code>EXEC CICS READ
+    FILE(&#39;CUSTFILE&#39;)
+    INTO(CUSTOMER-RECORD)
+    RIDFLD(CUSTOMER-KEY)
+END-EXEC</code></pre>
+<p><strong>Raison :</strong> CICS est un environnement transactionnel
+spécifique mainframe sans équivalent direct en Spring Batch.</p>
+<p><strong>Alternative :</strong> Migration manuelle vers Spring MVC +
+JPA.</p>
+<hr />
+<p><strong>2. Embedded SQL (DB2, IMS)</strong></p>
+<pre class="cobol"><code>EXEC SQL
+    SELECT CUST_NAME, CUST_BALANCE
+    INTO :WS-NAME, :WS-BALANCE
+    FROM CUSTOMERS
+    WHERE CUST_ID = :WS-ID
+END-EXEC</code></pre>
+<p><strong>Raison :</strong> Nécessite conversion vers JDBC/JPA avec
+contexte transactionnel différent.</p>
+<p><strong>Alternative :</strong> Utiliser Spring Data JPA.</p>
+<hr />
+<p><strong>3. SORT statements complexes</strong></p>
+<pre class="cobol"><code>SORT SORT-FILE
+    ON ASCENDING KEY SORT-CUSTOMER-ID
+    ON DESCENDING KEY SORT-DATE
+    USING INPUT-FILE
+    GIVING OUTPUT-FILE</code></pre>
+<p><strong>Raison :</strong> Spring Batch gère le tri différemment
+(ItemReader avec ORDER BY ou tri en mémoire).</p>
+<p><strong>Alternative :</strong> Configuration Spring Batch avec tri
+SQL.</p>
+<hr />
+<p><strong>4. REDEFINES complexes</strong></p>
+<pre class="cobol"><code>01  WS-DATA.
+    05  WS-NUMERIC      PIC 9(10).
+    05  WS-ALPHA REDEFINES WS-NUMERIC PIC X(10).
+    05  WS-PARTS REDEFINES WS-NUMERIC.
+        10  WS-PART1    PIC 9(5).
+        10  WS-PART2    PIC 9(5).</code></pre>
+<p><strong>Raison :</strong> Java n’a pas de concept équivalent à
+REDEFINES (vue multiple d’une même zone mémoire).</p>
+<p><strong>Alternative :</strong> Classes séparées avec conversion
+explicite.</p>
+<hr />
+<p><strong>5. Fonctions intrinsèques spécifiques</strong></p>
+<pre class="cobol"><code>COMPUTE WS-RESULT = FUNCTION ANNUITY(RATE PERIODS)</code></pre>
+<p><strong>Raison :</strong> Certaines fonctions COBOL n’ont pas
+d’équivalent direct en Java.</p>
+<p><strong>Alternative :</strong> Implémentation manuelle de la
+fonction.</p>
+<h4 data-number="5.1.1.2" id="partiellement-supporté"><span
+class="header-section-number">5.1.1.2</span> ⚠️ Partiellement
+supporté</h4>
+<p><strong>1. EVALUATE avec WHEN OTHER</strong></p>
+<pre class="cobol"><code>EVALUATE CUSTOMER-TYPE
+    WHEN &#39;A&#39;
+        PERFORM PROCESS-TYPE-A
+    WHEN &#39;B&#39;
+        PERFORM PROCESS-TYPE-B
+    WHEN OTHER
+        PERFORM PROCESS-DEFAULT
+END-EVALUATE</code></pre>
+<p><strong>Statut :</strong> Traduit en <code>switch</code> Java, mais
+logique complexe nécessite révision.</p>
+<p><strong>Traduction :</strong></p>
+<div class="sourceCode" id="cb37"><pre
+class="sourceCode java"><code class="sourceCode java"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="cf">switch</span> <span class="op">(</span>customerType<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="st">&quot;A&quot;</span><span class="op">:</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">processTypeA</span><span class="op">();</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="st">&quot;B&quot;</span><span class="op">:</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">processTypeB</span><span class="op">();</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">default</span><span class="op">:</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">processDefault</span><span class="op">();</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<hr />
+<p><strong>2. SEARCH ALL (binary search)</strong></p>
+<pre class="cobol"><code>SEARCH ALL CUSTOMER-TABLE
+    AT END
+        MOVE &#39;NOT FOUND&#39; TO WS-MESSAGE
+    WHEN CUST-ID(IDX) = WS-SEARCH-ID
+        MOVE CUST-NAME(IDX) TO WS-NAME
+END-SEARCH</code></pre>
+<p><strong>Statut :</strong> Traduit en recherche Map.get() mais
+optimisation binaire perdue.</p>
+<p><strong>Traduction :</strong></p>
+<div class="sourceCode" id="cb39"><pre
+class="sourceCode java"><code class="sourceCode java"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>Customer customer <span class="op">=</span> customerMap<span class="op">.</span><span class="fu">get</span><span class="op">(</span>wsSearchId<span class="op">);</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>customer <span class="op">==</span> <span class="kw">null</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    wsMessage <span class="op">=</span> <span class="st">&quot;NOT FOUND&quot;</span><span class="op">;</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>    wsName <span class="op">=</span> customer<span class="op">.</span><span class="fu">getName</span><span class="op">();</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<hr />
+<p><strong>3. REDEFINES simple</strong></p>
+<pre class="cobol"><code>01  WS-DATE-NUM     PIC 9(8).
+01  WS-DATE-ALPHA REDEFINES WS-DATE-NUM PIC X(8).</code></pre>
+<p><strong>Statut :</strong> Nécessite conversion manuelle.</p>
+<p><strong>Traduction :</strong></p>
+<div class="sourceCode" id="cb41"><pre
+class="sourceCode java"><code class="sourceCode java"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span> <span class="bu">Integer</span> wsDateNum<span class="op">;</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="bu">String</span> <span class="fu">getWsDateAlpha</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">String</span><span class="op">.</span><span class="fu">format</span><span class="op">(</span><span class="st">&quot;</span><span class="sc">%08d</span><span class="st">&quot;</span><span class="op">,</span> wsDateNum<span class="op">);</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 data-number="5.1.2" id="limites-techniques"><span
+class="header-section-number">5.1.2</span> 2. Limites techniques</h3>
+<h4 data-number="5.1.2.1" id="performance"><span
+class="header-section-number">5.1.2.1</span> Performance</h4>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Aspect</th>
+<th>Limite</th>
+<th>Recommandation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Taille fichier COBOL</strong></td>
+<td>&lt; 10,000 lignes</td>
+<td>Diviser les gros programmes</td>
+</tr>
+<tr class="even">
+<td><strong>Nombre de fichiers</strong></td>
+<td>&lt; 1,000 par batch</td>
+<td>Traiter par lots</td>
+</tr>
+<tr class="odd">
+<td><strong>Complexité cyclomatique</strong></td>
+<td>&lt; 50 par paragraphe</td>
+<td>Refactoriser la logique</td>
+</tr>
+<tr class="even">
+<td><strong>Profondeur nesting</strong></td>
+<td>&lt; 10 niveaux</td>
+<td>Simplifier les IF imbriqués</td>
+</tr>
+</tbody>
+</table>
+<h4 data-number="5.1.2.2" id="précision-de-traduction"><span
+class="header-section-number">5.1.2.2</span> Précision de
+traduction</h4>
+<pre class="mermaid"><code>pie title Taux de traduction automatique
+    &quot;Traduction complète (80%)&quot; : 80
+    &quot;Nécessite ajustement (15%)&quot; : 15
+    &quot;Traduction manuelle (5%)&quot; : 5</code></pre>
+<p><strong>Catégories :</strong></p>
+<ol type="1">
+<li><strong>Traduction complète (80%)</strong> : Code généré directement
+utilisable
+<ul>
+<li>Instructions simples (MOVE, ADD, IF)</li>
+<li>Fichiers séquentiels</li>
+<li>Calculs arithmétiques</li>
+</ul></li>
+<li><strong>Nécessite ajustement (15%)</strong> : Code généré à
+compléter
+<ul>
+<li>Logique métier complexe</li>
+<li>EVALUATE avec multiples WHEN</li>
+<li>Appels de sous-programmes</li>
+</ul></li>
+<li><strong>Traduction manuelle (5%)</strong> : Impossible à traduire
+automatiquement
+<ul>
+<li>CICS/CICS</li>
+<li>SQL embarqué</li>
+<li>Fonctions spécifiques mainframe</li>
+</ul></li>
+</ol>
+<h3 data-number="5.1.3" id="précautions-et-avertissements"><span
+class="header-section-number">5.1.3</span> 3. Précautions et
+avertissements</h3>
+<h4 data-number="5.1.3.1" id="validation-obligatoire"><span
+class="header-section-number">5.1.3.1</span> ⚠️ Validation
+obligatoire</h4>
+<p><strong>Après génération, il est IMPÉRATIF de :</strong></p>
+<ol type="1">
+<li><p><strong>Réviser le code généré</strong></p>
+<ul>
+<li>Vérifier la logique métier</li>
+<li>Valider les calculs financiers</li>
+<li>Tester les cas limites</li>
+</ul></li>
+<li><p><strong>Tester exhaustivement</strong></p>
+<ul>
+<li>Tests unitaires (JUnit)</li>
+<li>Tests d’intégration</li>
+<li>Tests de non-régression avec données réelles</li>
+</ul></li>
+<li><p><strong>Comparer les résultats</strong></p>
+<pre><code>COBOL Output ══════╗
+                   ║
+                   ╠═══&gt; Comparaison fichier par fichier
+                   ║
+Java Output  ══════╝</code></pre></li>
+<li><p><strong>Valider les performances</strong></p>
+<ul>
+<li>Temps d’exécution</li>
+<li>Utilisation mémoire</li>
+<li>Throughput</li>
+</ul></li>
+</ol>
+<h4 data-number="5.1.3.2" id="calculs-financiers"><span
+class="header-section-number">5.1.3.2</span> ⚠️ Calculs financiers</h4>
+<p><strong>ATTENTION CRITIQUE pour les calculs avec argent
+:</strong></p>
+<pre class="cobol"><code>COBOL: COMPUTE RESULT = AMOUNT * RATE.</code></pre>
+<p><strong>Traduction :</strong></p>
+<div class="sourceCode" id="cb45"><pre
+class="sourceCode java"><code class="sourceCode java"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ CORRECT - BigDecimal avec scale</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> amount<span class="op">.</span><span class="fu">multiply</span><span class="op">(</span>rate<span class="op">)</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">setScale</span><span class="op">(</span><span class="dv">2</span><span class="op">,</span> <span class="bu">RoundingMode</span><span class="op">.</span><span class="fu">HALF_UP</span><span class="op">);</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ INCORRECT - double (perte de précision)</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> amount <span class="op">*</span> rate<span class="op">;</span>  <span class="co">// </span><span class="al">DANGER</span><span class="co">!</span></span></code></pre></div>
+<p><strong>Règle :</strong> TOUJOURS utiliser <code>BigDecimal</code>
+pour les montants financiers.</p>
+<h4 data-number="5.1.3.3" id="conversions-de-dates"><span
+class="header-section-number">5.1.3.3</span> ⚠️ Conversions de
+dates</h4>
+<p><strong>Format COBOL → Java :</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>Format COBOL</th>
+<th>Type Java</th>
+<th>Conversion</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>PIC 9(8) YYYYMMDD</td>
+<td>LocalDate</td>
+<td><code>LocalDate.parse(str, formatter)</code></td>
+</tr>
+<tr class="even">
+<td>PIC 9(6) YYMMDD</td>
+<td>LocalDate</td>
+<td>Pivot année 2000</td>
+</tr>
+<tr class="odd">
+<td>PIC 9(7) YYYYDDD</td>
+<td>LocalDate</td>
+<td>Format Julian</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Attention au pivot d’année :</strong></p>
+<pre><code>COBOL: 99 → 1999 ou 2099 ?
+Configurer le pivot: &lt; 50 → 20xx, &gt;= 50 → 19xx</code></pre>
+<h3 data-number="5.1.4" id="différences-de-comportement"><span
+class="header-section-number">5.1.4</span> 4. Différences de
+comportement</h3>
+<h4 data-number="5.1.4.1" id="gestion-des-erreurs"><span
+class="header-section-number">5.1.4.1</span> Gestion des erreurs</h4>
+<p><strong>COBOL :</strong></p>
+<pre class="cobol"><code>READ CUSTOMER-FILE
+    AT END
+        MOVE &#39;Y&#39; TO EOF-FLAG
+    INVALID KEY
+        DISPLAY &#39;ERROR READING FILE&#39;
+END-READ</code></pre>
+<p><strong>Java Spring Batch :</strong></p>
+<div class="sourceCode" id="cb48"><pre
+class="sourceCode java"><code class="sourceCode java"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span> <span class="op">{</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>    CustomerRecord record <span class="op">=</span> reader<span class="op">.</span><span class="fu">read</span><span class="op">();</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>record <span class="op">==</span> <span class="kw">null</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>        eofFlag <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">catch</span> <span class="op">(</span><span class="bu">IOException</span> e<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>    logger<span class="op">.</span><span class="fu">error</span><span class="op">(</span><span class="st">&quot;Error reading file&quot;</span><span class="op">,</span> e<span class="op">);</span></span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">throw</span> <span class="kw">new</span> <span class="fu">ItemReaderException</span><span class="op">(</span><span class="st">&quot;Error reading file&quot;</span><span class="op">,</span> e<span class="op">);</span></span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><strong>Différence :</strong> Java utilise des exceptions, COBOL
+utilise des codes retour.</p>
+<h4 data-number="5.1.4.2" id="gestion-de-la-mémoire"><span
+class="header-section-number">5.1.4.2</span> Gestion de la mémoire</h4>
+<p><strong>COBOL :</strong> - Tables fixes (OCCURS) - Mémoire
+statique</p>
+<p><strong>Java :</strong> - Collections dynamiques (ArrayList, HashMap)
+- Garbage collector</p>
+<p><strong>Impact :</strong> - ✅ Plus flexible en Java - ⚠️ Risque de
+OutOfMemoryError si mal géré</p>
+<h4 data-number="5.1.4.3" id="concurrence"><span
+class="header-section-number">5.1.4.3</span> Concurrence</h4>
+<p><strong>COBOL :</strong> - Mono-thread - Traitement séquentiel</p>
+<p><strong>Java Spring Batch :</strong> - Multi-thread possible -
+Partitionnement</p>
+<p><strong>Attention :</strong> Variables partagées en COBOL →
+Thread-safety en Java.</p>
+<h2 data-number="5.2" id="recommandations"><span
+class="header-section-number">5.2</span> Recommandations</h2>
+<h3 data-number="5.2.1" id="workflow-de-migration"><span
+class="header-section-number">5.2.1</span> Workflow de migration</h3>
+<pre class="mermaid"><code>graph LR
+    A[Programme COBOL] --&gt; B[Analyse manuelle]
+    B --&gt; C{Complexité?}
+
+    C --&gt;|Simple| D[Traduction auto]
+    C --&gt;|Moyenne| E[Traduction auto + révision]
+    C --&gt;|Complexe| F[Traduction manuelle]
+
+    D --&gt; G[Tests unitaires]
+    E --&gt; G
+    F --&gt; G
+
+    G --&gt; H{Tests OK?}
+    H --&gt;|Non| I[Corrections]
+    I --&gt; G
+    H --&gt;|Oui| J[Tests intégration]
+
+    J --&gt; K{OK?}
+    K --&gt;|Non| I
+    K --&gt;|Oui| L[Production]</code></pre>
+<h3 data-number="5.2.2" id="checklist-de-validation"><span
+class="header-section-number">5.2.2</span> Checklist de validation</h3>
+<p><strong>Avant traduction :</strong> - [ ] Analyser les dépendances
+COBOL - [ ] Identifier les copybooks utilisés - [ ] Vérifier l’absence
+de CICS/DB2 - [ ] Documenter la logique métier</p>
+<p><strong>Après traduction :</strong> - [ ] Compiler le code Java
+généré - [ ] Réviser les conversions de types - [ ] Valider les calculs
+BigDecimal - [ ] Tester avec données réelles - [ ] Comparer les sorties
+COBOL vs Java - [ ] Mesurer les performances</p>
+<p><strong>Avant mise en production :</strong> - [ ] Tests de charge - [
+] Tests de non-régression - [ ] Validation métier - [ ] Documentation
+mise à jour - [ ] Plan de rollback préparé</p>
+<h1 data-number="6" id="annexes"><span
+class="header-section-number">6</span> Annexes</h1>
+<h2 data-number="6.1"
+id="annexe-a-table-de-correspondance-complète"><span
+class="header-section-number">6.1</span> Annexe A : Table de
+correspondance complète</h2>
+<h3 data-number="6.1.1" id="types-de-données"><span
+class="header-section-number">6.1.1</span> Types de données</h3>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 39%" />
+<col style="width: 18%" />
+<col style="width: 21%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>COBOL</th>
+<th>Description</th>
+<th>Java</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>PIC 9(n)</code></td>
+<td>Numérique entier</td>
+<td><code>Integer</code> (n≤9) ou <code>Long</code></td>
+<td>Sans signe</td>
+</tr>
+<tr class="even">
+<td><code>PIC S9(n)</code></td>
+<td>Numérique signé</td>
+<td><code>Integer</code> ou <code>Long</code></td>
+<td>Avec signe</td>
+</tr>
+<tr class="odd">
+<td><code>PIC 9(n)V99</code></td>
+<td>Numérique décimal</td>
+<td><code>BigDecimal</code></td>
+<td>2 décimales</td>
+</tr>
+<tr class="even">
+<td><code>PIC 9(n)V9(m)</code></td>
+<td>Numérique décimal</td>
+<td><code>BigDecimal</code></td>
+<td>m décimales</td>
+</tr>
+<tr class="odd">
+<td><code>PIC X(n)</code></td>
+<td>Alphanumérique</td>
+<td><code>String</code></td>
+<td>Texte</td>
+</tr>
+<tr class="even">
+<td><code>PIC A(n)</code></td>
+<td>Alphabétique</td>
+<td><code>String</code></td>
+<td>Lettres uniquement</td>
+</tr>
+<tr class="odd">
+<td><code>COMP</code></td>
+<td>Binary</td>
+<td><code>Integer</code> ou <code>Long</code></td>
+<td>2 ou 4 bytes</td>
+</tr>
+<tr class="even">
+<td><code>COMP-3</code></td>
+<td>Packed decimal</td>
+<td><code>BigDecimal</code></td>
+<td>Avec scale</td>
+</tr>
+<tr class="odd">
+<td><code>PIC 9(8)</code> (date)</td>
+<td>Date YYYYMMDD</td>
+<td><code>LocalDate</code></td>
+<td>Si nom contient DATE</td>
+</tr>
+<tr class="even">
+<td><code>PIC 9(6)</code> (date)</td>
+<td>Date YYMMDD</td>
+<td><code>LocalDate</code></td>
+<td>Pivot année</td>
+</tr>
+<tr class="odd">
+<td><code>PIC 9(7)</code> (date)</td>
+<td>Date Julian</td>
+<td><code>LocalDate</code></td>
+<td>YYYYDDD</td>
+</tr>
+</tbody>
+</table>
+<h3 data-number="6.1.2" id="instructions"><span
+class="header-section-number">6.1.2</span> Instructions</h3>
+<table>
+<thead>
+<tr class="header">
+<th>COBOL</th>
+<th>Java</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>MOVE A TO B</code></td>
+<td><code>b = a</code></td>
+<td>Simple assignment</td>
+</tr>
+<tr class="even">
+<td><code>ADD A TO B</code></td>
+<td><code>b += a</code> ou <code>b = b.add(a)</code></td>
+<td>BigDecimal</td>
+</tr>
+<tr class="odd">
+<td><code>SUBTRACT A FROM B</code></td>
+<td><code>b -= a</code> ou <code>b = b.subtract(a)</code></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>MULTIPLY A BY B</code></td>
+<td><code>b *= a</code> ou <code>b = b.multiply(a)</code></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><code>DIVIDE A INTO B</code></td>
+<td><code>b /= a</code> ou
+<code>b = b.divide(a, scale, mode)</code></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>COMPUTE C = A + B</code></td>
+<td><code>c = a.add(b)</code></td>
+<td>Expression</td>
+</tr>
+<tr class="odd">
+<td><code>IF A &gt; B</code></td>
+<td><code>if (a.compareTo(b) &gt; 0)</code></td>
+<td>BigDecimal</td>
+</tr>
+<tr class="even">
+<td><code>IF A = B</code></td>
+<td><code>if (a.equals(b))</code></td>
+<td>Objects</td>
+</tr>
+<tr class="odd">
+<td><code>PERFORM UNTIL</code></td>
+<td><code>while (!(condition))</code></td>
+<td>Loop</td>
+</tr>
+<tr class="even">
+<td><code>PERFORM n TIMES</code></td>
+<td><code>for (int i=0; i&lt;n; i++)</code></td>
+<td>Fixed loop</td>
+</tr>
+<tr class="odd">
+<td><code>EVALUATE</code></td>
+<td><code>switch (value)</code></td>
+<td>Multi-branch</td>
+</tr>
+<tr class="even">
+<td><code>DISPLAY</code></td>
+<td><code>System.out.println()</code></td>
+<td>Output</td>
+</tr>
+<tr class="odd">
+<td><code>ACCEPT</code></td>
+<td><code>scanner.nextLine()</code></td>
+<td>Input</td>
+</tr>
+<tr class="even">
+<td><code>INITIALIZE</code></td>
+<td><code>= null</code> ou <code>= 0</code></td>
+<td>Reset</td>
+</tr>
+<tr class="odd">
+<td><code>STRING...DELIMITED</code></td>
+<td><code>StringBuilder.append()</code></td>
+<td>Concatenation</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="6.2" id="annexe-b-fichier-de-configuration"><span
+class="header-section-number">6.2</span> Annexe B : Fichier de
+configuration</h2>
+<h3 data-number="6.2.1" id="translator.properties"><span
+class="header-section-number">6.2.1</span> translator.properties</h3>
+<pre class="properties"><code># Configuration du traducteur COBOL to Java
+
+# Package par défaut pour le code généré
+default.package=com.mycompany.batch
+
+# Répertoire de sortie
+output.directory=src/main/java
+
+# Générer les tests unitaires
+generate.tests=true
+
+# Générer la documentation Javadoc
+generate.docs=true
+
+# Style de code (google, oracle, spring)
+code.style=google
+
+# Conventions de nommage
+naming.entity.suffix=Record
+naming.processor.suffix=Processor
+naming.job.suffix=Job
+naming.config.suffix=Configuration
+
+# Conversion de types
+type.pic9.max.integer=9
+type.date.pivot.year=50
+
+# Optimisations
+optimization.use.parallel=true
+optimization.chunk.size=100
+
+# Logging
+logging.level=INFO
+logging.file=translator.log
+
+# Métriques
+metrics.enabled=true
+metrics.output.file=metrics.json</code></pre>
+<h2 data-number="6.3" id="annexe-c-glossaire"><span
+class="header-section-number">6.3</span> Annexe C : Glossaire</h2>
+<p><strong>AST (Abstract Syntax Tree)</strong> : Arbre de syntaxe
+abstraite représentant la structure d’un programme.</p>
+<p><strong>BigDecimal</strong> : Classe Java pour calculs décimaux de
+précision arbitraire.</p>
+<p><strong>COMP-3</strong> : Format COBOL packed decimal (2 chiffres par
+byte).</p>
+<p><strong>ItemProcessor</strong> : Interface Spring Batch pour traiter
+un item.</p>
+<p><strong>ItemReader</strong> : Interface Spring Batch pour lire des
+données.</p>
+<p><strong>ItemWriter</strong> : Interface Spring Batch pour écrire des
+données.</p>
+<p><strong>Parser</strong> : Analyseur syntaxique qui transforme du code
+en AST.</p>
+<p><strong>PICTURE clause</strong> : Clause COBOL définissant le format
+d’un champ.</p>
+<p><strong>Spring Batch</strong> : Framework Java pour le traitement par
+lots.</p>
+<p><strong>Token</strong> : Unité lexicale (mot-clé, identifiant,
+nombre, etc.).</p>
+<h2 data-number="6.4" id="annexe-d-références"><span
+class="header-section-number">6.4</span> Annexe D : Références</h2>
+<h3 data-number="6.4.1" id="documentation-cobol"><span
+class="header-section-number">6.4.1</span> Documentation COBOL</h3>
+<ul>
+<li>IBM Enterprise COBOL for z/OS Language Reference</li>
+<li>Micro Focus COBOL Documentation</li>
+<li>GNU COBOL (GnuCOBOL) Manual</li>
+</ul>
+<h3 data-number="6.4.2" id="documentation-javaspring"><span
+class="header-section-number">6.4.2</span> Documentation
+Java/Spring</h3>
+<ul>
+<li>Spring Batch Reference Documentation:
+https://spring.io/projects/spring-batch</li>
+<li>Java SE 17 API:
+https://docs.oracle.com/en/java/javase/17/docs/api/</li>
+<li>BigDecimal Best Practices</li>
+</ul>
+<h3 data-number="6.4.3" id="outils"><span
+class="header-section-number">6.4.3</span> Outils</h3>
+<ul>
+<li>ANTLR4: https://www.antlr.org/</li>
+<li>Apache Velocity: https://velocity.apache.org/</li>
+<li>Picocli: https://picocli.info/</li>
+</ul>
+<h3 data-number="6.4.4" id="articles-et-guides"><span
+class="header-section-number">6.4.4</span> Articles et guides</h3>
+<ul>
+<li>“Mainframe to Cloud Migration Best Practices”</li>
+<li>“COBOL Modernization Patterns”</li>
+<li>“Spring Batch Performance Tuning”</li>
+</ul>
+<h2 data-number="6.5" id="annexe-e-support-et-contact"><span
+class="header-section-number">6.5</span> Annexe E : Support et
+contact</h2>
+<h3 data-number="6.5.1" id="repository-github"><span
+class="header-section-number">6.5.1</span> Repository GitHub</h3>
+<pre><code>https://github.com/your-org/cobol-to-java-translator</code></pre>
+<h3 data-number="6.5.2" id="issues-et-bugs"><span
+class="header-section-number">6.5.2</span> Issues et bugs</h3>
+<p>Rapporter les bugs sur GitHub Issues avec : - Version du traducteur -
+Fichier COBOL problématique (si possible) - Message d’erreur complet -
+Logs</p>
+<h3 data-number="6.5.3" id="contributions"><span
+class="header-section-number">6.5.3</span> Contributions</h3>
+<p>Les contributions sont bienvenues : 1. Fork le repository 2. Créer
+une branche feature 3. Commit les changements 4. Créer une Pull
+Request</p>
+<h3 data-number="6.5.4" id="license"><span
+class="header-section-number">6.5.4</span> License</h3>
+<p>Apache License 2.0</p>
+<hr />
+<p><strong>Document généré le :</strong> 2026-01-01</p>
+<p><strong>Version du traducteur :</strong> 1.0.0</p>
+<p><strong>Auteurs :</strong> COBOL Migration Team</p>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COBOL to Java Spring Batch Converter</title>
+    <link rel="stylesheet" href="/css/conversion.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔄 COBOL to Java Spring Batch Converter</h1>
+            <p class="subtitle">Convertissez vos programmes COBOL en projets Spring Batch modernes</p>
+        </header>
+
+        <div class="main-content">
+            <div class="upload-section">
+                <h2>📁 Upload de fichiers COBOL</h2>
+
+                <form id="conversionForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="projectName">Nom du projet *</label>
+                        <input type="text" id="projectName" name="projectName"
+                               placeholder="my-batch-project" required>
+                        <small>Le nom du projet Spring Batch généré</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="basePackage">Package de base</label>
+                        <input type="text" id="basePackage" name="basePackage"
+                               placeholder="com.example.batch" value="com.example.batch">
+                        <small>Le package Java de base pour les classes générées</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cobolFiles">Fichiers COBOL et JCL *</label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="cobolFiles" name="files"
+                                   accept=".cob,.cbl,.jcl" multiple required>
+                            <div class="file-upload-area" id="fileUploadArea">
+                                <div class="upload-icon">📤</div>
+                                <p>Cliquez ou glissez-déposez vos fichiers COBOL ici</p>
+                                <small>Formats acceptés: .cob, .cbl, .jcl (optionnel)</small>
+                                <small class="jcl-note">💡 Ajoutez un fichier JCL pour une génération automatique complète!</small>
+                            </div>
+                        </div>
+                        <div id="fileList" class="file-list"></div>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="convertBtn">
+                        <span class="btn-text">🚀 Convertir en Spring Batch</span>
+                        <span class="spinner" id="spinner"></span>
+                    </button>
+                </form>
+
+                <div id="progressSection" class="progress-section hidden">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <p class="progress-text" id="progressText">Conversion en cours...</p>
+                </div>
+
+                <div id="resultSection" class="result-section hidden">
+                    <div class="success-message">
+                        <h3>✅ Conversion réussie!</h3>
+                        <p>Votre projet Spring Batch a été généré avec succès.</p>
+                        <p id="downloadMessage"></p>
+                    </div>
+                </div>
+
+                <div id="errorSection" class="error-section hidden">
+                    <div class="error-message">
+                        <h3>❌ Erreur</h3>
+                        <p id="errorMessage"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h2>ℹ️ Informations</h2>
+
+                <div class="info-card">
+                    <h3>📦 Contenu du projet généré</h3>
+                    <ul>
+                        <li><strong>Jobs Spring Batch</strong> - Configuration complète des jobs</li>
+                        <li><strong>Entités</strong> - Modèles de données Java</li>
+                        <li><strong>Processors</strong> - Logique métier</li>
+                        <li><strong>Configuration</strong> - Application Spring Boot</li>
+                        <li><strong>pom.xml</strong> - Dépendances Maven</li>
+                        <li><strong>README.md</strong> - Documentation</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>🎯 Étapes de conversion</h3>
+                    <ol>
+                        <li>Parsing des fichiers COBOL avec ANTLR4</li>
+                        <li>Construction de l'AST (Abstract Syntax Tree)</li>
+                        <li>Génération des classes Java</li>
+                        <li>Création de la structure Maven</li>
+                        <li>Téléchargement du projet ZIP</li>
+                    </ol>
+                </div>
+
+                <div class="info-card">
+                    <h3>💡 Conseils</h3>
+                    <ul>
+                        <li>Assurez-vous que vos fichiers COBOL sont syntaxiquement corrects</li>
+                        <li>Utilisez un nom de projet valide (lettres, chiffres, tirets)</li>
+                        <li>Le package doit suivre la convention Java (ex: com.company.project)</li>
+                        <li>Vous pouvez uploader plusieurs fichiers COBOL en une seule fois</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Développé avec ❤️ | COBOL to Java Spring Batch Translator</p>
+            <p><small>Powered by ANTLR4 + AST Parser</small></p>
+        </footer>
+    </div>
+
+    <script src="/js/conversion.js"></script>
+</body>
+</html>

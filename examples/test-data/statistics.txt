@@ -1,0 +1,24 @@
+STATISTIQUES DES DONNÉES GÉNÉRÉES
+============================================================
+
+COMPTES:
+  Total comptes: 1000
+  Par type:
+    IN: 355
+    CK: 319
+    SV: 326
+  Par statut:
+    Actif: 631
+    Fermé: 191
+    Gelé: 178
+  Solde total: 25,065,494.77 EUR
+  Solde moyen: 25,065.49 EUR
+
+TRANSACTIONS:
+  Total transactions: 5000
+  Par type:
+    Crédit: 1661
+    Débit: 1713
+    Transfert: 1626
+  Montant total: 12,590,730.89 EUR
+  Montant moyen: 2,518.15 EUR

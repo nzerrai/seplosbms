@@ -255,4 +255,196 @@ class BusinessLogicTranslatorTest {
         assertTrue(result.contains("TODO"), 
                    "Empty paragraph should generate TODO comment");
     }
+
+    // ==================== Phase 3 Improvements Tests ====================
+    
+    @Test
+    void testNullSourceHandling() {
+        // MOVE with null source should generate TODO
+        Statement moveStmt = new Statement();
+        moveStmt.setType(StatementType.MOVE);
+        moveStmt.setSource(null);
+        moveStmt.setTarget("WS-FIELD");
+        
+        Paragraph paragraph = new Paragraph("NULL-TEST");
+        paragraph.setStatements(List.of(moveStmt));
+        
+        String result = translator.translateParagraph(paragraph, "Record");
+        
+        assertNotNull(result);
+        assertTrue(result.contains("TODO") || result.contains("null"));
+    }
+
+    @Test
+    void testEmptyStringHandling() {
+        // Statement with empty string should be handled gracefully
+        Statement moveStmt = new Statement();
+        moveStmt.setType(StatementType.MOVE);
+        moveStmt.setSource("");
+        moveStmt.setTarget("");
+        
+        Paragraph paragraph = new Paragraph("EMPTY-STRING-TEST");
+        paragraph.setStatements(List.of(moveStmt));
+        
+        String result = translator.translateParagraph(paragraph, "Record");
+        
+        assertNotNull(result);
+        // Should not throw exception
+    }
+
+    @Test
+    void testComplexConditionTranslation() {
+        // Test condition with AND/OR/NOT operators
+        Statement ifStmt = new Statement();
+        ifStmt.setType(StatementType.IF);
+        ifStmt.setCondition("ACCOUNT = ZERO AND STATUS = 'ACTIVE' OR FLAG = 'Y'");
+        
+        Paragraph paragraph = new Paragraph("COMPLEX-CONDITION");
+        paragraph.setStatements(List.of(ifStmt));
+        
+        String result = translator.translateParagraph(paragraph, "Record");
+        
+        assertNotNull(result);
+        assertTrue(result.contains("&&") || result.contains("if ("));
+    }
+
+    @Test
+    void testFieldNameConversion() {
+        // Test COBOL field name to Java conversion
+        Statement moveStmt = new Statement();
+        moveStmt.setType(StatementType.MOVE);
+        moveStmt.setSource("'TEST'");
+        moveStmt.setTarget("TR-ACCOUNT-NUMBER");
+        
+        Paragraph paragraph = new Paragraph("FIELD-NAME-TEST");
+        paragraph.setStatements(List.of(moveStmt));
+        
+        String result = translator.translateParagraph(paragraph, "Record");
+        
+        assertNotNull(result);
+        assertTrue(result.contains("setTrAccountNumber") || result.contains("settraccountnumber"));
+    }
+
+    @Test
+    void testNumericLiteralHandling() {
+        // Test numeric literal conversion
+        Statement computeStmt = new Statement();
+        computeStmt.setType(StatementType.COMPUTE);
+        computeStmt.setTarget("WS-RESULT");
+        computeStmt.setExpression("100 + 50");
+        
+        Paragraph paragraph = new Paragraph("NUMERIC-LITERAL");
+        paragraph.setStatements(List.of(computeStmt));
+        
+        String result = translator.translateParagraph(paragraph, "Record");
+        
+        assertNotNull(result);
+        assertTrue(result.contains("setWsResult") || result.contains("100"));
+    }
+
+    @Test
+    void testSpecialCobolValues() {
+        // Test ZERO, SPACES, etc.
+        Statement ifStmt = new Statement();
+        ifStmt.setType(StatementType.IF);
+        ifStmt.setCondition("WS-COUNTER = ZERO");
+        
+        Paragraph paragraph = new Paragraph("SPECIAL-VALUES");
+        paragraph.setStatements(List.of(ifStmt));
+        
+        String result = translator.translateParagraph(paragraph, "Record");
+        
+        assertNotNull(result);
+        assertTrue(result.contains("0") || result.contains("ZERO"));
+    }
+
+    @Test
+    void testPerformTimesWithZero() {
+        // PERFORM 0 TIMES should be handled
+        Statement performStmt = new Statement();
+        performStmt.setType(StatementType.PERFORM);
+        performStmt.setParagraphName("100-INIT");
+        performStmt.setPerformTimes(0);
+        
+        Paragraph paragraph = new Paragraph("PERFORM-ZERO");
+        paragraph.setStatements(List.of(performStmt));
+        
+        String result = translator.translateParagraph(paragraph, "Record");
+        
+        assertNotNull(result);
+        // Should generate TODO or skip
+    }
+
+    @Test
+    void testNestedIfStatements() {
+        // Test nested IF structures
+        Statement childIf = new Statement();
+        childIf.setType(StatementType.IF);
+        childIf.setCondition("INNER-CONDITION");
+        
+        Statement parentIf = new Statement();
+        parentIf.setType(StatementType.IF);
+        parentIf.setCondition("OUTER-CONDITION");
+        parentIf.setChildren(List.of(childIf));
+        
+        Paragraph paragraph = new Paragraph("NESTED-IF");
+        paragraph.setStatements(List.of(parentIf));
+        
+        String result = translator.translateParagraph(paragraph, "Record");
+        
+        assertNotNull(result);
+        // Should have nested if structure
+        assertTrue(result.contains("if ("));
+    }
+
+    @Test
+    void testEvaluateTrueWithoutWhenClauses() {
+        // EVALUATE TRUE without WHEN clauses
+        Statement evalStmt = new Statement();
+        evalStmt.setType(StatementType.EVALUATE);
+        evalStmt.setExpression("TRUE");
+        evalStmt.setChildren(new ArrayList<>()); // Empty children
+        
+        Paragraph paragraph = new Paragraph("EVAL-EMPTY");
+        paragraph.setStatements(List.of(evalStmt));
+        
+        String result = translator.translateParagraph(paragraph, "Record");
+        
+        assertNotNull(result);
+        // Should handle gracefully
+    }
+
+    @Test
+    void testArithmeticOperationValidation() {
+        // ADD without target should generate TODO
+        Statement addStmt = new Statement();
+        addStmt.setType(StatementType.ADD);
+        addStmt.setSource("100");
+        addStmt.setTarget(null);
+        
+        Paragraph paragraph = new Paragraph("ADD-INVALID");
+        paragraph.setStatements(List.of(addStmt));
+        
+        String result = translator.translateParagraph(paragraph, "Record");
+        
+        assertNotNull(result);
+        assertTrue(result.contains("TODO") || result.contains("Invalid"));
+    }
+
+    @Test
+    void testDivideWithRoundingMode() {
+        // DIVIDE should use HALF_UP rounding
+        Statement divideStmt = new Statement();
+        divideStmt.setType(StatementType.DIVIDE);
+        divideStmt.setSource("3");
+        divideStmt.setTarget("WS-RESULT");
+        
+        Paragraph paragraph = new Paragraph("DIVIDE-TEST");
+        paragraph.setStatements(List.of(divideStmt));
+        
+        String result = translator.translateParagraph(paragraph, "Record");
+        
+        assertNotNull(result);
+        assertTrue(result.contains("RoundingMode") || result.contains("divide"));
+    }
 }

@@ -18,6 +18,7 @@ public class ProcessorGenerator {
 
     private static final Logger logger = LoggerFactory.getLogger(ProcessorGenerator.class);
     private final BusinessRuleGenerator businessRuleGenerator = new BusinessRuleGenerator();
+    private final BusinessLogicTranslator logicTranslator = new BusinessLogicTranslator();
 
     public File generate(CobolProgram program, TranslationConfig config, Path outputDir) throws IOException {
 
@@ -34,12 +35,13 @@ public class ProcessorGenerator {
         code.append("package ").append(packageName).append(";\n\n");
 
         // Imports
-        code.append("import org.springframework.batch.item.ItemProcessor;\n");
-        code.append("import org.springframework.beans.factory.annotation.Autowired;\n");
-        code.append("import org.slf4j.Logger;\n");
-        code.append("import org.slf4j.LoggerFactory;\n");
-        code.append("import java.math.BigDecimal;\n");
-        code.append("import java.math.RoundingMode;\n");
+            code.append("import org.springframework.batch.item.ItemProcessor;\n");
+            code.append("import org.springframework.beans.factory.annotation.Autowired;\n");
+            code.append("import org.springframework.stereotype.Component;\n");
+            code.append("import org.slf4j.Logger;\n");
+            code.append("import org.slf4j.LoggerFactory;\n");
+            code.append("import java.math.BigDecimal;\n");
+            code.append("import java.math.RoundingMode;\n");
 
         // Import entity classes from model package
         String modelPackage = deriveModelPackage(packageName);
@@ -66,6 +68,7 @@ public class ProcessorGenerator {
         // Determine the input record type from the first input file
         String inputRecordType = determineInputRecordType(program, config);
 
+            code.append("@Component\n");
         code.append("public class ").append(processorName)
             .append(" implements ItemProcessor<").append(inputRecordType)
             .append(", ").append(inputRecordType).append("> {\n\n");
@@ -111,27 +114,23 @@ public class ProcessorGenerator {
         code.append("        // Step 2: Process valid transaction (COBOL: 220-PROCESS-VALID-TRANSACTION)\n");
         code.append("        logger.debug(\"Transaction validated successfully, processing business rules\");\n\n");
 
-        // Step 3: Process business logic
-        code.append("        // Step 3: Implement business logic from COBOL PROCEDURE DIVISION\n");
-        code.append("        // TODO: Add your business logic here based on the COBOL program logic\n");
-        code.append("        // \n");
-        code.append("        // Example COBOL logic pattern:\n");
-        code.append("        // COBOL EVALUATE TRUE\n");
-        code.append("        //   WHEN TR-DEBIT\n");
-        code.append("        //     SUBTRACT TR-AMOUNT FROM MA-CURRENT-BALANCE\n");
-        code.append("        //   WHEN TR-CREDIT\n");
-        code.append("        //     ADD TR-AMOUNT TO MA-CURRENT-BALANCE\n");
-        code.append("        //   WHEN TR-TRANSFER\n");
-        code.append("        //     SUBTRACT TR-AMOUNT FROM MA-CURRENT-BALANCE\n");
-        code.append("        // END-EVALUATE\n");
-        code.append("        //\n");
-        code.append("        // Access record fields using the getter methods available in ").append(inputRecordType).append("\n");
-        code.append("        // For example:\n");
-        code.append("        //   record.getTrTransactionType()\n");
-        code.append("        //   record.getTrAmount()\n");
-        code.append("        //   record.getTrAccountNumber()\n");
-        code.append("        \n");
-        code.append("        logger.debug(\"Processing business logic for record: {}\", record);\n\n");
+        // Step 3: Translate COBOL paragraphs into Java business logic
+        code.append("        // Step 3: Business logic from COBOL PROCEDURE DIVISION\n");
+        
+        // Find main processing paragraph
+        var processingParagraph = program.getParagraphs().stream()
+            .filter(p -> p.getName().contains("PROCESS-VALID") || p.getName().contains("220"))
+            .findFirst();
+        
+        if (processingParagraph.isPresent()) {
+            String translatedCode = logicTranslator.translateParagraph(processingParagraph.get(), inputRecordType);
+            code.append(translatedCode);
+        } else {
+            code.append("        // TODO: No specific processing paragraph found\n");
+            code.append("        // Implement balance update logic here\n");
+            code.append("        logger.debug(\"Transaction processed: {}\", record);\n");
+        }
+        code.append("\n");
 
         code.append("        return record;\n");
         code.append("    }\n\n");

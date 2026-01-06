@@ -8,7 +8,9 @@ import com.cobol.translator.jcl.generator.JCLSpringBatchGenerator;
 import com.cobol.translator.jcl.model.JCLJob;
 import com.cobol.translator.jcl.parser.JCLParser;
 import com.cobol.translator.model.CobolProgram;
+import com.cobol.translator.parser.CobolASTParser;
 import com.cobol.translator.parser.CobolParser;
+import com.cobol.translator.ast.ProgramNode;
 import com.cobol.translator.project.ProjectGenerator;
 import com.cobol.translator.report.ConversionReport;
 import com.cobol.translator.report.ReportGenerator;
@@ -87,7 +89,28 @@ public class CobolTranslator {
             // Step 1: Parse COBOL program
             logger.info("Parsing COBOL program...");
             String cobolSource = readFile(config.getSourceFile());
-            CobolProgram program = parser.parse(cobolSource);
+            CobolProgram program = null;
+
+            // First, try the richer ANTLR parser to validate syntax and recover metadata
+            ProgramNode ast = null;
+            try {
+                CobolASTParser astParser = new CobolASTParser();
+                ast = astParser.parseString(cobolSource, config.getSourceFile());
+                if (ast != null && ast.getProgramName() != null && !ast.getProgramName().isEmpty()) {
+                    logger.info("ANTLR parse success - program name: {}", ast.getProgramName());
+                }
+            } catch (Exception e) {
+                logger.warn("ANTLR parse failed, falling back to legacy parser: {}", e.getMessage());
+            }
+
+            program = parser.parse(cobolSource);
+            if (ast != null && ast.getProgramName() != null && !ast.getProgramName().isEmpty()) {
+                // If legacy parser missed the program name, patch it from the AST
+                if (program.getProgramName() == null || program.getProgramName().isEmpty()) {
+                    program.setProgramName(ast.getProgramName());
+                    program.setProgramId(ast.getProgramName());
+                }
+            }
             program.setSourceFile(config.getSourceFile());
             resultBuilder.cobolProgram(program);
 

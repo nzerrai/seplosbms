@@ -447,4 +447,133 @@ class BusinessLogicTranslatorTest {
         assertNotNull(result);
         assertTrue(result.contains("RoundingMode") || result.contains("divide"));
     }
-}
+
+    // ==================== Phase 4: Advanced Statements Tests ====================
+
+    @Test
+    void testTranslateGoToStatement() {
+        // COBOL: GO TO 100-PROCESS
+        Statement goToStmt = new Statement();
+        goToStmt.setType(StatementType.GO_TO);
+        goToStmt.setParagraphName("100-PROCESS");
+        goToStmt.setOriginalCobol("GO TO 100-PROCESS");
+        
+        Paragraph paragraph = new Paragraph("TEST-GOTO");
+        paragraph.setStatements(List.of(goToStmt));
+        
+        String result = translator.translateParagraph(paragraph, "Record");
+        
+        assertNotNull(result);
+        assertTrue(result.contains("// COBOL: GO TO"));
+        assertTrue(result.contains("process") || result.contains("return"));
+    }
+
+    @Test
+    void testTranslateInspectTallying() {
+        // COBOL: INSPECT WS-STRING TALLYING WS-COUNT FOR ALL 'A'
+        Statement inspectStmt = new Statement();
+        inspectStmt.setType(StatementType.INSPECT);
+        inspectStmt.setTarget("WS-STRING");
+        inspectStmt.setExpression("TALLYING WS-COUNT FOR ALL 'A'");
+        
+        Paragraph paragraph = new Paragraph("TEST-INSPECT");
+        paragraph.setStatements(List.of(inspectStmt));
+        
+        String result = translator.translateParagraph(paragraph, "Record");
+        
+        assertNotNull(result);
+        assertTrue(result.contains("// COBOL: INSPECT"));
+        assertTrue(result.contains("TALLYING") || result.contains("count"));
+    }
+
+    @Test
+    void testTranslateInspectReplacing() {
+        // COBOL: INSPECT WS-STRING REPLACING ALL 'A' BY 'B'
+        Statement inspectStmt = new Statement();
+        inspectStmt.setType(StatementType.INSPECT);
+        inspectStmt.setTarget("WS-STRING");
+        inspectStmt.setExpression("REPLACING ALL 'A' BY 'B'");
+        
+        Paragraph paragraph = new Paragraph("TEST-INSPECT-REPLACE");
+        paragraph.setStatements(List.of(inspectStmt));
+        
+        String result = translator.translateParagraph(paragraph, "Record");
+        
+        assertNotNull(result);
+        assertTrue(result.contains("// COBOL: INSPECT"));
+        assertTrue(result.contains("REPLACING") || result.contains("replace"));
+    }
+
+    @Test
+    void testTranslateStringStatement() {
+        // COBOL: STRING 'Hello' 'World' INTO WS-RESULT
+        Statement stringStmt = new Statement();
+        stringStmt.setType(StatementType.STRING);
+        stringStmt.setSource("'Hello','World'");
+        stringStmt.setTarget("WS-RESULT");
+        
+        Paragraph paragraph = new Paragraph("TEST-STRING");
+        paragraph.setStatements(List.of(stringStmt));
+        
+        String result = translator.translateParagraph(paragraph, "Record");
+        
+        assertNotNull(result);
+        assertTrue(result.contains("// COBOL: STRING"));
+        assertTrue(result.contains("StringBuilder") || result.contains("append"));
+    }
+
+    @Test
+    void testTranslateUnstringStatement() {
+        // COBOL: UNSTRING WS-INPUT INTO WS-FIELD1 WS-FIELD2 WS-FIELD3
+        Statement unstringStmt = new Statement();
+        unstringStmt.setType(StatementType.UNSTRING);
+        unstringStmt.setSource("WS-INPUT");
+        unstringStmt.setTarget("WS-FIELD1,WS-FIELD2,WS-FIELD3");
+        unstringStmt.setExpression("DELIMITED BY ','");
+        
+        Paragraph paragraph = new Paragraph("TEST-UNSTRING");
+        paragraph.setStatements(List.of(unstringStmt));
+        
+        String result = translator.translateParagraph(paragraph, "Record");
+        
+        assertNotNull(result);
+        assertTrue(result.contains("// COBOL: UNSTRING"));
+        assertTrue(result.contains("split") || result.contains("parts"));
+    }
+
+    @Test
+    void testTranslateSearchStatement() {
+        // COBOL: SEARCH TABLE-ENTRY WHEN KEY = SEARCH-KEY
+        Statement searchStmt = new Statement();
+        searchStmt.setType(StatementType.SEARCH);
+        searchStmt.setSource("TABLE-ENTRY");
+        searchStmt.setCondition("KEY = SEARCH-KEY");
+        searchStmt.setExpression("LINEAR");
+        
+        Paragraph paragraph = new Paragraph("TEST-SEARCH");
+        paragraph.setStatements(List.of(searchStmt));
+        
+        String result = translator.translateParagraph(paragraph, "Record");
+        
+        assertNotNull(result);
+        assertTrue(result.contains("// COBOL: SEARCH"));
+        assertTrue(result.contains("for") || result.contains("idx"));
+    }
+
+    @Test
+    void testTranslateCallStatement() {
+        // COBOL: CALL 'SUBPROG' USING WS-PARAM1 WS-PARAM2
+        Statement callStmt = new Statement();
+        callStmt.setType(StatementType.CALL);
+        callStmt.setSource("'SUBPROG'");
+        callStmt.setExpression("USING WS-PARAM1 WS-PARAM2");
+        
+        Paragraph paragraph = new Paragraph("TEST-CALL");
+        paragraph.setStatements(List.of(callStmt));
+        
+        String result = translator.translateParagraph(paragraph, "Record");
+        
+        assertNotNull(result);
+        assertTrue(result.contains("// COBOL: CALL"));
+        assertTrue(result.contains("subprog") || result.contains("SUBPROG"));
+    }

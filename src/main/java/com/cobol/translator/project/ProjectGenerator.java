@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 
 /**
  * Generateur de structure de projet Maven Spring Boot.
@@ -67,6 +66,9 @@ public class ProjectGenerator {
         if (config.isGenerateDockerfile()) {
             generateDockerfile(projectPath);
         }
+
+        // Generer la classe principale Spring Boot Application
+        generateMainApplicationClass(projectPath);
 
         logger.info("Project structure created successfully at: {}", projectPath);
 
@@ -219,15 +221,20 @@ public class ProjectGenerator {
     }
 
     private String getDatabaseDependency() {
-        return switch (config.getDatabaseType().toUpperCase()) {
-            case "H2" -> """
+        // Always include H2 for development/testing, plus the configured database
+        String h2Dependency = """
+                <!-- H2 for development/testing -->
                 <dependency>
                     <groupId>com.h2database</groupId>
                     <artifactId>h2</artifactId>
                     <scope>runtime</scope>
                 </dependency>
                 """;
+
+        String productionDb = switch (config.getDatabaseType().toUpperCase()) {
+            case "H2" -> ""; // H2 already included above
             case "POSTGRESQL" -> """
+                <!-- PostgreSQL for production -->
                 <dependency>
                     <groupId>org.postgresql</groupId>
                     <artifactId>postgresql</artifactId>
@@ -235,6 +242,7 @@ public class ProjectGenerator {
                 </dependency>
                 """;
             case "MYSQL" -> """
+                <!-- MySQL for production -->
                 <dependency>
                     <groupId>com.mysql</groupId>
                     <artifactId>mysql-connector-j</artifactId>
@@ -242,6 +250,7 @@ public class ProjectGenerator {
                 </dependency>
                 """;
             case "ORACLE" -> """
+                <!-- Oracle for production -->
                 <dependency>
                     <groupId>com.oracle.database.jdbc</groupId>
                     <artifactId>ojdbc11</artifactId>
@@ -249,6 +258,7 @@ public class ProjectGenerator {
                 </dependency>
                 """;
             case "DB2" -> """
+                <!-- DB2 for production -->
                 <dependency>
                     <groupId>com.ibm.db2</groupId>
                     <artifactId>jcc</artifactId>
@@ -257,6 +267,8 @@ public class ProjectGenerator {
                 """;
             default -> "<!-- Database dependency not configured -->";
         };
+
+        return h2Dependency + productionDb;
     }
 
     private String getLombokDependency() {
@@ -318,11 +330,16 @@ public class ProjectGenerator {
             spring.batch.job.enabled=false
             spring.batch.jdbc.initialize-schema=always
 
-            # Database
-            spring.datasource.url=%s
-            spring.datasource.username=%s
-            spring.datasource.password=%s
-            spring.datasource.driver-class-name=%s
+            # Database (H2 in-memory for development - change to production DB as needed)
+            spring.datasource.url=jdbc:h2:mem:batchdb
+            spring.datasource.username=sa
+            spring.datasource.password=
+            spring.datasource.driver-class-name=org.h2.Driver
+            # Production database configuration (%s):
+            # spring.datasource.url=%s
+            # spring.datasource.username=%s
+            # spring.datasource.password=%s
+            # spring.datasource.driver-class-name=%s
 
             # JPA
             spring.jpa.hibernate.ddl-auto=update
@@ -345,6 +362,7 @@ public class ProjectGenerator {
             app.batch.skip-limit=%d
             """.formatted(
             config.getTargetProjectName(),
+            config.getDatabaseType(), // Database type name in comment
             config.getDatabaseUrl(),
             config.getDatabaseUsername(),
             config.getDatabasePassword(),
@@ -583,4 +601,69 @@ public class ProjectGenerator {
         Files.writeString(projectPath.resolve("Dockerfile"), dockerfile);
         logger.info("Generated Dockerfile");
     }
+
+    /**
+     * Genere la classe principale Spring Boot Application.
+     */
+    private void generateMainApplicationClass(Path projectPath) throws IOException {
+        // Convertir le nom du projet en PascalCase
+        String className = toPascalCase(config.getTargetProjectName()) + "Application";
+
+        String applicationClass = """
+            package %s;
+
+            import org.springframework.boot.SpringApplication;
+            import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+            /**
+             * Application principale Spring Boot.
+             * Generee automatiquement par le traducteur COBOL vers Java.
+             */
+            @SpringBootApplication
+            public class %s {
+
+                public static void main(String[] args) {
+                    SpringApplication.run(%s.class, args);
+                }
+            }
+            """.formatted(
+            config.getTargetPackageBase(),
+            className,
+            className
+        );
+
+        // Creer le chemin du fichier
+        String packagePath = config.getTargetPackageBase().replace('.', '/');
+        Path applicationClassPath = projectPath
+            .resolve("src/main/java")
+            .resolve(packagePath)
+            .resolve(className + ".java");
+
+        Files.writeString(applicationClassPath, applicationClass);
+        logger.info("Generated main application class: {}", className);
+    }
+
+    /**
+     * Convertit une chaine en PascalCase (ex: "mon-projet" -> "MonProjet").
+     */
+    private String toPascalCase(String input) {
+        if (input == null || input.isEmpty()) {
+            return "Application";
+        }
+
+        String[] parts = input.split("[-\\s_]+");
+        StringBuilder result = new StringBuilder();
+
+        for (String part : parts) {
+            if (!part.isEmpty()) {
+                result.append(part.substring(0, 1).toUpperCase());
+                if (part.length() > 1) {
+                    result.append(part.substring(1).toLowerCase());
+                }
+            }
+        }
+
+        return result.length() > 0 ? result.toString() : "Application";
+    }
 }
+

@@ -1,29 +1,26 @@
 package com.cobol.translator.service;
 
-import com.cobol.translator.parser.CobolParser;
-import com.cobol.translator.model.CobolProgram;
-import com.cobol.translator.model.DataItem;
-import com.cobol.translator.generator.JobConfigGenerator;
-import com.cobol.translator.generator.EntityGenerator;
-import com.cobol.translator.generator.ProcessorGenerator;
+import com.cobol.translator.CobolTranslator;
 import com.cobol.translator.config.TranslationConfig;
-import com.cobol.translator.jcl.parser.JCLParser;
-import com.cobol.translator.jcl.model.JCLJob;
-import com.cobol.translator.jcl.generator.JCLSpringBatchGenerator;
+import com.cobol.translator.config.TranslatorConfiguration;
+import com.cobol.translator.result.TranslationResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Properties;
 
 /**
  * Service for converting COBOL files to Spring Batch Java project
+ * Uses the full CobolTranslator to ensure same results as CLI
  */
 @Service
 public class CobolConversionService {
@@ -35,6 +32,7 @@ public class CobolConversionService {
 
     /**
      * Convert COBOL files to a complete Spring Batch project
+     * Now uses the full CobolTranslator to ensure same results as CLI
      *
      * @param cobolFiles List of COBOL source files
      * @param projectName Name of the target project
@@ -49,97 +47,134 @@ public class CobolConversionService {
                     projectName, basePackage, cobolFiles.size());
 
         // Create output directory structure using configured path
-        Path projectDir = createOutputDirectory(projectName);
-        Path srcMainJava = projectDir.resolve("src/main/java");
-        Path srcMainResources = projectDir.resolve("src/main/resources");
-        Path srcTestJava = projectDir.resolve("src/test/java");
-
-        Files.createDirectories(srcMainJava);
-        Files.createDirectories(srcMainResources);
-        Files.createDirectories(srcTestJava);
-
-        // Convert base package to directory structure
-        String packagePath = basePackage.replace('.', '/');
-        Path packageDir = srcMainJava.resolve(packagePath);
-        Files.createDirectories(packageDir);
-
-        // Create sub-packages for organization
-        Path batchDir = packageDir.resolve("batch");
-        Path modelDir = packageDir.resolve("model");
-        Path configDir = packageDir.resolve("config");
-
-        Files.createDirectories(batchDir);
-        Files.createDirectories(modelDir);
-        Files.createDirectories(configDir);
-
-        // Initialize generators
-        CobolParser parser = new CobolParser();
-        JobConfigGenerator jobGenerator = new JobConfigGenerator();
-        EntityGenerator entityGenerator = new EntityGenerator();
-        ProcessorGenerator processorGenerator = new ProcessorGenerator();
-
-        for (Path cobolFile : cobolFiles) {
-            try {
-                logger.info("Converting COBOL file: {}", cobolFile.getFileName());
-
-                // Parse COBOL file
-                String cobolSource = Files.readString(cobolFile);
-                CobolProgram program = parser.parse(cobolSource);
-
-                String programName = program.getProgramName();
-                if (programName == null || programName.isEmpty()) {
-                    programName = cobolFile.getFileName().toString().replace(".cob", "").replace(".cbl", "");
-                }
-
-                // Create translation configuration for this file
-                TranslationConfig config = TranslationConfig.builder()
-                        .sourceFile(cobolFile.toString())
-                        .outputPackage(basePackage + ".batch")
-                        .targetDirectory(batchDir.toString())
-                        .generateTests(false)
-                        .generateDocs(false)
-                        .generateReport(false)
-                        .build();
-
-                // Generate Spring Batch Job configuration
-                jobGenerator.generate(program, config, batchDir);
-                logger.info("Generated Job config for: {}", programName);
-
-                // Generate Entity class if working storage exists
-                if (!program.getWorkingStorageItems().isEmpty()) {
-                    TranslationConfig modelConfig = config.toBuilder()
-                            .outputPackage(basePackage + ".model")
-                            .targetDirectory(modelDir.toString())
-                            .build();
-                    entityGenerator.generate(program, modelConfig, modelDir);
-                    logger.info("Generated Entity for: {}", programName);
-                }
-
-                // Generate Item Processor
-                processorGenerator.generate(program, config, batchDir);
-                logger.info("Generated Processor for: {}", programName);
-
-            } catch (Exception e) {
-                logger.error("Error converting file: {}", cobolFile.getFileName(), e);
-                throw new IOException("Failed to convert " + cobolFile.getFileName() + ": " + e.getMessage(), e);
-            }
+        // IMPORTANT: Don't create a timestamp subdirectory - use projectName directly
+        Path baseOutputDir = Paths.get(outputTempDir);
+        if (!Files.exists(baseOutputDir)) {
+            Files.createDirectories(baseOutputDir);
+            logger.info("Created output base directory: {}", baseOutputDir);
         }
 
-        // Generate Spring Boot configuration files
-        generatePomXml(projectDir, projectName, basePackage);
-        generateApplicationProperties(srcMainResources);
-        generateBatchConfiguration(configDir, basePackage + ".config");
-        generateMainApplication(packageDir, basePackage, projectName);
-        generateReadme(projectDir, projectName);
+        // Use a simpler name without timestamp to avoid confusion
+        Path projectDir = baseOutputDir.resolve(projectName);
+        Files.createDirectories(projectDir);
 
-        logger.info("Conversion completed successfully. Project directory: {}", projectDir);
+        // Create custom properties for this web request to match CLI behavior
+        Properties webProperties = createWebTranslatorProperties(baseOutputDir, projectName, basePackage);
 
-        return projectDir;
+        // Save properties to temp file for CobolTranslator to load
+        Path tempPropertiesFile = baseOutputDir.resolve("translator-web-temp-" + projectName + ".properties");
+        try (FileOutputStream fos = new FileOutputStream(tempPropertiesFile.toFile())) {
+            webProperties.store(fos, "Temporary configuration for web request");
+        }
+
+        // Load translator with custom configuration
+        TranslatorConfiguration customConfig = TranslatorConfiguration.load(tempPropertiesFile.toString());
+        CobolTranslator customTranslator = new CobolTranslator(customConfig);
+
+        try {
+            // Convert each COBOL file using the full translator
+            List<TranslationResult> results = new ArrayList<>();
+            for (Path cobolFile : cobolFiles) {
+                try {
+                    logger.info("Converting COBOL file: {}", cobolFile.getFileName());
+
+                    // Create translation configuration for this file
+                    TranslationConfig config = TranslationConfig.builder()
+                            .sourceFile(cobolFile.toString())
+                            .outputPackage(basePackage)
+                            .targetDirectory(projectDir.toString())
+                            .generateTests(true)
+                            .generateDocs(true)
+                            .generateReport(true)
+                            .build();
+
+                    // Use the full translator - same as CLI!
+                    TranslationResult result = customTranslator.translate(config);
+                    results.add(result);
+
+                    if (!result.isSuccess()) {
+                        logger.error("Translation failed for: {} - {}", cobolFile.getFileName(), result.getErrorMessage());
+                        throw new IOException("Failed to convert " + cobolFile.getFileName() + ": " + result.getErrorMessage());
+                    }
+
+                    logger.info("Successfully converted: {} ({} files generated)",
+                        cobolFile.getFileName(),
+                        result.getGeneratedFiles().size());
+
+                } catch (Exception e) {
+                    logger.error("Error converting file: {}", cobolFile.getFileName(), e);
+                    throw new IOException("Failed to convert " + cobolFile.getFileName() + ": " + e.getMessage(), e);
+                }
+            }
+
+            // The actual project directory created by CobolTranslator
+            Path actualProjectDir = customConfig.getTargetProjectPath();
+
+            logger.info("Conversion completed successfully.");
+            logger.info("Configured project directory: {}", projectDir);
+            logger.info("Actual project directory: {}", actualProjectDir);
+            logger.info("Total files generated: {}", results.stream().mapToInt(r -> r.getGeneratedFiles().size()).sum());
+
+            // Return the actual directory where files were created
+            if (Files.exists(actualProjectDir) && Files.list(actualProjectDir).findAny().isPresent()) {
+                logger.info("Using actual project directory with files: {}", actualProjectDir);
+                return actualProjectDir;
+            } else {
+                logger.info("Using configured project directory: {}", projectDir);
+                return projectDir;
+            }
+
+        } finally {
+            // Clean up temp properties file
+            try {
+                Files.deleteIfExists(tempPropertiesFile);
+            } catch (IOException e) {
+                logger.warn("Could not delete temp properties file: {}", tempPropertiesFile);
+            }
+        }
+    }
+
+    /**
+     * Create translator properties for web requests to match CLI behavior
+     */
+    private Properties createWebTranslatorProperties(Path projectDir, String projectName, String basePackage) {
+        Properties props = new Properties();
+
+        // Project Configuration
+        props.setProperty("target.project.name", projectName);
+        props.setProperty("target.projects.directory", projectDir.getParent().toString());
+        props.setProperty("target.project.groupId", basePackage);
+        props.setProperty("target.project.version", "1.0.0-SNAPSHOT");
+        props.setProperty("target.project.description", "Spring Batch project generated from COBOL via Web Interface");
+
+        // Package Configuration
+        props.setProperty("target.package.base", basePackage);
+        props.setProperty("target.package.model", "model");
+        props.setProperty("target.package.processor", "processor");
+        props.setProperty("target.package.config", "config");
+
+        // Spring Boot versions
+        props.setProperty("spring.boot.version", "3.2.0");
+        props.setProperty("spring.batch.version", "5.1.0");
+        props.setProperty("java.version", "17");
+
+        // Enable all features to match CLI
+        props.setProperty("generate.tests", "true");
+        props.setProperty("generate.docs", "true");
+        props.setProperty("generate.report", "true");
+        props.setProperty("generate.readme", "true");
+        props.setProperty("generate.gitignore", "true");
+        props.setProperty("generate.spring.config", "true");
+        props.setProperty("copy.cobol.sources", "true");
+
+        return props;
     }
 
     /**
      * Generate pom.xml for the Spring Batch project
+     * @deprecated This method is no longer used - ProjectGenerator handles this now
      */
+    @Deprecated
     private void generatePomXml(Path projectDir, String projectName, String basePackage) throws IOException {
         String artifactId = projectName.toLowerCase().replace(" ", "-");
         String groupId = basePackage.substring(0, basePackage.lastIndexOf('.'));
@@ -225,7 +260,9 @@ public class CobolConversionService {
 
     /**
      * Generate application.properties
+     * @deprecated This method is no longer used - ProjectGenerator handles this now
      */
+    @Deprecated
     private void generateApplicationProperties(Path resourcesDir) throws IOException {
         String content = """
 # Application Configuration
@@ -257,7 +294,9 @@ logging.level.org.springframework.batch=INFO
 
     /**
      * Generate Spring Batch configuration class
+     * @deprecated This method is no longer used - ProjectGenerator handles this now
      */
+    @Deprecated
     private void generateBatchConfiguration(Path configDir, String packageName) throws IOException {
         String content = """
 package %s;
@@ -282,7 +321,9 @@ public class BatchConfiguration {
 
     /**
      * Generate main Spring Boot application class
+     * @deprecated This method is no longer used - ProjectGenerator handles this now
      */
+    @Deprecated
     private void generateMainApplication(Path packageDir, String basePackage, String projectName) throws IOException {
         String className = toPascalCase(projectName) + "Application";
 
@@ -310,7 +351,9 @@ public class %s {
 
     /**
      * Generate README.md
+     * @deprecated This method is no longer used - ProjectGenerator handles this now
      */
+    @Deprecated
     private void generateReadme(Path projectDir, String projectName) throws IOException {
         String content = """
 # %s
@@ -378,6 +421,7 @@ while implementing them as modern Spring Batch jobs.
     /**
      * Convert COBOL files with JCL to a complete Spring Batch project
      * This method uses JCL to automatically configure readers, writers, and job flow
+     * Now uses the full CobolTranslator to ensure same results as CLI
      *
      * @param cobolFiles List of COBOL source files
      * @param jclFile Optional JCL file for job configuration
@@ -393,89 +437,29 @@ while implementing them as modern Spring Batch jobs.
         logger.info("Starting conversion with JCL - Project: {}, Package: {}, COBOL Files: {}, JCL: {}",
                     projectName, basePackage, cobolFiles.size(), jclFile != null ? jclFile.getFileName() : "none");
 
-        // Create base project structure using configured path
-        Path projectDir = createOutputDirectory(projectName);
-        Path srcMainJava = projectDir.resolve("src/main/java");
-        Path srcMainResources = projectDir.resolve("src/main/resources");
+        // For now, JCL processing is handled by CobolTranslator automatically
+        // If a JCL file exists with the same name as COBOL file, it will be detected and used
+        // So we just need to ensure the JCL file is in the same directory as COBOL files
 
-        Files.createDirectories(srcMainJava);
-        Files.createDirectories(srcMainResources);
-
-        String packagePath = basePackage.replace('.', '/');
-        Path packageDir = srcMainJava.resolve(packagePath);
-        Files.createDirectories(packageDir);
-
-        // Parse and generate from COBOL files first
-        CobolParser cobolParser = new CobolParser();
-        EntityGenerator entityGenerator = new EntityGenerator();
-
-        for (Path cobolFile : cobolFiles) {
-            try {
-                logger.info("Processing COBOL file: {}", cobolFile.getFileName());
-
-                String cobolSource = Files.readString(cobolFile);
-                CobolProgram program = cobolParser.parse(cobolSource);
-
-                TranslationConfig config = TranslationConfig.builder()
-                        .sourceFile(cobolFile.toString())
-                        .outputPackage(basePackage + ".model")
-                        .targetDirectory(packageDir.resolve("model").toString())
-                        .generateTests(false)
-                        .generateDocs(false)
-                        .generateReport(false)
-                        .build();
-
-                // Generate entities from COBOL
-                if (!program.getWorkingStorageItems().isEmpty()) {
-                    Files.createDirectories(packageDir.resolve("model"));
-                    entityGenerator.generate(program, config, packageDir.resolve("model"));
-                }
-
-            } catch (Exception e) {
-                logger.error("Error processing COBOL file: {}", cobolFile.getFileName(), e);
+        // Create temp directory and copy JCL there if needed
+        if (jclFile != null && cobolFiles.size() > 0) {
+            Path cobolDir = cobolFiles.get(0).getParent();
+            Path jclTarget = cobolDir.resolve(jclFile.getFileName());
+            if (!jclFile.equals(jclTarget)) {
+                Files.copy(jclFile, jclTarget, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                logger.info("Copied JCL file to COBOL directory for auto-detection: {}", jclTarget);
             }
         }
 
-        // If JCL file provided, use it to generate Spring Batch configuration
-        if (jclFile != null) {
-            try {
-                logger.info("Processing JCL file: {}", jclFile.getFileName());
-
-                JCLParser jclParser = new JCLParser();
-                JCLJob jclJob = jclParser.parse(jclFile);
-
-                JCLSpringBatchGenerator jclGenerator = new JCLSpringBatchGenerator(basePackage + ".batch");
-                Path batchDir = packageDir.resolve("batch");
-                Files.createDirectories(batchDir);
-
-                List<Path> generatedFiles = jclGenerator.generateJobConfiguration(jclJob, srcMainJava);
-
-                logger.info("Generated {} files from JCL", generatedFiles.size());
-
-            } catch (Exception e) {
-                logger.error("Error processing JCL file: {}", jclFile.getFileName(), e);
-                // Continue without JCL - fall back to standard conversion
-            }
-        }
-
-        // Generate standard project files
-        Path configDir = packageDir.resolve("config");
-        Files.createDirectories(configDir);
-
-        generatePomXml(projectDir, projectName, basePackage);
-        generateApplicationProperties(srcMainResources);
-        generateBatchConfiguration(configDir, basePackage + ".config");
-        generateMainApplication(packageDir, basePackage, projectName);
-        generateReadme(projectDir, projectName);
-
-        logger.info("Conversion with JCL completed successfully. Project directory: {}", projectDir);
-
-        return projectDir;
+        // Use the standard conversion which will auto-detect and use JCL
+        return convertToSpringBatchProject(cobolFiles, projectName, basePackage);
     }
 
     /**
      * Create output directory using the configured base path
+     * @deprecated This method is no longer used - directories are created inline in convertToSpringBatchProject
      */
+    @Deprecated
     private Path createOutputDirectory(String projectName) throws IOException {
         // Create base directory if it doesn't exist
         Path basePath = Paths.get(outputTempDir);

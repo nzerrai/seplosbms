@@ -23,7 +23,14 @@
       "Bash(./generate_all_test_data.sh:*)",
       "Bash(mvn package:*)",
       "Bash(tree:*)",
-      "Bash(xargs:*)"
+      "Bash(xargs:*)",
+      "Bash(find:*)",
+      "Bash(sudo apt update:*)",
+      "Bash(sudo apt install:*)",
+      "Bash(./generate-html-guide.sh:*)",
+      "Bash(timeout 15 mvn spring-boot:run:*)",
+      "Bash(timeout 20 mvn spring-boot:run:*)",
+      "Bash(timeout 25 mvn spring-boot:run:*)"
     ]
   }
 }

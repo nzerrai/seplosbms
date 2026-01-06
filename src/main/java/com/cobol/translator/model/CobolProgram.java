@@ -18,6 +18,7 @@ public class CobolProgram {
     private List<FileDefinition> files = new ArrayList<>();
     private List<Statement> statements = new ArrayList<>();
     private List<String> copybooks = new ArrayList<>();
+    private List<Paragraph> paragraphs = new ArrayList<>();
 
     // Identification Division
     private String programId;
@@ -58,6 +59,11 @@ public class CobolProgram {
 
     public CobolProgram addCopybook(String copybook) {
         this.copybooks.add(copybook);
+        return this;
+    }
+
+    public CobolProgram addParagraph(Paragraph paragraph) {
+        this.paragraphs.add(paragraph);
         return this;
     }
 
@@ -112,6 +118,9 @@ public class CobolProgram {
     public void setFileDefinitions(List<FileDefinition> fileDefinitions) {
         this.fileDefinitions = fileDefinitions;
     }
+
+    public List<Paragraph> getParagraphs() { return paragraphs; }
+    public void setParagraphs(List<Paragraph> paragraphs) { this.paragraphs = paragraphs; }
 
     @Override
     public String toString() {

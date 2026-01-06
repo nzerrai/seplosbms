@@ -144,9 +144,31 @@ public class EntityGenerator {
     private List<DataItem> findElementaryFields(DataItem parentItem, CobolProgram program) {
         List<DataItem> result = new ArrayList<>();
 
-        // Find all data items that belong to this record
-        for (DataItem item : program.getDataItems()) {
-            if (item.getLevel() > 1 && item.isElementary() && item.getJavaType() != null) {
+        // Scope fields to the contiguous block following the parent 01 record until another
+        // top-level record (level <= parent level) is encountered. This avoids pulling in
+        // unrelated WORKING-STORAGE items into the entity.
+        List<DataItem> allItems = program.getDataItems();
+        int parentIdx = allItems.indexOf(parentItem);
+
+        if (parentIdx == -1) {
+            // Fallback to previous behavior if the parent is not found
+            for (DataItem item : allItems) {
+                if (item.getLevel() > 1 && item.isElementary() && item.getJavaType() != null) {
+                    result.add(item);
+                }
+            }
+            return result;
+        }
+
+        for (int i = parentIdx + 1; i < allItems.size(); i++) {
+            DataItem item = allItems.get(i);
+
+            // Stop when we reach another top-level or sibling record
+            if (item.getLevel() <= parentItem.getLevel()) {
+                break;
+            }
+
+            if (item.isElementary() && item.getJavaType() != null) {
                 result.add(item);
             }
         }

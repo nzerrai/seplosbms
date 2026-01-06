@@ -3,6 +3,7 @@ package com.cobol.translator.parser;
 import com.cobol.translator.model.CobolProgram;
 import com.cobol.translator.model.DataItem;
 import com.cobol.translator.model.FileDefinition;
+import com.cobol.translator.model.Paragraph;
 import com.cobol.translator.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,6 +59,7 @@ public class CobolParser {
         boolean inFileSection = false;
         boolean inWorkingStorage = false;
         FileDefinition currentFile = null;
+        Paragraph currentParagraph = null;
         int fillerCounter = 1;  // Counter for generating unique FILLER names
         DataItem lastDataItem = null;  // Track last data item for Level-88 parent linking
 
@@ -185,16 +187,50 @@ public class CobolParser {
 
             // Parse procedure division statements (simplified)
             if (inProcedureDivision) {
+                // Check if this is a paragraph name (ends with . and no statement keyword)
+                String trimmed = line.trim();
+                if (!trimmed.isEmpty() && trimmed.endsWith(".") && 
+                    !trimmed.toUpperCase().startsWith("MOVE") &&
+                    !trimmed.toUpperCase().startsWith("IF") &&
+                    !trimmed.toUpperCase().startsWith("PERFORM") &&
+                    !trimmed.toUpperCase().contains("DIVISION")) {
+                    
+                    // This is likely a paragraph name
+                    String paragraphName = trimmed.substring(0, trimmed.length() - 1).trim();
+                    if (paragraphName.matches("[A-Z0-9-]+")) {
+                        // Save previous paragraph if exists
+                        if (currentParagraph != null) {
+                            currentParagraph.setEndLine(i);
+                            program.addParagraph(currentParagraph);
+                        }
+                        
+                        // Start new paragraph
+                        currentParagraph = new Paragraph(paragraphName);
+                        currentParagraph.setStartLine(i + 1);
+                        logger.debug("Found paragraph: {}", paragraphName);
+                    }
+                }
+                
                 Statement statement = parseStatement(line, i + 1);
                 if (statement != null) {
                     program.addStatement(statement);
+                    if (currentParagraph != null) {
+                        currentParagraph.addStatement(statement);
+                    }
                 }
             }
         }
 
-        logger.info("Parsed {} data items and {} statements",
+        // Save last paragraph
+        if (currentParagraph != null) {
+            currentParagraph.setEndLine(lines.length);
+            program.addParagraph(currentParagraph);
+        }
+
+        logger.info("Parsed {} data items, {} statements, and {} paragraphs",
                    program.getDataItems().size(),
-                   program.getStatements().size());
+                   program.getStatements().size(),
+                   program.getParagraphs().size());
 
         return program;
     }

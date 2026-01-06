@@ -92,6 +92,25 @@ public class BusinessLogicTranslator {
             case DISPLAY:
                 return translateDisplay(stmt, recordType, indent);
             
+            // Phase 4: Advanced Statements
+            case GO_TO:
+                return translateGoTo(stmt, recordType, indent);
+            
+            case INSPECT:
+                return translateInspect(stmt, recordType, indent);
+            
+            case STRING:
+                return translateString(stmt, recordType, indent);
+            
+            case UNSTRING:
+                return translateUnstring(stmt, recordType, indent);
+            
+            case SEARCH:
+                return translateSearch(stmt, recordType, indent);
+            
+            case CALL:
+                return translateCall(stmt, recordType, indent);
+            
             default:
                 return translateGeneric(stmt, indent);
         }
@@ -136,6 +155,7 @@ public class BusinessLogicTranslator {
 
     /**
      * Translates COBOL EVALUATE statement to Java switch or if-else.
+     * Supports EVALUATE TRUE, regular EVALUATE, and EVALUATE ALSO patterns.
      */
     private String translateEvaluate(Statement stmt, String recordType, String indent) {
         StringBuilder code = new StringBuilder();
@@ -143,7 +163,11 @@ public class BusinessLogicTranslator {
         code.append(indent).append("// COBOL: EVALUATE ").append(stmt.getOriginalCobol() != null ? stmt.getOriginalCobol() : "").append("\n");
         
         String evaluateExpr = stmt.getExpression();
-        if (evaluateExpr != null && evaluateExpr.trim().toUpperCase().equals("TRUE")) {
+        
+        // Check for EVALUATE ALSO (multi-expression)
+        if (evaluateExpr != null && evaluateExpr.toUpperCase().contains("ALSO")) {
+            code.append(translateEvaluateAlso(stmt, recordType, indent));
+        } else if (evaluateExpr != null && evaluateExpr.trim().toUpperCase().equals("TRUE")) {
             // EVALUATE TRUE pattern - translate to if-else chain
             code.append(translateEvaluateTrue(stmt, recordType, indent));
         } else if (evaluateExpr != null && !evaluateExpr.trim().isEmpty()) {
@@ -151,6 +175,54 @@ public class BusinessLogicTranslator {
             code.append(translateEvaluateSwitch(stmt, recordType, indent));
         } else {
             code.append(indent).append("// TODO: Invalid EVALUATE statement\n");
+        }
+        
+        return code.toString();
+    }
+
+    /**
+     * Translates EVALUATE ALSO (multi-expression EVALUATE) to nested if-else.
+     * Example: EVALUATE STATUS ALSO ERROR-CODE
+     *          WHEN 'A' ALSO '01' ...
+     */
+    private String translateEvaluateAlso(Statement stmt, String recordType, String indent) {
+        StringBuilder code = new StringBuilder();
+        
+        if (stmt.getChildren() == null || stmt.getChildren().isEmpty()) {
+            code.append(indent).append("// TODO: EVALUATE ALSO with no WHEN clauses\n");
+            return code.toString();
+        }
+        
+        code.append(indent).append("// Multi-expression evaluation with ALSO\n");
+        
+        boolean first = true;
+        for (Statement whenClause : stmt.getChildren()) {
+            if (whenClause == null || whenClause.getCondition() == null) continue;
+            
+            // EVALUATE ALSO uses multiple conditions separated by ALSO
+            String conditions = whenClause.getCondition();
+            String javaCondition = translateCobolCondition(conditions);
+            
+            if (first) {
+                code.append(indent).append("if (").append(javaCondition).append(") {\n");
+                first = false;
+            } else {
+                code.append(indent).append("} else if (").append(javaCondition).append(") {\n");
+            }
+            
+            // Translate statements in WHEN clause
+            if (whenClause.getChildren() != null) {
+                for (Statement action : whenClause.getChildren()) {
+                    String actionCode = translateStatement(action, recordType, indent + "    ");
+                    if (actionCode != null && !actionCode.isEmpty()) {
+                        code.append(actionCode);
+                    }
+                }
+            }
+        }
+        
+        if (!first) {
+            code.append(indent).append("}\n\n");
         }
         
         return code.toString();
@@ -517,6 +589,41 @@ public class BusinessLogicTranslator {
     }
 
     /**
+     * Extracts a string literal (quoted value) from a COBOL expression.
+     * Returns the literal with Java quotes if found, otherwise returns quoted expression.
+     */
+    private String extractStringLiteral(String text) {
+        if (text == null || text.isEmpty()) {
+            return "\"\"";
+        }
+        
+        text = text.trim();
+        
+        // Look for single-quoted string
+        int singleStart = text.indexOf("'");
+        if (singleStart >= 0) {
+            int singleEnd = text.indexOf("'", singleStart + 1);
+            if (singleEnd > singleStart) {
+                String literal = text.substring(singleStart + 1, singleEnd);
+                return "\"" + literal + "\"";
+            }
+        }
+        
+        // Look for double-quoted string
+        int doubleStart = text.indexOf("\"");
+        if (doubleStart >= 0) {
+            int doubleEnd = text.indexOf("\"", doubleStart + 1);
+            if (doubleEnd > doubleStart) {
+                String literal = text.substring(doubleStart + 1, doubleEnd);
+                return "\"" + literal + "\"";
+            }
+        }
+        
+        // No quoted string found, return as is with quotes
+        return "\"" + text + "\"";
+    }
+
+    /**
      * Translates arithmetic expression with better variable handling.
      */
     private String translateArithmeticExpression(String expr, String recordType) {
@@ -650,5 +757,441 @@ public class BusinessLogicTranslator {
     private String generateTodoComment(Paragraph paragraph) {
         return "        // TODO: Implement logic from COBOL paragraph: " + 
                (paragraph != null ? paragraph.getName() : "unknown") + "\n";
+    }
+
+    // ==================== Phase 4: Advanced Statements ====================
+
+    /**
+     * Translates COBOL GO TO statement to Java.
+     * GO TO is discouraged in modern code, so we generate a comment with suggestion.
+     */
+    /**
+     * Translates COBOL GO TO statement.
+     * Supports both simple GO TO and GO TO DEPENDING ON variants.
+     */
+    private String translateGoTo(Statement stmt, String recordType, String indent) {
+        StringBuilder code = new StringBuilder();
+        
+        String paragraphName = stmt.getParagraphName();
+        if (paragraphName == null || paragraphName.trim().isEmpty()) {
+            return indent + "// TODO: GO TO statement without target paragraph\n";
+        }
+        
+        code.append(indent).append("// COBOL: GO TO ").append(paragraphName).append("\n");
+        code.append(indent).append("// WARNING: GO TO is discouraged - Consider refactoring to method calls\n");
+        
+        // For GO TO DEPENDING ON
+        if (stmt.getExpression() != null && stmt.getExpression().toUpperCase().contains("DEPENDING")) {
+            code.append(translateGotoDependingOn(stmt, recordType, indent));
+        } else {
+            // Simple GO TO - translate to method call with return
+            String methodName = toJavaMethodName(paragraphName);
+            code.append(indent).append(methodName).append("(record);\n");
+            code.append(indent).append("return; // Unconditional jump to ").append(paragraphName).append("\n");
+        }
+        
+        return code.toString();
+    }
+
+    /**
+     * Translates GO TO DEPENDING ON statement.
+     * Example: GO TO PARA-100 PARA-200 PARA-300 DEPENDING ON WS-INDEX
+     */
+    private String translateGotoDependingOn(Statement stmt, String recordType, String indent) {
+        StringBuilder code = new StringBuilder();
+        
+        String indexVar = stmt.getExpression();
+        if (indexVar == null) {
+            code.append(indent).append("// TODO: GO TO DEPENDING ON requires index variable\n");
+            return code.toString();
+        }
+        
+        // Extract "DEPENDING ON variable"
+        String depVar = indexVar.replaceAll("(?i).*DEPENDING\\s+ON\\s+(\\S+).*", "$1");
+        String javaIndex = toJavaGetter(depVar, recordType);
+        
+        code.append(indent).append("switch (").append(javaIndex).append(") {\n");
+        
+        // Multiple paragraphs to jump to
+        // Children contain the alternative paragraphs
+        if (stmt.getChildren() != null) {
+            int caseNum = 1;
+            for (Statement para : stmt.getChildren()) {
+                if (para.getParagraphName() != null) {
+                    String methodName = toJavaMethodName(para.getParagraphName());
+                    code.append(indent).append("    case ").append(caseNum).append(":\n");
+                    code.append(indent).append("        ").append(methodName).append("(record);\n");
+                    code.append(indent).append("        return;\n");
+                    caseNum++;
+                }
+            }
+        } else {
+            code.append(indent).append("    // TODO: Add multiple paragraph destinations\n");
+        }
+        
+        code.append(indent).append("    default:\n");
+        code.append(indent).append("        // TODO: Handle out-of-range case\n");
+        code.append(indent).append("}\n");
+        
+        return code.toString();
+    }
+
+    /**
+     * Translates COBOL INSPECT statement to Java string operations.
+     * Supports INSPECT TALLYING (count characters) and INSPECT REPLACING (replace characters).
+     */
+    private String translateInspect(Statement stmt, String recordType, String indent) {
+        StringBuilder code = new StringBuilder();
+        
+        String target = stmt.getTarget();
+        if (target == null || target.trim().isEmpty()) {
+            return indent + "// TODO: INSPECT statement without target field\n";
+        }
+        
+        code.append(indent).append("// COBOL: INSPECT ").append(target).append("\n");
+        
+        String operation = stmt.getExpression();
+        if (operation == null || operation.trim().isEmpty()) {
+            return indent + "// TODO: INSPECT without operation\n";
+        }
+        
+        operation = operation.toUpperCase();
+        
+        if (operation.contains("TALLYING")) {
+            // INSPECT field TALLYING counter FOR [ALL|LEADING|FIRST] 'char'
+            // Extract counter variable (e.g., WS-COUNT)
+            String[] parts = operation.split("FOR");
+            if (parts.length >= 2) {
+                String counterPart = parts[0].replace("TALLYING", "").trim();
+                String forPart = parts[1].trim();
+                
+                // Extract the character to count (e.g., 'A' from FOR ALL 'A')
+                String charToCount = extractStringLiteral(forPart);
+                String countMode = "ALL"; // Default mode
+                
+                if (forPart.contains("LEADING")) {
+                    countMode = "LEADING";
+                } else if (forPart.contains("FIRST")) {
+                    countMode = "FIRST";
+                } else if (forPart.contains("ALL")) {
+                    countMode = "ALL";
+                }
+                
+                String targetGetter = toJavaGetter(target, recordType);
+                String counterSetter = toJavaSetter(counterPart, recordType);
+                
+                code.append(indent).append("String inspectStr = ").append(targetGetter).append(";\n");
+                code.append(indent).append("int tallyCount = 0;\n");
+                
+                if (countMode.equals("ALL")) {
+                    // Count all occurrences
+                    code.append(indent).append("for (int i = 0; i < inspectStr.length(); i++) {\n");
+                    code.append(indent).append("    if (String.valueOf(inspectStr.charAt(i)).equals(").append(charToCount).append(")) {\n");
+                    code.append(indent).append("        tallyCount++;\n");
+                    code.append(indent).append("    }\n");
+                    code.append(indent).append("}\n");
+                } else if (countMode.equals("LEADING")) {
+                    // Count leading occurrences only
+                    code.append(indent).append("for (int i = 0; i < inspectStr.length(); i++) {\n");
+                    code.append(indent).append("    if (String.valueOf(inspectStr.charAt(i)).equals(").append(charToCount).append(")) {\n");
+                    code.append(indent).append("        tallyCount++;\n");
+                    code.append(indent).append("    } else {\n");
+                    code.append(indent).append("        break;\n");
+                    code.append(indent).append("    }\n");
+                    code.append(indent).append("}\n");
+                }
+                
+                code.append(indent).append(counterSetter).append("(String.valueOf(tallyCount));\n");
+            } else {
+                code.append(indent).append("// TODO: Parse TALLYING clause properly\n");
+            }
+            
+        } else if (operation.contains("REPLACING")) {
+            // INSPECT field REPLACING [ALL|LEADING|FIRST] 'old' BY 'new'
+            String[] parts = operation.split("BY");
+            if (parts.length >= 2) {
+                String beforeBy = parts[0]; // Contains REPLACING ... 'old'
+                String newChar = extractStringLiteral(parts[1]);
+                String oldChar = extractStringLiteral(beforeBy);
+                
+                String replaceMode = "ALL"; // Default
+                if (beforeBy.contains("LEADING")) {
+                    replaceMode = "LEADING";
+                } else if (beforeBy.contains("FIRST")) {
+                    replaceMode = "FIRST";
+                }
+                
+                String targetGetter = toJavaGetter(target, recordType);
+                String targetSetter = toJavaSetter(target, recordType);
+                
+                code.append(indent).append("String replaceStr = ").append(targetGetter).append(";\n");
+                
+                if (replaceMode.equals("ALL")) {
+                    // Replace all occurrences
+                    code.append(indent).append("replaceStr = replaceStr.replace(").append(oldChar).append(", ").append(newChar).append(");\n");
+                } else if (replaceMode.equals("LEADING")) {
+                    // Replace leading occurrences only
+                    code.append(indent).append("StringBuilder sb = new StringBuilder(replaceStr);\n");
+                    code.append(indent).append("for (int i = 0; i < sb.length(); i++) {\n");
+                    code.append(indent).append("    if (String.valueOf(sb.charAt(i)).equals(").append(oldChar).append(")) {\n");
+                    code.append(indent).append("        sb.setCharAt(i, ").append(newChar).append(".charAt(0));\n");
+                    code.append(indent).append("    } else {\n");
+                    code.append(indent).append("        break;\n");
+                    code.append(indent).append("    }\n");
+                    code.append(indent).append("}\n");
+                    code.append(indent).append("replaceStr = sb.toString();\n");
+                } else if (replaceMode.equals("FIRST")) {
+                    // Replace only first occurrence
+                    code.append(indent).append("int idx = replaceStr.indexOf(").append(oldChar).append(");\n");
+                    code.append(indent).append("if (idx >= 0) {\n");
+                    code.append(indent).append("    replaceStr = replaceStr.substring(0, idx) + ").append(newChar).append(" + replaceStr.substring(idx + 1);\n");
+                    code.append(indent).append("}\n");
+                }
+                
+                code.append(indent).append(targetSetter).append("(replaceStr);\n");
+            } else {
+                code.append(indent).append("// TODO: Parse REPLACING clause properly\n");
+            }
+            
+        } else {
+            code.append(indent).append("// TODO: Unsupported INSPECT operation\n");
+        }
+        
+        return code.toString();
+    }
+
+    /**
+     * Translates COBOL STRING statement to Java StringBuilder operations.
+     */
+    private String translateString(Statement stmt, String recordType, String indent) {
+        StringBuilder code = new StringBuilder();
+        
+        String target = stmt.getTarget();
+        if (target == null || target.trim().isEmpty()) {
+            return indent + "// TODO: STRING statement without INTO target\n";
+        }
+        
+        code.append(indent).append("// COBOL: STRING ... INTO ").append(target).append("\n");
+        code.append(indent).append("StringBuilder stringBuilder = new StringBuilder();\n");
+        
+        // Source fields from statement
+        String source = stmt.getSource();
+        if (source != null && !source.trim().isEmpty()) {
+            String[] sources = source.split(",");
+            for (String src : sources) {
+                src = src.trim();
+                if (!src.isEmpty()) {
+                    code.append(indent).append("stringBuilder.append(")
+                        .append(toJavaExpression(src, recordType)).append(");\n");
+                }
+            }
+        } else {
+            code.append(indent).append("// TODO: Add source fields to STRING\n");
+        }
+        
+        String setter = toJavaSetter(target, recordType);
+        code.append(indent).append(setter).append("(stringBuilder.toString());\n");
+        
+        return code.toString();
+    }
+
+    /**
+     * Translates COBOL UNSTRING statement to Java String split operations.
+     * Supports DELIMITED BY clause with customizable delimiters.
+     */
+    private String translateUnstring(Statement stmt, String recordType, String indent) {
+        StringBuilder code = new StringBuilder();
+        
+        String source = stmt.getSource();
+        if (source == null || source.trim().isEmpty()) {
+            return indent + "// TODO: UNSTRING statement without source field\n";
+        }
+        
+        code.append(indent).append("// COBOL: UNSTRING ").append(source).append("\n");
+        
+        // Get delimiter from expression - defaults to space or comma
+        String delimiter = " "; // Default to space
+        String delimiterStr = "\" \"";
+        
+        if (stmt.getExpression() != null) {
+            String expr = stmt.getExpression().toUpperCase();
+            if (expr.contains("DELIMITED")) {
+                // Extract the delimiter: DELIMITED BY 'char' or DELIMITED BY ','
+                String delim = extractStringLiteral(expr.substring(expr.indexOf("BY") + 2));
+                if (!delim.equals("\"\"")) {
+                    delimiterStr = delim;
+                    // Extract just the character for Java regex
+                    delimiter = delim.replace("\"", "");
+                }
+            }
+        }
+        
+        // Escape special regex characters
+        String escapedDelim = delimiter
+            .replace("\\", "\\\\")
+            .replace(".", "\\.")
+            .replace("*", "\\*")
+            .replace("+", "\\+")
+            .replace("?", "\\?")
+            .replace("[", "\\[")
+            .replace("]", "\\]")
+            .replace("(", "\\(")
+            .replace(")", "\\)")
+            .replace("|", "\\|")
+            .replace("^", "\\^")
+            .replace("$", "\\$");
+        
+        String getter = toJavaGetter(source, recordType);
+        code.append(indent).append("String sourceStr = ").append(getter).append(";\n");
+        code.append(indent).append("String[] parts = sourceStr.split(\"").append(escapedDelim).append("\");\n");
+        
+        // Target fields
+        String target = stmt.getTarget();
+        if (target != null && !target.trim().isEmpty()) {
+            String[] targets = target.split(",");
+            for (int i = 0; i < targets.length; i++) {
+                String tgt = targets[i].trim();
+                if (!tgt.isEmpty()) {
+                    String setter = toJavaSetter(tgt, recordType);
+                    code.append(indent).append("if (parts.length > ").append(i).append(") {\n");
+                    code.append(indent).append("    ").append(setter).append("(parts[").append(i).append("].trim());\n");
+                    code.append(indent).append("} else {\n");
+                    code.append(indent).append("    ").append(setter).append("(\"\");\n");
+                    code.append(indent).append("}\n");
+                }
+            }
+        } else {
+            code.append(indent).append("// TODO: Add target fields for UNSTRING\n");
+        }
+        
+        return code.toString();
+    }
+
+    /**
+     * Translates COBOL SEARCH statement to Java linear or binary search.
+     * Supports SEARCH (linear) and SEARCH ALL (binary search on sorted table).
+     */
+    private String translateSearch(Statement stmt, String recordType, String indent) {
+        StringBuilder code = new StringBuilder();
+        
+        String tableName = stmt.getSource(); // Array/table name
+        if (tableName == null || tableName.trim().isEmpty()) {
+            return indent + "// TODO: SEARCH statement without table name\n";
+        }
+        
+        code.append(indent).append("// COBOL: SEARCH ").append(tableName).append("\n");
+        
+        // Check if it's SEARCH ALL (binary search) or simple SEARCH (linear)
+        boolean isSearchAll = stmt.getExpression() != null && 
+                              stmt.getExpression().toUpperCase().contains("ALL");
+        
+        if (isSearchAll) {
+            // Binary search on sorted table
+            code.append(indent).append("// SEARCH ALL (binary search on sorted table)\n");
+            
+            String varName = tableName.toLowerCase();
+            if (varName.endsWith("s")) {
+                varName = varName.substring(0, varName.length() - 1); // Remove 's' for singular
+            }
+            
+            code.append(indent).append("int searchIndex = java.util.Arrays.binarySearch(").append(tableName)
+                .append(", 0, ").append(tableName).append(".length, null"); // TODO: add search key
+            code.append(");\n");
+            code.append(indent).append("if (searchIndex >= 0) {\n");
+            
+            // WHEN condition/actions when found
+            if (stmt.getChildren() != null && !stmt.getChildren().isEmpty()) {
+                for (Statement action : stmt.getChildren()) {
+                    String actionCode = translateStatement(action, recordType, indent + "    ");
+                    if (actionCode != null && !actionCode.isEmpty()) {
+                        code.append(actionCode);
+                    }
+                }
+            } else {
+                code.append(indent).append("    // TODO: Add action when found\n");
+            }
+            
+            code.append(indent).append("} else {\n");
+            code.append(indent).append("    // TODO: Add action when NOT found\n");
+            code.append(indent).append("}\n");
+            
+        } else {
+            // Linear search
+            code.append(indent).append("// SEARCH (linear search)\n");
+            code.append(indent).append("boolean found = false;\n");
+            code.append(indent).append("int searchIndex = -1;\n");
+            code.append(indent).append("for (int idx = 0; idx < ").append(tableName).append(".length; idx++) {\n");
+            
+            // WHEN condition
+            if (stmt.getCondition() != null) {
+                String javaCondition = translateCobolCondition(stmt.getCondition());
+                code.append(indent).append("    if (").append(javaCondition).append(") {\n");
+                code.append(indent).append("        found = true;\n");
+                code.append(indent).append("        searchIndex = idx;\n");
+                
+                // Execute child statements if found
+                if (stmt.getChildren() != null && !stmt.getChildren().isEmpty()) {
+                    for (Statement action : stmt.getChildren()) {
+                        String actionCode = translateStatement(action, recordType, indent + "        ");
+                        if (actionCode != null && !actionCode.isEmpty()) {
+                            code.append(actionCode);
+                        }
+                    }
+                }
+                
+                code.append(indent).append("        break;\n");
+                code.append(indent).append("    }\n");
+            } else {
+                code.append(indent).append("    // TODO: Add WHEN condition\n");
+            }
+            
+            code.append(indent).append("}\n");
+            code.append(indent).append("// found = false if no match, searchIndex = -1\n");
+        }
+        
+        return code.toString();
+    }
+
+    /**
+     * Translates COBOL CALL statement to Java method invocation.
+     */
+    private String translateCall(Statement stmt, String recordType, String indent) {
+        StringBuilder code = new StringBuilder();
+        
+        String programName = stmt.getSource(); // Called program name
+        if (programName == null || programName.trim().isEmpty()) {
+            return indent + "// TODO: CALL statement without program name\n";
+        }
+        
+        // Clean up program name (remove quotes if present)
+        programName = programName.replace("'", "").replace("\"", "");
+        
+        code.append(indent).append("// COBOL: CALL '").append(programName).append("'\n");
+        
+        // Convert program name to Java method name
+        String methodName = toJavaMethodName(programName);
+        
+        // Parameters from USING clause
+        String params = stmt.getExpression(); // USING parameters
+        if (params != null && params.toUpperCase().contains("USING")) {
+            code.append(indent).append("// USING parameters specified\n");
+            // Extract parameter list
+            String[] paramList = params.replace("USING", "").trim().split("\\s+");
+            StringBuilder paramStr = new StringBuilder();
+            for (int i = 0; i < paramList.length; i++) {
+                if (i > 0) paramStr.append(", ");
+                paramStr.append(toJavaGetter(paramList[i], recordType));
+            }
+            code.append(indent).append(methodName).append("(").append(paramStr).append(");\n");
+        } else {
+            code.append(indent).append(methodName).append("();\n");
+        }
+        
+        // ON EXCEPTION handling
+        if (stmt.getCondition() != null && stmt.getCondition().toUpperCase().contains("EXCEPTION")) {
+            code.append(indent).append("// TODO: Add ON EXCEPTION handling\n");
+        }
+        
+        return code.toString();
     }
 }

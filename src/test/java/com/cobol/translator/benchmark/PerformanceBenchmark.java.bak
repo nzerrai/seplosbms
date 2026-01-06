@@ -1,0 +1,206 @@
+package com.cobol.translator.benchmark;
+
+import com.cobol.translator.parser.CobolASTParser;
+import com.cobol.translator.generator.EntityGenerator;
+import com.cobol.translator.generator.ProcessorGenerator;
+import com.cobol.translator.generator.JobConfigGenerator;
+import com.cobol.translator.semantic.SymbolTableBuilder;
+import com.cobol.translator.ast.ProgramNode;
+import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.RunnerException;
+import org.openjdk.jmh.runner.options.Options;
+import org.openjdk.jmh.runner.options.OptionsBuilder;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * JMH Benchmarks pour tester la performance du convertisseur
+ * 
+ * Exécution :
+ * mvn clean verify -DskipTests
+ * java -jar target/benchmarks.jar PerformanceBenchmark
+ */
+@BenchmarkMode(Mode.AverageTime)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
+@State(Scope.Benchmark)
+@Fork(value = 2, jvmArgs = {"-Xms1024m", "-Xmx2048m"})
+@Warmup(iterations = 3, time = 1)
+@Measurement(iterations = 5, time = 2)
+public class PerformanceBenchmark {
+
+    private CobolASTParser parser;
+    private EntityGenerator entityGenerator;
+    private ProcessorGenerator processorGenerator;
+    private JobConfigGenerator jobConfigGenerator;
+    private SymbolTableBuilder symbolTableBuilder;
+
+    // Test data - petit programme
+    private String smallProgram;
+    
+    // Test data - programme moyen
+    private String mediumProgram;
+    
+    // Test data - gros programme
+    private String largeProgram;
+
+    @Setup(Level.Trial)
+    public void setUp() throws Exception {
+        parser = new CobolASTParser();
+        entityGenerator = new EntityGenerator();
+        processorGenerator = new ProcessorGenerator();
+        jobConfigGenerator = new JobConfigGenerator();
+        symbolTableBuilder = new SymbolTableBuilder();
+
+        // Charger les programs de test
+        smallProgram = loadResource("small-program.cob");
+        mediumProgram = loadResource("medium-program.cob");
+        largeProgram = loadResource("large-program.cob");
+    }
+
+    // ==================== PARSING BENCHMARKS ====================
+
+    @Benchmark
+    public ProgramNode parseSmallProgram() {
+        return parser.parseString(smallProgram, "SMALL-PROG");
+    }
+
+    @Benchmark
+    public ProgramNode parseMediumProgram() {
+        return parser.parseString(mediumProgram, "MEDIUM-PROG");
+    }
+
+    @Benchmark
+    public ProgramNode parseLargeProgram() {
+        return parser.parseString(largeProgram, "LARGE-PROG");
+    }
+
+    // ==================== SYMBOL TABLE BUILDING ====================
+
+    @Benchmark
+    public Object buildSymbolTableSmall() {
+        ProgramNode ast = parser.parseString(smallProgram, "SMALL-PROG");
+        return symbolTableBuilder.buildSymbolTable(ast);
+    }
+
+    @Benchmark
+    public Object buildSymbolTableMedium() {
+        ProgramNode ast = parser.parseString(mediumProgram, "MEDIUM-PROG");
+        return symbolTableBuilder.buildSymbolTable(ast);
+    }
+
+    @Benchmark
+    public Object buildSymbolTableLarge() {
+        ProgramNode ast = parser.parseString(largeProgram, "LARGE-PROG");
+        return symbolTableBuilder.buildSymbolTable(ast);
+    }
+
+    // ==================== CODE GENERATION BENCHMARKS ====================
+
+    @Benchmark
+    public String generateEntitySmall() {
+        ProgramNode ast = parser.parseString(smallProgram, "SMALL-PROG");
+        return entityGenerator.generate(ast);
+    }
+
+    @Benchmark
+    public String generateEntityMedium() {
+        ProgramNode ast = parser.parseString(mediumProgram, "MEDIUM-PROG");
+        return entityGenerator.generate(ast);
+    }
+
+    @Benchmark
+    public String generateEntityLarge() {
+        ProgramNode ast = parser.parseString(largeProgram, "LARGE-PROG");
+        return entityGenerator.generate(ast);
+    }
+
+    @Benchmark
+    public String generateProcessorSmall() {
+        ProgramNode ast = parser.parseString(smallProgram, "SMALL-PROG");
+        return processorGenerator.generate(ast);
+    }
+
+    @Benchmark
+    public String generateProcessorMedium() {
+        ProgramNode ast = parser.parseString(mediumProgram, "MEDIUM-PROG");
+        return processorGenerator.generate(ast);
+    }
+
+    @Benchmark
+    public String generateJobConfigSmall() {
+        ProgramNode ast = parser.parseString(smallProgram, "SMALL-PROG");
+        return jobConfigGenerator.generate(ast);
+    }
+
+    // ==================== COMBINED WORKFLOW ====================
+
+    @Benchmark
+    public Object fullConversionSmall() {
+        ProgramNode ast = parser.parseString(smallProgram, "SMALL-PROG");
+        var symTable = symbolTableBuilder.buildSymbolTable(ast);
+        
+        String entity = entityGenerator.generate(ast);
+        String processor = processorGenerator.generate(ast);
+        String jobConfig = jobConfigGenerator.generate(ast);
+        
+        return new Object[]{entity, processor, jobConfig};
+    }
+
+    @Benchmark
+    public Object fullConversionMedium() {
+        ProgramNode ast = parser.parseString(mediumProgram, "MEDIUM-PROG");
+        var symTable = symbolTableBuilder.buildSymbolTable(ast);
+        
+        String entity = entityGenerator.generate(ast);
+        String processor = processorGenerator.generate(ast);
+        String jobConfig = jobConfigGenerator.generate(ast);
+        
+        return new Object[]{entity, processor, jobConfig};
+    }
+
+    @Benchmark
+    public Object fullConversionLarge() {
+        ProgramNode ast = parser.parseString(largeProgram, "LARGE-PROG");
+        var symTable = symbolTableBuilder.buildSymbolTable(ast);
+        
+        String entity = entityGenerator.generate(ast);
+        String processor = processorGenerator.generate(ast);
+        String jobConfig = jobConfigGenerator.generate(ast);
+        
+        return new Object[]{entity, processor, jobConfig};
+    }
+
+    // ==================== MEMORY FOOTPRINT ====================
+
+    @Benchmark
+    public long memoryUsageParsingSmall() {
+        Runtime runtime = Runtime.getRuntime();
+        long before = runtime.totalMemory() - runtime.freeMemory();
+        
+        parser.parseString(smallProgram, "SMALL-PROG");
+        
+        long after = runtime.totalMemory() - runtime.freeMemory();
+        return after - before;
+    }
+
+    // Helper methods
+    private String loadResource(String filename) throws Exception {
+        return Files.readString(
+            Paths.get("src/test/resources/benchmark/" + filename)
+        );
+    }
+
+    // Entry point
+    public static void main(String[] args) throws RunnerException {
+        Options opt = new OptionsBuilder()
+            .include(PerformanceBenchmark.class.getSimpleName())
+            .resultFormat(org.openjdk.jmh.results.format.ResultFormatType.JSON)
+            .result("benchmark-results.json")
+            .build();
+
+        new Runner(opt).run();
+    }
+}

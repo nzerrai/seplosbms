@@ -1,4 +1,4 @@
-// DOM elements
+// ===== DOM Elements =====
 const conversionForm = document.getElementById('conversionForm');
 const fileInput = document.getElementById('cobolFiles');
 const fileUploadArea = document.getElementById('fileUploadArea');
@@ -6,64 +6,111 @@ const fileList = document.getElementById('fileList');
 const convertBtn = document.getElementById('convertBtn');
 const progressSection = document.getElementById('progressSection');
 const progressFill = document.getElementById('progressFill');
-const progressText = document.getElementById('progressText');
+const progressPercent = document.getElementById('progressPercent');
 const resultSection = document.getElementById('resultSection');
 const errorSection = document.getElementById('errorSection');
 const errorMessage = document.getElementById('errorMessage');
 const downloadMessage = document.getElementById('downloadMessage');
+const spinner = document.getElementById('spinner');
+const themeBtn = document.getElementById('themeBtn');
+const advancedToggle = document.getElementById('advancedToggle');
+const advancedOptions = document.getElementById('advancedOptions');
 
 // Selected files array
 let selectedFiles = [];
+let conversionStartTime = null;
 
-// File upload drag and drop
+// ===== Theme Toggle =====
+themeBtn?.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    updateThemeIcon();
+});
+
+function updateThemeIcon() {
+    themeBtn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+}
+
+// Initialize theme from localStorage
+if (localStorage.getItem('theme') === 'dark') {
+    document.body.classList.add('dark-mode');
+    updateThemeIcon();
+}
+
+// ===== Advanced Options Toggle =====
+advancedToggle?.addEventListener('click', () => {
+    advancedToggle.classList.toggle('expanded');
+    advancedOptions.classList.toggle('show');
+});
+
+// ===== File Upload - Drag and Drop =====
 fileUploadArea.addEventListener('dragover', (e) => {
+    console.log('dragover event');
     e.preventDefault();
+    e.stopPropagation();
     fileUploadArea.classList.add('dragover');
 });
 
-fileUploadArea.addEventListener('dragleave', () => {
+fileUploadArea.addEventListener('dragleave', (e) => {
+    console.log('dragleave event');
+    e.preventDefault();
+    e.stopPropagation();
     fileUploadArea.classList.remove('dragover');
 });
 
 fileUploadArea.addEventListener('drop', (e) => {
+    console.log('drop event - files count:', e.dataTransfer.files.length);
     e.preventDefault();
+    e.stopPropagation();
     fileUploadArea.classList.remove('dragover');
 
     const files = Array.from(e.dataTransfer.files);
-    const cobolFiles = files.filter(file =>
-        file.name.endsWith('.cob') || file.name.endsWith('.cbl')
+    console.log('Files received:', files.map(f => f.name));
+    
+    const validFiles = files.filter(file =>
+        file.name.endsWith('.cob') || file.name.endsWith('.cbl') || file.name.endsWith('.jcl')
     );
 
-    if (cobolFiles.length > 0) {
-        addFiles(cobolFiles);
+    console.log('Valid files:', validFiles.map(f => f.name));
+
+    if (validFiles.length > 0) {
+        addFiles(validFiles);
     } else {
-        showError('Veuillez déposer des fichiers COBOL (.cob ou .cbl)');
+        showError('Veuillez déposer des fichiers COBOL (.cob, .cbl) ou JCL (.jcl)');
     }
 });
 
-// File input change
+// ===== File Input Change =====
 fileInput.addEventListener('change', (e) => {
     const files = Array.from(e.target.files);
     addFiles(files);
 });
 
-// Add files to the list
+// ===== File Upload Area Click =====
+fileUploadArea.addEventListener('click', () => {
+    fileInput.click();
+});
+
+// ===== Add Files =====
 function addFiles(files) {
+    console.log('addFiles called with:', files.length, 'files');
     files.forEach(file => {
         if (!selectedFiles.find(f => f.name === file.name)) {
             selectedFiles.push(file);
+            console.log('Added file:', file.name, 'Total now:', selectedFiles.length);
         }
     });
+    console.log('Final selectedFiles length:', selectedFiles.length);
     renderFileList();
 }
 
-// Remove file from list
+// ===== Remove File =====
 function removeFile(index) {
     selectedFiles.splice(index, 1);
     renderFileList();
 }
 
-// Render file list
+// ===== Render File List =====
 function renderFileList() {
     if (selectedFiles.length === 0) {
         fileList.innerHTML = '';
@@ -78,23 +125,23 @@ function renderFileList() {
                 <span class="file-item-name">📄 ${file.name}</span>
                 <span class="file-item-size">(${formatFileSize(file.size)})</span>
             </div>
-            <button type="button" class="file-item-remove" onclick="removeFile(${index})">
-                ✕ Retirer
-            </button>
+            <button type="button" class="file-remove-btn" onclick="removeFile(${index})" title="Retirer">✕</button>
         </div>
     `).join('');
 }
 
-// Format file size
+// ===== Format File Size =====
 function formatFileSize(bytes) {
     if (bytes < 1024) return bytes + ' B';
     if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
 }
 
-// Form submission
+// ===== Form Submission =====
 conversionForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    console.log('Form submit event - selectedFiles.length:', selectedFiles.length);
 
     // Validate form
     const projectName = document.getElementById('projectName').value.trim();
@@ -106,39 +153,48 @@ conversionForm.addEventListener('submit', async (e) => {
     }
 
     if (selectedFiles.length === 0) {
+        console.error('No files selected! selectedFiles:', selectedFiles);
         showError('Veuillez sélectionner au moins un fichier COBOL');
         return;
     }
 
     // Validate package name
-    const packageRegex = /^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)*$/;
+    const packageRegex = /^([a-z]+\.)*[a-z]+$/;
     if (basePackage && !packageRegex.test(basePackage)) {
         showError('Le nom du package n\'est pas valide (ex: com.example.batch)');
         return;
     }
 
-    // Hide previous results/errors
+    // Hide previous messages
     hideAllMessages();
 
-    // Show progress
-    showProgress('Préparation de la conversion...');
+    // Track time
+    conversionStartTime = Date.now();
+
+    // Disable button and show spinner
+    convertBtn.disabled = true;
+    spinner.classList.add('show');
 
     // Prepare form data
     const formData = new FormData();
     formData.append('projectName', projectName);
     formData.append('basePackage', basePackage || 'com.example.batch');
+    
+    // Add options
+    const generateTests = document.getElementById('generateTests').checked;
+    const generateDocs = document.getElementById('generateDocs').checked;
+    
+    formData.append('generateTests', generateTests);
+    formData.append('generateDocs', generateDocs);
 
     selectedFiles.forEach(file => {
         formData.append('files', file);
     });
 
-    // Disable button
-    convertBtn.disabled = true;
-    convertBtn.classList.add('loading');
-
     try {
-        // Update progress
-        updateProgress(20, 'Upload des fichiers COBOL...');
+        // Show progress
+        showProgress();
+        updateProgressStep('parsing', 'active');
 
         // Send request
         const response = await fetch('/conversion/upload', {
@@ -146,25 +202,30 @@ conversionForm.addEventListener('submit', async (e) => {
             body: formData
         });
 
-        updateProgress(50, 'Parsing des fichiers COBOL...');
+        updateProgressStep('parsing', 'done');
+        updateProgressStep('ast', 'active');
+        updateProgress(25);
 
         if (!response.ok) {
-            const errorData = await response.json();
-
-            // Check if it's a detailed error response
-            if (errorData.errorType) {
-                throw { detailed: true, data: errorData };
+            let errorData;
+            try {
+                errorData = await response.json();
+            } catch {
+                throw new Error(`Erreur serveur (${response.status})`);
             }
-
             throw new Error(errorData.error || 'Erreur lors de la conversion');
         }
 
-        updateProgress(75, 'Génération du projet Spring Batch...');
+        updateProgressStep('ast', 'done');
+        updateProgressStep('generation', 'active');
+        updateProgress(50);
 
         // Get the ZIP file
         const blob = await response.blob();
 
-        updateProgress(100, 'Téléchargement du projet...');
+        updateProgressStep('generation', 'done');
+        updateProgressStep('maven', 'active');
+        updateProgress(75);
 
         // Download the file
         const url = window.URL.createObjectURL(blob);
@@ -176,6 +237,9 @@ conversionForm.addEventListener('submit', async (e) => {
         window.URL.revokeObjectURL(url);
         document.body.removeChild(a);
 
+        updateProgressStep('maven', 'done');
+        updateProgress(100);
+
         // Show success
         setTimeout(() => {
             hideProgress();
@@ -185,132 +249,112 @@ conversionForm.addEventListener('submit', async (e) => {
     } catch (error) {
         console.error('Conversion error:', error);
         hideProgress();
-
-        // Handle detailed error response
-        if (error.detailed && error.data) {
-            showDetailedError(error.data);
-        } else {
-            showError(error.message || 'Une erreur est survenue lors de la conversion');
-        }
+        showError(error.message || 'Une erreur est survenue lors de la conversion');
     } finally {
         // Re-enable button
         convertBtn.disabled = false;
-        convertBtn.classList.remove('loading');
+        spinner.classList.remove('show');
     }
 });
 
-// Show progress
-function showProgress(message) {
+// ===== Progress Management =====
+function showProgress() {
     progressSection.classList.remove('hidden');
-    progressText.textContent = message;
     progressFill.style.width = '0%';
+    progressPercent.textContent = '0%';
 }
 
-// Update progress
-function updateProgress(percent, message) {
+function updateProgress(percent) {
     progressFill.style.width = percent + '%';
-    progressText.textContent = message;
+    progressPercent.textContent = percent + '%';
 }
 
-// Hide progress
+function updateProgressStep(stepId, status) {
+    const step = document.getElementById(`step-${stepId}`);
+    if (!step) return;
+    
+    step.classList.remove('active', 'done');
+    if (status === 'active') {
+        step.classList.add('active');
+        step.innerHTML = '<span class="step-icon">⏳</span> ' + step.textContent.trim().split(' ').slice(1).join(' ');
+    } else if (status === 'done') {
+        step.classList.add('done');
+        const label = step.textContent.trim().split(' ').slice(1).join(' ');
+        step.innerHTML = '<span class="step-icon">✅</span> ' + label;
+    }
+}
+
 function hideProgress() {
     progressSection.classList.add('hidden');
 }
 
-// Show success
+// ===== Success Management =====
 function showSuccess(projectName) {
+    const elapsed = Math.round((Date.now() - conversionStartTime) / 1000);
     resultSection.classList.remove('hidden');
-    downloadMessage.innerHTML = `
-        Le fichier <strong>${projectName}.zip</strong> a été téléchargé avec succès.<br>
-        Décompressez-le et exécutez <code>mvn clean package</code> pour compiler le projet.
-    `;
+    
+    const elapsedText = elapsed < 60 ? `${elapsed}s` : `${Math.round(elapsed/60)}m ${elapsed % 60}s`;
+    document.getElementById('timeElapsed').textContent = `(${elapsedText})`;
+    
+    downloadMessage.textContent = `Le fichier ${projectName}.zip a été généré avec succès. ${selectedFiles.length} fichier(s) COBOL converti(s).`;
+
+    // Set up action buttons
+    document.getElementById('downloadBtn').onclick = () => {
+        // The download happens automatically, show message
+        alert('Le fichier a été téléchargé. Voir le dossier Téléchargements.');
+    };
+
+    document.getElementById('resetBtn').onclick = () => {
+        resetForm();
+    };
 
     // Reset form after a delay
     setTimeout(() => {
-        selectedFiles = [];
-        renderFileList();
-        conversionForm.reset();
-    }, 1000);
+        resetForm();
+    }, 2000);
 }
 
-// Show error
+function resetForm() {
+    selectedFiles = [];
+    renderFileList();
+    conversionForm.reset();
+    resultSection.classList.add('hidden');
+}
+
+// ===== Error Management =====
 function showError(message) {
     errorSection.classList.remove('hidden');
     errorMessage.innerHTML = `<p>${escapeHtml(message)}</p>`;
-
-    // Auto-hide after 8 seconds
-    setTimeout(() => {
+    
+    document.getElementById('closeErrorBtn').onclick = () => {
         errorSection.classList.add('hidden');
-    }, 8000);
-}
-
-// Show detailed error with file, line, and suggestions
-function showDetailedError(errorData) {
-    errorSection.classList.remove('hidden');
-
-    let errorHTML = '<div class="detailed-error">';
-
-    // Error type header
-    const errorTypeLabel = {
-        'JCL_PARSE_ERROR': '❌ Erreur de syntaxe JCL',
-        'COBOL_PARSE_ERROR': '❌ Erreur de syntaxe COBOL',
-        'IO_ERROR': '❌ Erreur d\'entrée/sortie',
-        'CONVERSION_ERROR': '❌ Erreur de conversion'
     };
-
-    errorHTML += `<h4>${errorTypeLabel[errorData.errorType] || '❌ Erreur'}</h4>`;
-
-    // File name
-    if (errorData.fileName) {
-        errorHTML += `<p><strong>Fichier:</strong> ${escapeHtml(errorData.fileName)}</p>`;
-    }
-
-    // Line and column
-    if (errorData.lineNumber) {
-        errorHTML += `<p><strong>Ligne:</strong> ${errorData.lineNumber}`;
-        if (errorData.columnNumber !== null && errorData.columnNumber !== undefined) {
-            errorHTML += `, <strong>Colonne:</strong> ${errorData.columnNumber}`;
-        }
-        errorHTML += '</p>';
-    }
-
-    // Error message
-    if (errorData.errorMessage) {
-        errorHTML += `<p class="error-msg"><strong>Message:</strong> ${escapeHtml(errorData.errorMessage)}</p>`;
-    }
-
-    // Detailed message
-    if (errorData.detailedMessage) {
-        errorHTML += `<p class="error-detail">${escapeHtml(errorData.detailedMessage)}</p>`;
-    }
-
-    // Suggestion
-    if (errorData.suggestion) {
-        errorHTML += `<div class="error-suggestion">`;
-        errorHTML += `<strong>💡 Suggestion:</strong><br>`;
-        errorHTML += `${escapeHtml(errorData.suggestion)}`;
-        errorHTML += `</div>`;
-    }
-
-    errorHTML += '</div>';
-    errorMessage.innerHTML = errorHTML;
-
-    // Don't auto-hide detailed errors - user needs time to read them
 }
 
-// Escape HTML to prevent XSS
+// ===== Utility Functions =====
 function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
 }
 
-// Hide all messages
 function hideAllMessages() {
     progressSection.classList.add('hidden');
     resultSection.classList.add('hidden');
     errorSection.classList.add('hidden');
 }
 
-// Make removeFile available globally
-window.removeFile = removeFile;
+// ===== Tab Navigation =====
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const tabName = btn.dataset.tab;
+        
+        // Update buttons
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Update panes
+        document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+        document.getElementById(`tab-${tabName}`).classList.add('active');
+    });
+});

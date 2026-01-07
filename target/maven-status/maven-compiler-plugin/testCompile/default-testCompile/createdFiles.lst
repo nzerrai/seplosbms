@@ -1,0 +1,9 @@
+com/cobol/translator/generator/BusinessLogicTranslatorTest.class
+com/cobol/translator/FillerFieldTest.class
+com/cobol/translator/semantic/SemanticFoundationTest.class
+com/cobol/translator/vsam/VsamSupportTest.class
+com/cobol/translator/parser/CobolASTParserTest.class
+com/cobol/translator/generator/JobConfigGeneratorTest.class
+com/cobol/translator/copybook/CopybookResolverTest.class
+com/cobol/translator/CobolParserTest.class
+com/cobol/translator/generator/EntityGeneratorTest.class

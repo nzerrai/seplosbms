@@ -3,6 +3,7 @@ package com.cobol.translator;
 import com.cobol.translator.analyzer.CobolContextAnalyzer;
 import com.cobol.translator.config.TranslationConfig;
 import com.cobol.translator.config.TranslatorConfiguration;
+import com.cobol.translator.copybook.CopybookResolver;
 import com.cobol.translator.generator.*;
 import com.cobol.translator.jcl.generator.JCLSpringBatchGenerator;
 import com.cobol.translator.jcl.model.JCLJob;
@@ -15,6 +16,9 @@ import com.cobol.translator.project.ProjectGenerator;
 import com.cobol.translator.report.ConversionReport;
 import com.cobol.translator.report.ReportGenerator;
 import com.cobol.translator.result.TranslationResult;
+import com.cobol.translator.vsam.VsamFileAnalyzer;
+import com.cobol.translator.vsam.VsamFileInfo;
+import com.cobol.translator.vsam.VsamToJdbcMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,6 +53,9 @@ public class CobolTranslator {
     private final JobConfigGenerator jobConfigGenerator;
     private final TestGenerator testGenerator;
     private final TranslatorConfiguration translatorConfig;
+    private final CopybookResolver copybookResolver;
+    private final VsamFileAnalyzer vsamAnalyzer;
+    private final VsamToJdbcMapper vsamMapper;
 
     /**
      * Constructeur par defaut - charge la configuration depuis translator.properties
@@ -67,15 +74,48 @@ public class CobolTranslator {
         this.processorGenerator = new ProcessorGenerator();
         this.jobConfigGenerator = new JobConfigGenerator();
         this.testGenerator = new TestGenerator();
+        
+        // Initialize copybook resolver
+        this.copybookResolver = new CopybookResolver();
+        
+        // Initialize VSAM support
+        this.vsamAnalyzer = new VsamFileAnalyzer();
+        this.vsamMapper = new VsamToJdbcMapper(TranslationConfig.builder()
+            .outputPackage(translatorConfig.getTargetPackageBase())
+            .build());
 
         logger.info("CobolTranslator initialized with configuration: {}", translatorConfig);
+        logger.info("Copybook resolver and VSAM support enabled");
     }
 
     /**
      * Translates a single COBOL program to Java Spring Batch.
-     *
-     * @param config Translation configuration
-     * @return Translation result with generated files and metrics
+     *0: Resolve copybooks (if any)
+            logger.info("Resolving copybooks...");
+            String cobolSource = readFile(config.getSourceFile());
+            
+            // Configure copybook search paths
+            Path sourceDir = Paths.get(config.getSourceFile()).getParent();
+            if (sourceDir != null) {
+                copybookResolver.addSearchPath(sourceDir);
+                // Also check for copybooks subdirectory
+                Path copybooksDir = sourceDir.resolve("copybooks");
+                if (Files.exists(copybooksDir)) {
+                    copybookResolver.addSearchPath(copybooksDir);
+                }
+            }
+            
+            // Expand copybooks
+            cobolSource = copybookResolver.resolveAllCopybooks(cobolSource);
+            
+            if (!copybookResolver.getResolvedCopybooks().isEmpty()) {
+                logger.info("Resolved {} copybooks: {}", 
+                    copybookResolver.getResolvedCopybooks().size(),
+                    copybookResolver.getResolvedCopybooks());
+            }
+            
+            // Step 1: Parse COBOL program
+            logger.info("Parsing COBOL program..."cs
      */
     public TranslationResult translate(TranslationConfig config) {
         logger.info("Starting translation of: {}", config.getSourceFile());

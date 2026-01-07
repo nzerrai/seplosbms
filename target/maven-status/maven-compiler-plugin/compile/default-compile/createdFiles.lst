@@ -3,6 +3,7 @@ com/cobol/translator/ast/WriteStatementNode.class
 com/cobol/translator/ast/SearchStatementNode.class
 com/cobol/translator/grammar/CobolParser$SelectionSubjectContext.class
 com/cobol/translator/ast/FileDescriptionNode.class
+com/cobol/translator/vsam/VsamFileAnalyzer$VsamType.class
 com/cobol/translator/config/TranslationConfig$CodeStyle.class
 com/cobol/translator/controller/ConversionController$ErrorResponse.class
 com/cobol/translator/grammar/CobolParser$EndOfReelContext.class
@@ -18,6 +19,7 @@ com/cobol/translator/grammar/CobolParser$SortStatementContext.class
 com/cobol/translator/analyzer/CobolContextAnalyzer$WarningLevel.class
 com/cobol/translator/grammar/CobolParser$FileControlParagraphContext.class
 com/cobol/translator/config/TranslationConfig.class
+com/cobol/translator/copybook/RenamesHandler.class
 com/cobol/translator/grammar/CobolParser$CommentEntryContext.class
 com/cobol/translator/grammar/CobolParser$MoveStatementContext.class
 com/cobol/translator/grammar/CobolVisitor.class
@@ -29,6 +31,7 @@ com/cobol/translator/report/ConversionReport.class
 com/cobol/translator/model/Statement$StatementType.class
 com/cobol/translator/grammar/CobolParser$AtEndClauseContext.class
 com/cobol/translator/grammar/CobolParser$AcceptStatementContext.class
+com/cobol/translator/copybook/CopybookNotFoundException.class
 com/cobol/translator/ast/DataDivisionNode.class
 com/cobol/translator/grammar/CobolParser$NotAtEndClauseContext.class
 com/cobol/translator/ast/IdentifierNode.class
@@ -38,6 +41,7 @@ com/cobol/translator/grammar/CobolParser$StartStatementContext.class
 com/cobol/translator/grammar/JCLBaseVisitor.class
 com/cobol/translator/ast/ReadStatementNode.class
 com/cobol/translator/grammar/CobolParser$SegmentLimitClauseContext.class
+com/cobol/translator/copybook/RenamesHandler$RenameInfo.class
 com/cobol/translator/grammar/JCLParser$SysoutClassContext.class
 com/cobol/translator/grammar/JCLParser$CommentLineContext.class
 com/cobol/translator/CobolTranslatorWebApplication.class
@@ -60,6 +64,7 @@ com/cobol/translator/grammar/CobolParser$AssignClauseContext.class
 com/cobol/translator/ast/WorkingStorageSectionNode.class
 com/cobol/translator/ast/ComputeStatementNode.class
 com/cobol/translator/ast/InitializeStatementNode.class
+com/cobol/translator/copybook/CopybookResolver.class
 com/cobol/translator/grammar/CobolParser$ParagraphContext.class
 com/cobol/translator/grammar/CobolParser$AlphabetClauseContext.class
 com/cobol/translator/model/CobolProgram.class
@@ -87,6 +92,7 @@ com/cobol/translator/ast/EvaluateStatementNode.class
 com/cobol/translator/grammar/CobolParser$LiteralContext.class
 com/cobol/translator/CobolTranslator$TranslationMetrics.class
 com/cobol/translator/generator/TestGenerator.class
+com/cobol/translator/vsam/AlternateKeyInfo.class
 com/cobol/translator/grammar/CobolParser$AtEndOfPageClauseContext.class
 com/cobol/translator/grammar/CobolParser$UnstringStatementContext.class
 com/cobol/translator/grammar/CobolParser$CallStatementContext.class
@@ -98,6 +104,7 @@ com/cobol/translator/grammar/CobolParser$JustifiedClauseContext.class
 com/cobol/translator/grammar/CobolParser$ClassClauseContext.class
 com/cobol/translator/config/TranslationConfig$Builder.class
 com/cobol/translator/grammar/CobolParser$StringStatementContext.class
+com/cobol/translator/vsam/VsamFileAnalyzer.class
 com/cobol/translator/grammar/JCLParser$DispParameterContext.class
 com/cobol/translator/grammar/JCLParser$DdStatementContext.class
 com/cobol/translator/grammar/JCLParser$SysoutParameterContext.class
@@ -240,6 +247,7 @@ com/cobol/translator/ast/StringStatementNode.class
 com/cobol/translator/grammar/CobolParser$OccursDependingClauseContext.class
 com/cobol/translator/semantic/SymbolType.class
 com/cobol/translator/grammar/CobolParser$WorkingStorageSectionContext.class
+com/cobol/translator/vsam/VsamFileInfo.class
 com/cobol/translator/grammar/CobolParser$EnvironmentDivisionContext.class
 com/cobol/translator/CobolTranslatorCli.class
 com/cobol/translator/grammar/JCLParser$DsnParameterContext.class
@@ -254,6 +262,7 @@ com/cobol/translator/grammar/CobolParser$NotOnSizeErrorClauseContext.class
 com/cobol/translator/grammar/JCLParser$CommentContext.class
 com/cobol/translator/grammar/CobolParser$TimesPhraseContext.class
 com/cobol/translator/grammar/CobolParser$LinageClauseContext.class
+com/cobol/translator/vsam/VsamToJdbcMapper.class
 com/cobol/translator/parser/CobolParser.class
 com/cobol/translator/ast/ExitStatementNode.class
 com/cobol/translator/ast/ContinueStatementNode.class

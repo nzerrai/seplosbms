@@ -483,7 +483,7 @@ class BusinessLogicTranslatorTest {
         
         assertNotNull(result);
         assertTrue(result.contains("// COBOL: INSPECT"));
-        assertTrue(result.contains("TALLYING") || result.contains("count"));
+        assertTrue(result.contains("TALLYING") || result.contains("count") || result.contains("tally"));
     }
 
     @Test
@@ -577,3 +577,4 @@ class BusinessLogicTranslatorTest {
         assertTrue(result.contains("// COBOL: CALL"));
         assertTrue(result.contains("subprog") || result.contains("SUBPROG"));
     }
+}

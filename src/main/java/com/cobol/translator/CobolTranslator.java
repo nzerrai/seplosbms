@@ -81,6 +81,7 @@ public class CobolTranslator {
         // Initialize VSAM support
         this.vsamAnalyzer = new VsamFileAnalyzer();
         this.vsamMapper = new VsamToJdbcMapper(TranslationConfig.builder()
+            .sourceFile("dummy.cob")  // Dummy source file for initialization
             .outputPackage(translatorConfig.getTargetPackageBase())
             .build());
 

@@ -137,6 +137,64 @@
                             <span class="time-elapsed" id="timeElapsed"></span>
                         </div>
                         <p>Votre projet Spring Batch a été généré avec succès.</p>
+                        
+                        <!-- Rapport de conversion -->
+                        <div id="reportCard" class="report-card">
+                            <div class="report-header">
+                                <h4>📊 Rapport de Conversion</h4>
+                            </div>
+                            <div class="report-content">
+                                <div class="report-metric">
+                                    <div class="metric-label">Taux de conversion</div>
+                                    <div class="metric-value">
+                                        <div class="progress-bar-horizontal">
+                                            <div class="progress-fill-conversion" id="conversionProgressBar"></div>
+                                        </div>
+                                        <span id="conversionPercent" class="metric-number">0%</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="report-metric">
+                                    <div class="metric-label">Niveau de confiance</div>
+                                    <div class="metric-value">
+                                        <span id="confidenceIcon" class="confidence-icon"></span>
+                                        <span id="confidenceLevel" class="confidence-level"></span>
+                                    </div>
+                                    <div id="confidenceDescription" class="confidence-description"></div>
+                                </div>
+                                
+                                <div class="report-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-label">Instructions totales</span>
+                                        <span id="totalStatements" class="stat-value">0</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Converties</span>
+                                        <span id="convertedStatements" class="stat-value">0</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Partielles</span>
+                                        <span id="partialStatements" class="stat-value">0</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Non converties</span>
+                                        <span id="unconvertedStatements" class="stat-value">0</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="report-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-label">Data items totaux</span>
+                                        <span id="totalDataItems" class="stat-value">0</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Data items convertis</span>
+                                        <span id="convertedDataItems" class="stat-value">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <p id="downloadMessage" class="download-info"></p>
                         <div class="result-actions">
                             <button class="btn-primary" id="downloadBtn">⬇️ Télécharger le projet</button>

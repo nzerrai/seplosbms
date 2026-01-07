@@ -220,30 +220,24 @@ conversionForm.addEventListener('submit', async (e) => {
         updateProgressStep('generation', 'active');
         updateProgress(50);
 
-        // Get the ZIP file
-        const blob = await response.blob();
+        // Parse JSON response
+        const data = await response.json();
+        
+        if (!data.success) {
+            throw new Error(data.message || 'Erreur lors de la conversion');
+        }
 
         updateProgressStep('generation', 'done');
         updateProgressStep('maven', 'active');
         updateProgress(75);
 
-        // Download the file
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${projectName}.zip`;
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-
         updateProgressStep('maven', 'done');
         updateProgress(100);
 
-        // Show success
+        // Show success with conversion report
         setTimeout(() => {
             hideProgress();
-            showSuccess(projectName);
+            showSuccessWithReport(projectName, data);
         }, 500);
 
     } catch (error) {
@@ -307,11 +301,85 @@ function showSuccess(projectName) {
     document.getElementById('resetBtn').onclick = () => {
         resetForm();
     };
+}
 
-    // Reset form after a delay
-    setTimeout(() => {
+// New function to show success with conversion report
+function showSuccessWithReport(projectName, responseData) {
+    const elapsed = Math.round((Date.now() - conversionStartTime) / 1000);
+    resultSection.classList.remove('hidden');
+    
+    const elapsedText = elapsed < 60 ? `${elapsed}s` : `${Math.round(elapsed/60)}m ${elapsed % 60}s`;
+    document.getElementById('timeElapsed').textContent = `(${elapsedText})`;
+    
+    // Display conversion report if available
+    if (responseData.report) {
+        const report = responseData.report;
+        
+        // Update conversion percentage
+        const conversionPercent = report.conversionPercentage || 0;
+        document.getElementById('conversionProgressBar').style.width = conversionPercent + '%';
+        document.getElementById('conversionPercent').textContent = conversionPercent.toFixed(1) + '%';
+        
+        // Set progress bar color based on percentage
+        const progressBar = document.getElementById('conversionProgressBar');
+        if (conversionPercent >= 80) {
+            progressBar.style.backgroundColor = '#28a745';
+        } else if (conversionPercent >= 50) {
+            progressBar.style.backgroundColor = '#ffc107';
+        } else {
+            progressBar.style.backgroundColor = '#dc3545';
+        }
+        
+        // Update confidence level
+        document.getElementById('confidenceIcon').textContent = report.confidenceIcon || '❓';
+        document.getElementById('confidenceLevel').textContent = report.confidenceLevel || 'Unknown';
+        document.getElementById('confidenceDescription').textContent = report.confidenceDescription || '';
+        
+        // Update statement counts
+        document.getElementById('totalStatements').textContent = report.totalStatements || 0;
+        document.getElementById('convertedStatements').textContent = report.convertedStatements || 0;
+        document.getElementById('partialStatements').textContent = report.partiallyConvertedStatements || 0;
+        document.getElementById('unconvertedStatements').textContent = report.unconvertedStatements || 0;
+        
+        // Update data item counts
+        document.getElementById('totalDataItems').textContent = report.totalDataItems || 0;
+        document.getElementById('convertedDataItems').textContent = report.convertedDataItems || 0;
+        
+        downloadMessage.textContent = `${selectedFiles.length} fichier(s) COBOL converti(s) avec ${conversionPercent.toFixed(1)}% de réussite.`;
+    } else {
+        downloadMessage.textContent = `Le fichier ${projectName}.zip a été généré avec succès. ${selectedFiles.length} fichier(s) COBOL converti(s).`;
+    }
+
+    // Set up download button with base64 ZIP
+    const downloadBtn = document.getElementById('downloadBtn');
+    downloadBtn.onclick = () => {
+        if (responseData.zipFileBase64) {
+            // Decode base64 and create blob
+            const byteCharacters = atob(responseData.zipFileBase64);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], { type: 'application/zip' });
+            
+            // Create download link
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${projectName}.zip`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        } else {
+            alert('Fichier ZIP non disponible.');
+        }
+    };
+
+    document.getElementById('resetBtn').onclick = () => {
         resetForm();
-    }, 2000);
+    };
 }
 
 function resetForm() {

@@ -325,6 +325,20 @@ public class ConversionReport {
         statementTypeCounts.merge(type, 1, Integer::sum);
     }
 
+    // Additional getters for accessing report data
+    public String getSourceFile() { return sourceFile; }
+    public String getProgramName() { return programName; }
+    public LocalDateTime getConversionDate() { return conversionDate; }
+    public int getTotalStatements() { return totalStatements; }
+    public int getConvertedStatements() { return convertedStatements; }
+    public int getPartiallyConvertedStatements() { return partiallyConvertedStatements; }
+    public int getUnconvertedStatements() { return unconvertedStatements; }
+    public int getTotalDataItems() { return totalDataItems; }
+    public int getConvertedDataItems() { return convertedDataItems; }
+    public int getUnconvertedDataItems() { return unconvertedDataItems; }
+    public List<UnconvertedCase> getUnconvertedCases() { return unconvertedCases; }
+    public List<String> getWarnings() { return warnings; }
+
     public ConfidenceLevel getOverallConfidence() { return overallConfidence; }
 
     /**

@@ -2,6 +2,7 @@ package com.cobol.translator.controller;
 
 import com.cobol.translator.jcl.parser.JCLParseException;
 import com.cobol.translator.service.CobolConversionService;
+import com.cobol.translator.service.ConversionResult;
 import org.antlr.v4.runtime.RecognitionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Base64;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -118,17 +120,18 @@ public class ConversionController {
 
             // Convert COBOL files to Spring Batch project
             // If JCL file is provided, use enhanced conversion with JCL
-            Path outputDir;
+            ConversionResult result;
             if (jclFile != null) {
                 logger.info("Using JCL-enhanced conversion");
-                outputDir = conversionService.convertWithJCL(
+                result = conversionService.convertWithJCL(
                         cobolFiles, jclFile, projectName, basePackage);
             } else {
                 logger.info("Using standard COBOL conversion");
-                outputDir = conversionService.convertToSpringBatchProject(
+                result = conversionService.convertToSpringBatchProject(
                         cobolFiles, projectName, basePackage);
             }
 
+            Path outputDir = result.getProjectPath();
             logger.info("Conversion completed. Output directory: {}", outputDir);
 
             // Create ZIP file with the generated project
@@ -138,14 +141,19 @@ public class ConversionController {
             deleteDirectory(tempDir.toFile());
             deleteDirectory(outputDir.toFile());
 
-            // Return ZIP file
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-            headers.setContentDispositionFormData("attachment", projectName + ".zip");
+            // Create response with conversion report
+            ConversionResponse response = ConversionResponse.success(
+                    "Conversion completed successfully",
+                    projectName,
+                    result.getReport()
+            );
+            
+            // Encode ZIP file as base64 for JSON response
+            response.setZipFileBase64(Base64.getEncoder().encodeToString(zipBytes));
 
             return ResponseEntity.ok()
-                    .headers(headers)
-                    .body(zipBytes);
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(response);
 
         } catch (JCLParseException e) {
             logger.error("JCL parsing error", e);

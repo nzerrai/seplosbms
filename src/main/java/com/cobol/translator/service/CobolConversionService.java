@@ -4,6 +4,7 @@ import com.cobol.translator.CobolTranslator;
 import com.cobol.translator.config.TranslationConfig;
 import com.cobol.translator.config.TranslatorConfiguration;
 import com.cobol.translator.result.TranslationResult;
+import com.cobol.translator.report.ConversionReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,9 +38,9 @@ public class CobolConversionService {
      * @param cobolFiles List of COBOL source files
      * @param projectName Name of the target project
      * @param basePackage Base package for generated Java classes
-     * @return Path to the generated project directory
+     * @return ConversionResult with project path and conversion report
      */
-    public Path convertToSpringBatchProject(List<Path> cobolFiles,
+    public ConversionResult convertToSpringBatchProject(List<Path> cobolFiles,
                                             String projectName,
                                             String basePackage) throws IOException {
 
@@ -74,6 +75,7 @@ public class CobolConversionService {
         try {
             // Convert each COBOL file using the full translator
             List<TranslationResult> results = new ArrayList<>();
+            ConversionReport lastReport = null;
             for (Path cobolFile : cobolFiles) {
                 try {
                     logger.info("Converting COBOL file: {}", cobolFile.getFileName());
@@ -91,6 +93,11 @@ public class CobolConversionService {
                     // Use the full translator - same as CLI!
                     TranslationResult result = customTranslator.translate(config);
                     results.add(result);
+                    
+                    // Keep the last conversion report
+                    if (result.getConversionReport() != null) {
+                        lastReport = result.getConversionReport();
+                    }
 
                     if (!result.isSuccess()) {
                         logger.error("Translation failed for: {} - {}", cobolFile.getFileName(), result.getErrorMessage());
@@ -115,14 +122,17 @@ public class CobolConversionService {
             logger.info("Actual project directory: {}", actualProjectDir);
             logger.info("Total files generated: {}", results.stream().mapToInt(r -> r.getGeneratedFiles().size()).sum());
 
-            // Return the actual directory where files were created
+            // Return the actual directory where files were created along with the report
+            Path finalProjectDir;
             if (Files.exists(actualProjectDir) && Files.list(actualProjectDir).findAny().isPresent()) {
                 logger.info("Using actual project directory with files: {}", actualProjectDir);
-                return actualProjectDir;
+                finalProjectDir = actualProjectDir;
             } else {
                 logger.info("Using configured project directory: {}", projectDir);
-                return projectDir;
+                finalProjectDir = projectDir;
             }
+            
+            return new ConversionResult(finalProjectDir, lastReport);
 
         } finally {
             // Clean up temp properties file
@@ -427,9 +437,9 @@ while implementing them as modern Spring Batch jobs.
      * @param jclFile Optional JCL file for job configuration
      * @param projectName Name of the target project
      * @param basePackage Base package for generated Java classes
-     * @return Path to the generated project directory
+     * @return ConversionResult with project path and conversion report
      */
-    public Path convertWithJCL(List<Path> cobolFiles,
+    public ConversionResult convertWithJCL(List<Path> cobolFiles,
                                Path jclFile,
                                String projectName,
                                String basePackage) throws IOException {

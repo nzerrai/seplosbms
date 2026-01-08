@@ -229,8 +229,11 @@ public class ReportGenerator {
             case COMPUTE:
             case IF:
             case PERFORM:
+            case PERFORM_UNTIL:   // ✅ AJOUTÉ
             case READ:
             case WRITE:
+            case OPEN:            // ✅ AJOUTÉ
+            case CLOSE:           // ✅ AJOUTÉ
             case DISPLAY:
             case STOP_RUN:
                 return ConversionStatus.CONVERTED;

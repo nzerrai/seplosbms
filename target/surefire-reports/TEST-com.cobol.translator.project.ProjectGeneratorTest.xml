@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.cobol.translator.project.ProjectGeneratorTest" time="0.183" tests="40" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.cobol.translator.project.ProjectGeneratorTest" time="0.184" tests="40" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -13,7 +13,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="FR"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/java-21-openjdk-arm64/lib"/>
-    <property name="sun.java.command" value="/home/seplos/projets/cobol-to-java-translator/target/surefire/surefirebooter-20260108171040145_3.jar /home/seplos/projets/cobol-to-java-translator/target/surefire 2026-01-08T17-10-40_089-jvmRun1 surefire-20260108171040145_1tmp surefire_0-20260108171040145_2tmp"/>
+    <property name="sun.java.command" value="/home/seplos/projets/cobol-to-java-translator/target/surefire/surefirebooter-20260108171228179_3.jar /home/seplos/projets/cobol-to-java-translator/target/surefire 2026-01-08T17-12-28_128-jvmRun1 surefire-20260108171228179_1tmp surefire_0-20260108171228179_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="/home/seplos/projets/cobol-to-java-translator/target/test-classes:/home/seplos/projets/cobol-to-java-translator/target/classes:/home/seplos/.m2/repository/org/springframework/boot/spring-boot-starter-actuator/3.2.0/spring-boot-starter-actuator-3.2.0.jar:/home/seplos/.m2/repository/org/springframework/boot/spring-boot-starter/3.2.0/spring-boot-starter-3.2.0.jar:/home/seplos/.m2/repository/org/springframework/boot/spring-boot/3.2.0/spring-boot-3.2.0.jar:/home/seplos/.m2/repository/org/springframework/boot/spring-boot-autoconfigure/3.2.0/spring-boot-autoconfigure-3.2.0.jar:/home/seplos/.m2/repository/org/springframework/boot/spring-boot-starter-logging/3.2.0/spring-boot-starter-logging-3.2.0.jar:/home/seplos/.m2/repository/org/apache/logging/log4j/log4j-to-slf4j/2.21.1/log4j-to-slf4j-2.21.1.jar:/home/seplos/.m2/repository/org/apache/logging/log4j/log4j-api/2.21.1/log4j-api-2.21.1.jar:/home/seplos/.m2/repository/org/slf4j/jul-to-slf4j/2.0.9/jul-to-slf4j-2.0.9.jar:/home/seplos/.m2/repository/jakarta/annotation/jakarta.annotation-api/2.1.1/jakarta.annotation-api-2.1.1.jar:/home/seplos/.m2/repository/org/springframework/spring-core/6.1.1/spring-core-6.1.1.jar:/home/seplos/.m2/repository/org/springframework/spring-jcl/6.1.1/spring-jcl-6.1.1.jar:/home/seplos/.m2/repository/org/yaml/snakeyaml/2.2/snakeyaml-2.2.jar:/home/seplos/.m2/repository/org/springframework/boot/spring-boot-actuator-autoconfigure/3.2.0/spring-boot-actuator-autoconfigure-3.2.0.jar:/home/seplos/.m2/repository/org/springframework/boot/spring-boot-actuator/3.2.0/spring-boot-actuator-3.2.0.jar:/home/seplos/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.15.3/jackson-datatype-jsr310-2.15.3.jar:/home/seplos/.m2/repository/io/micrometer/micrometer-observation/1.12.0/micrometer-observation-1.12.0.jar:/home/seplos/.m2/repository/io/micrometer/micrometer-commons/1.12.0/micrometer-commons-1.12.0.jar:/home/seplos/.m2/repository/io/micrometer/micrometer-jakarta9/1.12.0/micrometer-jakarta9-1.12.0.jar:/home/seplos/.m2/repository/io/micrometer/micrometer-core/1.12.0/micrometer-core-1.12.0.jar:/home/seplos/.m2/repository/org/hdrhistogram/HdrHistogram/2.1.12/HdrHistogram-2.1.12.jar:/home/seplos/.m2/repository/org/latencyutils/LatencyUtils/2.0.3/LatencyUtils-2.0.3.jar:/home/seplos/.m2/repository/org/antlr/antlr4-runtime/4.13.1/antlr4-runtime-4.13.1.jar:/home/seplos/.m2/repository/org/apache/velocity/velocity-engine-core/2.3/velocity-engine-core-2.3.jar:/home/seplos/.m2/repository/org/freemarker/freemarker/2.3.32/freemarker-2.3.32.jar:/home/seplos/.m2/repository/commons-io/commons-io/2.15.1/commons-io-2.15.1.jar:/home/seplos/.m2/repository/org/apache/commons/commons-lang3/3.14.0/commons-lang3-3.14.0.jar:/home/seplos/.m2/repository/org/slf4j/slf4j-api/2.0.9/slf4j-api-2.0.9.jar:/home/seplos/.m2/repository/ch/qos/logback/logback-classic/1.4.11/logback-classic-1.4.11.jar:/home/seplos/.m2/repository/ch/qos/logback/logback-core/1.4.11/logback-core-1.4.11.jar:/home/seplos/.m2/repository/org/springframework/boot/spring-boot-starter-batch/3.2.0/spring-boot-starter-batch-3.2.0.jar:/home/seplos/.m2/repository/org/springframework/boot/spring-boot-starter-jdbc/3.2.0/spring-boot-starter-jdbc-3.2.0.jar:/home/seplos/.m2/repository/com/zaxxer/HikariCP/5.0.1/HikariCP-5.0.1.jar:/home/seplos/.m2/repository/org/springframework/spring-jdbc/6.1.1/spring-jdbc-6.1.1.jar:/home/seplos/.m2/repository/org/springframework/batch/spring-batch-core/5.1.0/spring-batch-core-5.1.0.jar:/home/seplos/.m2/repository/org/springframework/batch/spring-batch-infrastructure/5.1.0/spring-batch-infrastructure-5.1.0.jar:/home/seplos/.m2/repository/org/springframework/retry/spring-retry/2.0.4/spring-retry-2.0.4.jar:/home/seplos/.m2/repository/org/springframework/spring-aop/6.1.1/spring-aop-6.1.1.jar:/home/seplos/.m2/repository/org/springframework/spring-beans/6.1.1/spring-beans-6.1.1.jar:/home/seplos/.m2/repository/org/springframework/spring-context/6.1.1/spring-context-6.1.1.jar:/home/seplos/.m2/repository/org/springframework/spring-tx/6.1.1/spring-tx-6.1.1.jar:/home/seplos/.m2/repository/org/springframework/boot/spring-boot-starter-web/3.2.0/spring-boot-starter-web-3.2.0.jar:/home/seplos/.m2/repository/org/springframework/boot/spring-boot-starter-json/3.2.0/spring-boot-starter-json-3.2.0.jar:/home/seplos/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jdk8/2.15.3/jackson-datatype-jdk8-2.15.3.jar:/home/seplos/.m2/repository/com/fasterxml/jackson/module/jackson-module-parameter-names/2.15.3/jackson-module-parameter-names-2.15.3.jar:/home/seplos/.m2/repository/org/springframework/boot/spring-boot-starter-tomcat/3.2.0/spring-boot-starter-tomcat-3.2.0.jar:/home/seplos/.m2/repository/org/apache/tomcat/embed/tomcat-embed-core/10.1.16/tomcat-embed-core-10.1.16.jar:/home/seplos/.m2/repository/org/apache/tomcat/embed/tomcat-embed-el/10.1.16/tomcat-embed-el-10.1.16.jar:/home/seplos/.m2/repository/org/apache/tomcat/embed/tomcat-embed-websocket/10.1.16/tomcat-embed-websocket-10.1.16.jar:/home/seplos/.m2/repository/org/springframework/spring-web/6.1.1/spring-web-6.1.1.jar:/home/seplos/.m2/repository/org/springframework/spring-webmvc/6.1.1/spring-webmvc-6.1.1.jar:/home/seplos/.m2/repository/org/springframework/spring-expression/6.1.1/spring-expression-6.1.1.jar:/home/seplos/.m2/repository/org/springframework/boot/spring-boot-starter-thymeleaf/3.2.0/spring-boot-starter-thymeleaf-3.2.0.jar:/home/seplos/.m2/repository/org/thymeleaf/thymeleaf-spring6/3.1.2.RELEASE/thymeleaf-spring6-3.1.2.RELEASE.jar:/home/seplos/.m2/repository/org/thymeleaf/thymeleaf/3.1.2.RELEASE/thymeleaf-3.1.2.RELEASE.jar:/home/seplos/.m2/repository/org/attoparser/attoparser/2.0.7.RELEASE/attoparser-2.0.7.RELEASE.jar:/home/seplos/.m2/repository/org/unbescape/unbescape/1.1.6.RELEASE/unbescape-1.1.6.RELEASE.jar:/home/seplos/.m2/repository/com/h2database/h2/2.2.224/h2-2.2.224.jar:/home/seplos/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.15.3/jackson-databind-2.15.3.jar:/home/seplos/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.15.3/jackson-annotations-2.15.3.jar:/home/seplos/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.15.3/jackson-core-2.15.3.jar:/home/seplos/.m2/repository/info/picocli/picocli/4.7.5/picocli-4.7.5.jar:/home/seplos/.m2/repository/org/junit/jupiter/junit-jupiter/5.10.1/junit-jupiter-5.10.1.jar:/home/seplos/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.10.1/junit-jupiter-api-5.10.1.jar:/home/seplos/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/home/seplos/.m2/repository/org/junit/platform/junit-platform-commons/1.10.1/junit-platform-commons-1.10.1.jar:/home/seplos/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/seplos/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.10.1/junit-jupiter-params-5.10.1.jar:/home/seplos/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.10.1/junit-jupiter-engine-5.10.1.jar:/home/seplos/.m2/repository/org/junit/platform/junit-platform-engine/1.10.1/junit-platform-engine-1.10.1.jar:/home/seplos/.m2/repository/org/assertj/assertj-core/3.25.1/assertj-core-3.25.1.jar:/home/seplos/.m2/repository/net/bytebuddy/byte-buddy/1.14.10/byte-buddy-1.14.10.jar:/home/seplos/.m2/repository/org/mockito/mockito-core/5.8.0/mockito-core-5.8.0.jar:/home/seplos/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.10/byte-buddy-agent-1.14.10.jar:/home/seplos/.m2/repository/org/objenesis/objenesis/3.3/objenesis-3.3.jar:"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -28,7 +28,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
-    <property name="surefire.real.class.path" value="/home/seplos/projets/cobol-to-java-translator/target/surefire/surefirebooter-20260108171040145_3.jar"/>
+    <property name="surefire.real.class.path" value="/home/seplos/projets/cobol-to-java-translator/target/surefire/surefirebooter-20260108171228179_3.jar"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="21.0.9+10-Debian-1deb13u1"/>
     <property name="user.name" value="seplos"/>
@@ -38,7 +38,6 @@
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
     <property name="file.encoding" value="UTF-8"/>
     <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
-    <property name="skipTests" value="false"/>
     <property name="localRepository" value="/home/seplos/.m2/repository"/>
     <property name="java.vendor.url.bug" value="https://bugs.debian.org/openjdk-21"/>
     <property name="java.io.tmpdir" value="/tmp"/>
@@ -55,487 +54,487 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="testCreateDirectoryStructure" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.015">
-    <system-out><![CDATA[17:10:41.106 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit8129490019349503588/test-translator.properties
-17:10:41.106 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit8129490019349503588/cobol-batch-processor
-17:10:41.107 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.107 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.107 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.108 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.108 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.108 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.108 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit8129490019349503588/cobol-batch-processor
+  <testcase name="testCreateDirectoryStructure" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.02">
+    <system-out><![CDATA[17:12:29.231 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit5000133735267394604/test-translator.properties
+17:12:29.232 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit5000133735267394604/cobol-batch-processor
+17:12:29.233 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.233 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.233 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.233 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.233 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.233 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.233 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit5000133735267394604/cobol-batch-processor
 ]]></system-out>
   </testcase>
-  <testcase name="testCreatePackageStructure" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.005">
-    <system-out><![CDATA[17:10:41.117 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit5691283930044175070/test-translator.properties
-17:10:41.118 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit5691283930044175070/cobol-batch-processor
-17:10:41.118 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.119 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.119 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.119 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.119 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.119 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.119 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit5691283930044175070/cobol-batch-processor
+  <testcase name="testCreatePackageStructure" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.008">
+    <system-out><![CDATA[17:12:29.243 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit8708045160522446752/test-translator.properties
+17:12:29.243 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit8708045160522446752/cobol-batch-processor
+17:12:29.244 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.244 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.244 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.244 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.244 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.244 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.244 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit8708045160522446752/cobol-batch-processor
 ]]></system-out>
   </testcase>
   <testcase name="testCreateDataDirectories" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.004">
-    <system-out><![CDATA[17:10:41.123 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit18212033574772511877/test-translator.properties
-17:10:41.123 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit18212033574772511877/cobol-batch-processor
-17:10:41.123 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.123 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.123 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.124 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.124 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.124 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.124 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit18212033574772511877/cobol-batch-processor
+    <system-out><![CDATA[17:12:29.247 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit8697441130666097266/test-translator.properties
+17:12:29.247 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit8697441130666097266/cobol-batch-processor
+17:12:29.248 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.248 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.248 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.248 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.248 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.248 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.248 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit8697441130666097266/cobol-batch-processor
 ]]></system-out>
   </testcase>
-  <testcase name="testCreateDocsDirectory" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.003">
-    <system-out><![CDATA[17:10:41.127 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit17995595891699873362/test-translator.properties
-17:10:41.128 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit17995595891699873362/cobol-batch-processor
-17:10:41.128 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.128 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.128 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.129 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.129 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.129 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.129 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit17995595891699873362/cobol-batch-processor
+  <testcase name="testCreateDocsDirectory" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.005">
+    <system-out><![CDATA[17:12:29.253 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit13005154871343776194/test-translator.properties
+17:12:29.253 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit13005154871343776194/cobol-batch-processor
+17:12:29.254 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.254 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.254 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.254 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.254 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.254 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.254 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit13005154871343776194/cobol-batch-processor
 ]]></system-out>
   </testcase>
-  <testcase name="testGeneratePomXml" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.004">
-    <system-out><![CDATA[17:10:41.131 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit909993190277124068/test-translator.properties
-17:10:41.132 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit909993190277124068/cobol-batch-processor
-17:10:41.132 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.132 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.132 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.133 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.133 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.133 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.133 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit909993190277124068/cobol-batch-processor
+  <testcase name="testGeneratePomXml" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.007">
+    <system-out><![CDATA[17:12:29.259 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit13151034168609956613/test-translator.properties
+17:12:29.260 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit13151034168609956613/cobol-batch-processor
+17:12:29.260 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.260 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.260 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.261 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.261 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.261 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.261 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit13151034168609956613/cobol-batch-processor
 ]]></system-out>
   </testcase>
-  <testcase name="testPomXmlProjectInfo" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.004">
-    <system-out><![CDATA[17:10:41.138 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit1677278120117983547/test-translator.properties
-17:10:41.139 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit1677278120117983547/cobol-batch-processor
-17:10:41.139 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.139 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.139 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.140 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.140 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.140 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.140 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit1677278120117983547/cobol-batch-processor
+  <testcase name="testPomXmlProjectInfo" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.003">
+    <system-out><![CDATA[17:12:29.263 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit17253470613595196361/test-translator.properties
+17:12:29.263 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit17253470613595196361/cobol-batch-processor
+17:12:29.264 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.264 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.264 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.264 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.264 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.264 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.264 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit17253470613595196361/cobol-batch-processor
 ]]></system-out>
   </testcase>
   <testcase name="testPomXmlSpringBootParent" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.003">
-    <system-out><![CDATA[17:10:41.143 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit1119078139182650115/test-translator.properties
-17:10:41.143 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit1119078139182650115/cobol-batch-processor
-17:10:41.143 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.143 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.143 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.143 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.143 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.143 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.143 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit1119078139182650115/cobol-batch-processor
+    <system-out><![CDATA[17:12:29.267 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit17485769519856639466/test-translator.properties
+17:12:29.268 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit17485769519856639466/cobol-batch-processor
+17:12:29.268 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.268 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.268 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.268 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.268 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.268 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.269 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit17485769519856639466/cobol-batch-processor
 ]]></system-out>
   </testcase>
-  <testcase name="testPomXmlProperties" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.002">
-    <system-out><![CDATA[17:10:41.146 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit12904436240618138869/test-translator.properties
-17:10:41.146 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit12904436240618138869/cobol-batch-processor
-17:10:41.146 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.146 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.146 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.146 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.146 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.146 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.146 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit12904436240618138869/cobol-batch-processor
+  <testcase name="testPomXmlProperties" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.003">
+    <system-out><![CDATA[17:12:29.271 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit4716497286684824840/test-translator.properties
+17:12:29.271 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit4716497286684824840/cobol-batch-processor
+17:12:29.272 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.272 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.272 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.272 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.272 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.272 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.272 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit4716497286684824840/cobol-batch-processor
 ]]></system-out>
   </testcase>
-  <testcase name="testPomXmlSpringBootDependencies" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.006">
-    <system-out><![CDATA[17:10:41.149 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit17882238194409186984/test-translator.properties
-17:10:41.149 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit17882238194409186984/cobol-batch-processor
-17:10:41.150 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.150 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.150 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.150 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.150 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.150 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.150 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit17882238194409186984/cobol-batch-processor
+  <testcase name="testPomXmlSpringBootDependencies" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.002">
+    <system-out><![CDATA[17:12:29.274 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit17068549967701917595/test-translator.properties
+17:12:29.275 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit17068549967701917595/cobol-batch-processor
+17:12:29.275 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.275 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.275 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.275 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.275 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.275 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.275 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit17068549967701917595/cobol-batch-processor
 ]]></system-out>
   </testcase>
-  <testcase name="testPomXmlDatabaseDependency" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.005">
-    <system-out><![CDATA[17:10:41.157 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit13124250809559608408/test-translator.properties
-17:10:41.157 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit13124250809559608408/cobol-batch-processor
-17:10:41.157 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.157 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.157 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.157 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.157 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.158 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.158 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit13124250809559608408/cobol-batch-processor
+  <testcase name="testPomXmlDatabaseDependency" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.002">
+    <system-out><![CDATA[17:12:29.277 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit391659674238936014/test-translator.properties
+17:12:29.277 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit391659674238936014/cobol-batch-processor
+17:12:29.278 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.278 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.278 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.278 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.278 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.278 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.278 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit391659674238936014/cobol-batch-processor
 ]]></system-out>
   </testcase>
-  <testcase name="testPomXmlLombokDependency" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.003">
-    <system-out><![CDATA[17:10:41.160 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit16690791472638569898/test-translator.properties
-17:10:41.160 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit16690791472638569898/cobol-batch-processor
-17:10:41.161 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.161 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.161 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.161 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.161 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.161 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.161 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit16690791472638569898/cobol-batch-processor
+  <testcase name="testPomXmlLombokDependency" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.007">
+    <system-out><![CDATA[17:12:29.280 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit15020151249047587781/test-translator.properties
+17:12:29.280 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit15020151249047587781/cobol-batch-processor
+17:12:29.280 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.280 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.280 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.280 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.280 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.280 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.280 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit15020151249047587781/cobol-batch-processor
 ]]></system-out>
   </testcase>
-  <testcase name="testPomXmlTestDependencies" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.003">
-    <system-out><![CDATA[17:10:41.164 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit12317662461227444627/test-translator.properties
-17:10:41.164 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit12317662461227444627/cobol-batch-processor
-17:10:41.164 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.164 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.164 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.165 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.165 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.165 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.165 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit12317662461227444627/cobol-batch-processor
+  <testcase name="testPomXmlTestDependencies" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.008">
+    <system-out><![CDATA[17:12:29.290 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit7798967158671669745/test-translator.properties
+17:12:29.291 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit7798967158671669745/cobol-batch-processor
+17:12:29.291 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.291 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.291 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.291 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.291 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.293 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.293 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit7798967158671669745/cobol-batch-processor
 ]]></system-out>
   </testcase>
-  <testcase name="testPomXmlMavenPlugin" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.004">
-    <system-out><![CDATA[17:10:41.169 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit14724412141585947665/test-translator.properties
-17:10:41.169 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit14724412141585947665/cobol-batch-processor
-17:10:41.169 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.169 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.169 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.170 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.170 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.170 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.170 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit14724412141585947665/cobol-batch-processor
+  <testcase name="testPomXmlMavenPlugin" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.003">
+    <system-out><![CDATA[17:12:29.295 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit11013770504993934553/test-translator.properties
+17:12:29.295 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit11013770504993934553/cobol-batch-processor
+17:12:29.296 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.296 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.296 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.296 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.296 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.296 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.296 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit11013770504993934553/cobol-batch-processor
 ]]></system-out>
   </testcase>
-  <testcase name="testPomXmlValidXml" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.005">
-    <system-out><![CDATA[17:10:41.173 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit1054661676151217585/test-translator.properties
-17:10:41.173 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit1054661676151217585/cobol-batch-processor
-17:10:41.174 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.174 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.174 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.174 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.174 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.174 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.174 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit1054661676151217585/cobol-batch-processor
+  <testcase name="testPomXmlValidXml" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.003">
+    <system-out><![CDATA[17:12:29.299 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit8164744191656964580/test-translator.properties
+17:12:29.300 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit8164744191656964580/cobol-batch-processor
+17:12:29.300 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.300 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.300 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.300 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.300 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.300 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.300 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit8164744191656964580/cobol-batch-processor
 ]]></system-out>
   </testcase>
-  <testcase name="testGenerateApplicationProperties" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.004">
-    <system-out><![CDATA[17:10:41.179 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit4218161482105601097/test-translator.properties
-17:10:41.179 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit4218161482105601097/cobol-batch-processor
-17:10:41.180 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.180 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.180 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.180 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.180 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.180 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.180 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit4218161482105601097/cobol-batch-processor
+  <testcase name="testGenerateApplicationProperties" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.002">
+    <system-out><![CDATA[17:12:29.303 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit9768295146250052474/test-translator.properties
+17:12:29.303 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit9768295146250052474/cobol-batch-processor
+17:12:29.303 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.303 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.303 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.303 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.303 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.304 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.304 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit9768295146250052474/cobol-batch-processor
 ]]></system-out>
   </testcase>
-  <testcase name="testApplicationPropertiesAppName" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.009">
-    <system-out><![CDATA[17:10:41.182 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit15300660723986888994/test-translator.properties
-17:10:41.182 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit15300660723986888994/cobol-batch-processor
-17:10:41.183 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.183 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.183 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.183 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.183 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.183 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.183 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit15300660723986888994/cobol-batch-processor
+  <testcase name="testApplicationPropertiesAppName" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.002">
+    <system-out><![CDATA[17:12:29.305 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit12477374603691801995/test-translator.properties
+17:12:29.305 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit12477374603691801995/cobol-batch-processor
+17:12:29.306 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.306 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.306 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.306 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.306 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.306 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.306 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit12477374603691801995/cobol-batch-processor
 ]]></system-out>
   </testcase>
   <testcase name="testApplicationPropertiesDatasource" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.003">
-    <system-out><![CDATA[17:10:41.193 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit17597134301729581224/test-translator.properties
-17:10:41.193 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit17597134301729581224/cobol-batch-processor
-17:10:41.193 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.193 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.193 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.193 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.193 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.193 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.194 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit17597134301729581224/cobol-batch-processor
+    <system-out><![CDATA[17:12:29.308 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit8267336120089920603/test-translator.properties
+17:12:29.308 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit8267336120089920603/cobol-batch-processor
+17:12:29.308 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.308 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.308 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.308 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.308 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.308 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.308 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit8267336120089920603/cobol-batch-processor
 ]]></system-out>
   </testcase>
-  <testcase name="testApplicationPropertiesJpa" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.002">
-    <system-out><![CDATA[17:10:41.195 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit9405648059973345971/test-translator.properties
-17:10:41.195 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit9405648059973345971/cobol-batch-processor
-17:10:41.196 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.196 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.196 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.196 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.196 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.196 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.196 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit9405648059973345971/cobol-batch-processor
+  <testcase name="testApplicationPropertiesJpa" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.003">
+    <system-out><![CDATA[17:12:29.312 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit1521586472849463886/test-translator.properties
+17:12:29.312 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit1521586472849463886/cobol-batch-processor
+17:12:29.312 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.312 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.312 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.312 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.312 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.313 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.313 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit1521586472849463886/cobol-batch-processor
 ]]></system-out>
   </testcase>
-  <testcase name="testApplicationPropertiesLogging" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.002">
-    <system-out><![CDATA[17:10:41.198 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit4572450296011002931/test-translator.properties
-17:10:41.198 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit4572450296011002931/cobol-batch-processor
-17:10:41.199 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.199 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.199 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.199 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.199 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.199 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.199 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit4572450296011002931/cobol-batch-processor
+  <testcase name="testApplicationPropertiesLogging" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.003">
+    <system-out><![CDATA[17:12:29.315 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit16788163854052021105/test-translator.properties
+17:12:29.315 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit16788163854052021105/cobol-batch-processor
+17:12:29.316 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.316 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.316 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.316 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.316 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.316 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.316 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit16788163854052021105/cobol-batch-processor
 ]]></system-out>
   </testcase>
-  <testcase name="testApplicationPropertiesFilePaths" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.004">
-    <system-out><![CDATA[17:10:41.202 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit2861269592798765166/test-translator.properties
-17:10:41.202 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit2861269592798765166/cobol-batch-processor
-17:10:41.202 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.203 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.203 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.203 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.203 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.203 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.203 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit2861269592798765166/cobol-batch-processor
+  <testcase name="testApplicationPropertiesFilePaths" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.003">
+    <system-out><![CDATA[17:12:29.319 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit15152107041256700860/test-translator.properties
+17:12:29.319 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit15152107041256700860/cobol-batch-processor
+17:12:29.319 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.319 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.319 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.319 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.319 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.320 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.320 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit15152107041256700860/cobol-batch-processor
 ]]></system-out>
   </testcase>
-  <testcase name="testApplicationPropertiesBatchConfig" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.004">
-    <system-out><![CDATA[17:10:41.208 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit14658025078817268331/test-translator.properties
-17:10:41.208 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit14658025078817268331/cobol-batch-processor
-17:10:41.208 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.208 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.208 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.209 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.209 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.209 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.209 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit14658025078817268331/cobol-batch-processor
+  <testcase name="testApplicationPropertiesBatchConfig" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.003">
+    <system-out><![CDATA[17:12:29.322 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit11042623401787411510/test-translator.properties
+17:12:29.322 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit11042623401787411510/cobol-batch-processor
+17:12:29.322 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.322 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.322 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.323 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.323 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.323 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.323 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit11042623401787411510/cobol-batch-processor
 ]]></system-out>
   </testcase>
   <testcase name="testGenerateReadme" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.002">
-    <system-out><![CDATA[17:10:41.211 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit18357905576659478645/test-translator.properties
-17:10:41.211 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit18357905576659478645/cobol-batch-processor
-17:10:41.211 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.211 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.211 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.212 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.212 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.212 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.212 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit18357905576659478645/cobol-batch-processor
+    <system-out><![CDATA[17:12:29.325 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit14807493184578846407/test-translator.properties
+17:12:29.325 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit14807493184578846407/cobol-batch-processor
+17:12:29.325 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.325 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.325 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.325 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.325 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.325 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.325 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit14807493184578846407/cobol-batch-processor
 ]]></system-out>
   </testcase>
   <testcase name="testReadmeProjectName" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.002">
-    <system-out><![CDATA[17:10:41.213 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit9444870383996164169/test-translator.properties
-17:10:41.213 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit9444870383996164169/cobol-batch-processor
-17:10:41.214 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.214 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.214 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.214 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.214 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.214 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.214 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit9444870383996164169/cobol-batch-processor
+    <system-out><![CDATA[17:12:29.327 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit13013078070537872368/test-translator.properties
+17:12:29.327 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit13013078070537872368/cobol-batch-processor
+17:12:29.327 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.328 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.328 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.328 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.328 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.328 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.328 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit13013078070537872368/cobol-batch-processor
 ]]></system-out>
   </testcase>
   <testcase name="testReadmeSections" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.003">
-    <system-out><![CDATA[17:10:41.216 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit18381567031882558578/test-translator.properties
-17:10:41.216 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit18381567031882558578/cobol-batch-processor
-17:10:41.217 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.217 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.217 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.217 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.217 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.217 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.217 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit18381567031882558578/cobol-batch-processor
+    <system-out><![CDATA[17:12:29.330 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit7046932792550400505/test-translator.properties
+17:12:29.330 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit7046932792550400505/cobol-batch-processor
+17:12:29.330 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.330 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.330 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.330 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.330 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.330 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.330 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit7046932792550400505/cobol-batch-processor
 ]]></system-out>
   </testcase>
-  <testcase name="testReadmeMavenCommands" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.003">
-    <system-out><![CDATA[17:10:41.220 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit17272650613394739677/test-translator.properties
-17:10:41.220 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit17272650613394739677/cobol-batch-processor
-17:10:41.220 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.221 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.221 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.221 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.221 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.221 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.221 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit17272650613394739677/cobol-batch-processor
+  <testcase name="testReadmeMavenCommands" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.004">
+    <system-out><![CDATA[17:12:29.333 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit190585826644269636/test-translator.properties
+17:12:29.333 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit190585826644269636/cobol-batch-processor
+17:12:29.334 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.334 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.334 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.334 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.334 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.334 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.334 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit190585826644269636/cobol-batch-processor
 ]]></system-out>
   </testcase>
-  <testcase name="testReadmeJavaVersion" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.002">
-    <system-out><![CDATA[17:10:41.223 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit15783115502978480101/test-translator.properties
-17:10:41.223 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit15783115502978480101/cobol-batch-processor
-17:10:41.223 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.223 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.223 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.223 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.223 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.223 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.223 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit15783115502978480101/cobol-batch-processor
+  <testcase name="testReadmeJavaVersion" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.006">
+    <system-out><![CDATA[17:12:29.339 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit3005019063312880984/test-translator.properties
+17:12:29.339 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit3005019063312880984/cobol-batch-processor
+17:12:29.340 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.340 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.340 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.341 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.341 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.341 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.341 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit3005019063312880984/cobol-batch-processor
 ]]></system-out>
   </testcase>
   <testcase name="testGenerateGitignore" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.002">
-    <system-out><![CDATA[17:10:41.228 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit6508055738837629975/test-translator.properties
-17:10:41.228 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit6508055738837629975/cobol-batch-processor
-17:10:41.229 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.229 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.229 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.229 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.229 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.229 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.229 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit6508055738837629975/cobol-batch-processor
+    <system-out><![CDATA[17:12:29.343 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit1740612900532306801/test-translator.properties
+17:12:29.343 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit1740612900532306801/cobol-batch-processor
+17:12:29.343 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.343 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.343 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.343 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.344 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.344 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.344 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit1740612900532306801/cobol-batch-processor
 ]]></system-out>
   </testcase>
-  <testcase name="testGitignoreMaven" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.003">
-    <system-out><![CDATA[17:10:41.231 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit14875569700515821868/test-translator.properties
-17:10:41.232 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit14875569700515821868/cobol-batch-processor
-17:10:41.232 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.232 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.232 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.232 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.232 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.232 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.232 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit14875569700515821868/cobol-batch-processor
+  <testcase name="testGitignoreMaven" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.001">
+    <system-out><![CDATA[17:12:29.345 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit14428432667912498929/test-translator.properties
+17:12:29.345 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit14428432667912498929/cobol-batch-processor
+17:12:29.345 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.345 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.345 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.346 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.346 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.346 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.346 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit14428432667912498929/cobol-batch-processor
 ]]></system-out>
   </testcase>
-  <testcase name="testGitignoreIde" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.002">
-    <system-out><![CDATA[17:10:41.235 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit11255924918670428010/test-translator.properties
-17:10:41.235 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit11255924918670428010/cobol-batch-processor
-17:10:41.236 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.236 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.236 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.236 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.236 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.236 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.236 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit11255924918670428010/cobol-batch-processor
+  <testcase name="testGitignoreIde" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.001">
+    <system-out><![CDATA[17:12:29.347 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit10763990695089740262/test-translator.properties
+17:12:29.347 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit10763990695089740262/cobol-batch-processor
+17:12:29.347 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.347 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.347 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.347 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.347 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.348 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.348 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit10763990695089740262/cobol-batch-processor
 ]]></system-out>
   </testcase>
-  <testcase name="testGitignoreLogs" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.002">
-    <system-out><![CDATA[17:10:41.238 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit2987629189486677711/test-translator.properties
-17:10:41.238 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit2987629189486677711/cobol-batch-processor
-17:10:41.239 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.239 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.239 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.239 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.239 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.239 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.239 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit2987629189486677711/cobol-batch-processor
+  <testcase name="testGitignoreLogs" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.005">
+    <system-out><![CDATA[17:12:29.353 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit16398451031609484377/test-translator.properties
+17:12:29.353 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit16398451031609484377/cobol-batch-processor
+17:12:29.353 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.353 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.353 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.354 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.354 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.354 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.354 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit16398451031609484377/cobol-batch-processor
 ]]></system-out>
   </testcase>
-  <testcase name="testGitignoreOs" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.002">
-    <system-out><![CDATA[17:10:41.241 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit16530740907025483174/test-translator.properties
-17:10:41.241 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit16530740907025483174/cobol-batch-processor
-17:10:41.241 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.241 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.241 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.242 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.242 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.242 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.242 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit16530740907025483174/cobol-batch-processor
+  <testcase name="testGitignoreOs" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.005">
+    <system-out><![CDATA[17:12:29.356 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit16781016242900125064/test-translator.properties
+17:12:29.356 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit16781016242900125064/cobol-batch-processor
+17:12:29.356 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.356 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.357 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.357 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.357 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.358 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.358 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit16781016242900125064/cobol-batch-processor
 ]]></system-out>
   </testcase>
-  <testcase name="testGenerateMainApplicationClass" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.001">
-    <system-out><![CDATA[17:10:41.243 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit450675226630718366/test-translator.properties
-17:10:41.243 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit450675226630718366/cobol-batch-processor
-17:10:41.243 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.243 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.243 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.244 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.244 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.244 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.244 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit450675226630718366/cobol-batch-processor
+  <testcase name="testGenerateMainApplicationClass" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.003">
+    <system-out><![CDATA[17:12:29.361 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit15438105528343387509/test-translator.properties
+17:12:29.361 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit15438105528343387509/cobol-batch-processor
+17:12:29.362 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.362 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.362 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.362 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.362 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.362 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.362 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit15438105528343387509/cobol-batch-processor
 ]]></system-out>
   </testcase>
-  <testcase name="testProjectNameWithDashes" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.004">
-    <system-out><![CDATA[17:10:41.246 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit7097778810386326585/test-translator.properties
-17:10:41.247 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit7097778810386326585/custom-translator-20121109812731.properties
-17:10:41.247 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit7097778810386326585/my-cobol-batch
-17:10:41.247 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.247 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.247 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.248 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.248 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.248 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: MyCobolBatchApplication
-17:10:41.248 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit7097778810386326585/my-cobol-batch
+  <testcase name="testProjectNameWithDashes" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.005">
+    <system-out><![CDATA[17:12:29.364 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit5868534705815460633/test-translator.properties
+17:12:29.366 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit5868534705815460633/custom-translator-20229227656983.properties
+17:12:29.366 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit5868534705815460633/my-cobol-batch
+17:12:29.366 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.366 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.366 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.367 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.367 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.367 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: MyCobolBatchApplication
+17:12:29.367 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit5868534705815460633/my-cobol-batch
 ]]></system-out>
   </testcase>
-  <testcase name="testWithoutLombok" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.003">
-    <system-out><![CDATA[17:10:41.250 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit7836144597200375776/test-translator.properties
-17:10:41.250 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit7836144597200375776/custom-translator-20121113524057.properties
-17:10:41.250 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit7836144597200375776/test-project
-17:10:41.250 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.250 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.251 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.251 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.251 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.251 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: TestProjectApplication
-17:10:41.251 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit7836144597200375776/test-project
+  <testcase name="testWithoutLombok" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.002">
+    <system-out><![CDATA[17:12:29.369 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit8981688306741217607/test-translator.properties
+17:12:29.369 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit8981688306741217607/custom-translator-20229232511264.properties
+17:12:29.369 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit8981688306741217607/test-project
+17:12:29.369 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.369 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.369 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.370 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.370 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.370 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: TestProjectApplication
+17:12:29.370 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit8981688306741217607/test-project
 ]]></system-out>
   </testcase>
-  <testcase name="testWithoutReadme" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.003">
-    <system-out><![CDATA[17:10:41.253 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit15543851065635159880/test-translator.properties
-17:10:41.253 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit15543851065635159880/custom-translator-20121116530599.properties
-17:10:41.253 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit15543851065635159880/test-project
-17:10:41.253 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.254 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.254 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.254 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.254 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: TestProjectApplication
-17:10:41.254 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit15543851065635159880/test-project
+  <testcase name="testWithoutReadme" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.004">
+    <system-out><![CDATA[17:12:29.373 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit14464153114448530208/test-translator.properties
+17:12:29.373 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit14464153114448530208/custom-translator-20229236511304.properties
+17:12:29.373 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit14464153114448530208/test-project
+17:12:29.373 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.374 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.374 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.374 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.374 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: TestProjectApplication
+17:12:29.374 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit14464153114448530208/test-project
 ]]></system-out>
   </testcase>
   <testcase name="testWithoutGitignore" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.002">
-    <system-out><![CDATA[17:10:41.257 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit9276263740398673171/test-translator.properties
-17:10:41.257 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit9276263740398673171/custom-translator-20121120433255.properties
-17:10:41.257 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit9276263740398673171/test-project
-17:10:41.257 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.257 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.257 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.257 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.257 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: TestProjectApplication
-17:10:41.258 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit9276263740398673171/test-project
+    <system-out><![CDATA[17:12:29.377 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit1134649032940280311/test-translator.properties
+17:12:29.378 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit1134649032940280311/custom-translator-20229241045673.properties
+17:12:29.378 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit1134649032940280311/test-project
+17:12:29.378 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.378 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.378 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.378 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.378 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: TestProjectApplication
+17:12:29.378 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit1134649032940280311/test-project
 ]]></system-out>
   </testcase>
-  <testcase name="testWithPostgreSql" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.004">
-    <system-out><![CDATA[17:10:41.261 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit2264741412986544497/test-translator.properties
-17:10:41.261 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit2264741412986544497/custom-translator-20121124908862.properties
-17:10:41.261 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit2264741412986544497/test-project
-17:10:41.262 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.262 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.262 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.262 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.262 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.262 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: TestProjectApplication
-17:10:41.262 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit2264741412986544497/test-project
+  <testcase name="testWithPostgreSql" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.003">
+    <system-out><![CDATA[17:12:29.380 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit12252177483916775057/test-translator.properties
+17:12:29.380 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit12252177483916775057/custom-translator-20229243474938.properties
+17:12:29.380 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit12252177483916775057/test-project
+17:12:29.381 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.381 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.381 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.381 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.381 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.381 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: TestProjectApplication
+17:12:29.381 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit12252177483916775057/test-project
 ]]></system-out>
   </testcase>
   <testcase name="testGenerateProjectReturnsPath" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.003">
-    <system-out><![CDATA[17:10:41.266 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit3961349791896146117/test-translator.properties
-17:10:41.266 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit3961349791896146117/cobol-batch-processor
-17:10:41.266 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.266 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.266 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.266 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.266 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.266 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.266 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit3961349791896146117/cobol-batch-processor
+    <system-out><![CDATA[17:12:29.382 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit4591498993900977329/test-translator.properties
+17:12:29.382 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit4591498993900977329/cobol-batch-processor
+17:12:29.383 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.383 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.383 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.384 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.384 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.384 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.384 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit4591498993900977329/cobol-batch-processor
 ]]></system-out>
   </testcase>
-  <testcase name="testGenerateCompleteProject" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.01">
-    <system-out><![CDATA[17:10:41.269 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit7306067110826467009/test-translator.properties
-17:10:41.269 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit7306067110826467009/cobol-batch-processor
-17:10:41.270 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.270 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.270 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.273 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.273 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.273 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.273 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit7306067110826467009/cobol-batch-processor
+  <testcase name="testGenerateCompleteProject" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.008">
+    <system-out><![CDATA[17:12:29.387 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit18312638565985136217/test-translator.properties
+17:12:29.387 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit18312638565985136217/cobol-batch-processor
+17:12:29.387 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.387 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.387 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.388 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.388 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.388 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.388 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit18312638565985136217/cobol-batch-processor
 ]]></system-out>
   </testcase>
-  <testcase name="testGeneratedFilesNotEmpty" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.002">
-    <system-out><![CDATA[17:10:41.281 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit17735359225024801699/test-translator.properties
-17:10:41.281 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit17735359225024801699/cobol-batch-processor
-17:10:41.281 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
-17:10:41.281 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
-17:10:41.281 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
-17:10:41.281 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
-17:10:41.281 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
-17:10:41.281 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
-17:10:41.281 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit17735359225024801699/cobol-batch-processor
+  <testcase name="testGeneratedFilesNotEmpty" classname="com.cobol.translator.project.ProjectGeneratorTest" time="0.005">
+    <system-out><![CDATA[17:12:29.395 [main] INFO com.cobol.translator.config.TranslatorConfiguration -- Configuration loaded from: /tmp/junit2566122938549446323/test-translator.properties
+17:12:29.395 [main] INFO com.cobol.translator.project.ProjectGenerator -- Creating target project: /tmp/junit2566122938549446323/cobol-batch-processor
+17:12:29.397 [main] INFO com.cobol.translator.project.ProjectGenerator -- Directory structure created
+17:12:29.397 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated pom.xml
+17:12:29.397 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated application.properties
+17:12:29.397 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated README.md
+17:12:29.397 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated .gitignore
+17:12:29.397 [main] INFO com.cobol.translator.project.ProjectGenerator -- Generated main application class: CobolBatchProcessorApplication
+17:12:29.397 [main] INFO com.cobol.translator.project.ProjectGenerator -- Project structure created successfully at: /tmp/junit2566122938549446323/cobol-batch-processor
 ]]></system-out>
   </testcase>
 </testsuite>

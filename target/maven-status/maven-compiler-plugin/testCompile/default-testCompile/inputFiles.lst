@@ -1,5 +1,6 @@
 /home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/generator/JobConfigGeneratorTest.java
 /home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/converter/FileSectionConverterTest.java
+/home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/demo/PatternWarningDemo.java
 /home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/analyzer/CobolPatternDetectorTest.java
 /home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/redefines/RedefinesOptimizerTest.java
 /home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/semantic/SemanticFoundationTest.java

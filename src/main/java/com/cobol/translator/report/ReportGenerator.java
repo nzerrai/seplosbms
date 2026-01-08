@@ -104,19 +104,38 @@ public class ReportGenerator {
         if (score == null || score < 80) return false;
         
         // Vérifier si c'est un pattern de traitement de fichier
-        Object patternObj = detectedPatterns.get("FILE_PROCESSING_PATTERN");
+        Object patternObj = detectedPatterns.get("FILE_PROCESSING");
         if (patternObj instanceof CobolPatternDetector.FileProcessingPattern) {
             CobolPatternDetector.FileProcessingPattern pattern = 
                 (CobolPatternDetector.FileProcessingPattern) patternObj;
             
-            // Les instructions OPEN, READ, PERFORM, CLOSE, DISPLAY font partie du pattern
+            // Les instructions du pattern idiomatique de traitement fichier
             Statement.StatementType type = stmt.getType();
             if (type == Statement.StatementType.OPEN ||
                 type == Statement.StatementType.READ ||
                 type == Statement.StatementType.PERFORM ||
                 type == Statement.StatementType.PERFORM_UNTIL ||
                 type == Statement.StatementType.CLOSE ||
-                type == Statement.StatementType.DISPLAY) {
+                type == Statement.StatementType.DISPLAY ||
+                type == Statement.StatementType.STOP_RUN ||
+                type == Statement.StatementType.ADD ||
+                type == Statement.StatementType.MOVE ||
+                type == Statement.StatementType.IF) {
+                return true;
+            }
+        }
+        
+        // Vérifier si c'est un pattern de structure batch
+        Object batchObj = detectedPatterns.get("BATCH_STRUCTURE");
+        if (batchObj instanceof CobolPatternDetector.BatchStructurePattern) {
+            Statement.StatementType type = stmt.getType();
+            // Instructions typiques des patterns batch
+            if (type == Statement.StatementType.PERFORM ||
+                type == Statement.StatementType.PERFORM_UNTIL ||
+                type == Statement.StatementType.DISPLAY ||
+                type == Statement.StatementType.STOP_RUN ||
+                type == Statement.StatementType.ADD ||
+                type == Statement.StatementType.MOVE) {
                 return true;
             }
         }

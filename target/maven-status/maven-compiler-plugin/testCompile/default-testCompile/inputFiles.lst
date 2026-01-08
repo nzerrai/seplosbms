@@ -13,5 +13,6 @@
 /home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/CobolParserTest.java
 /home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/parser/CobolASTParserTest.java
 /home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/integration/IdiomaticPatternIntegrationTest.java
+/home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/demo/ImprovedPatternDemo.java
 /home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/vsam/VsamSupportTest.java
 /home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/redefines/UnionTypeGeneratorTest.java

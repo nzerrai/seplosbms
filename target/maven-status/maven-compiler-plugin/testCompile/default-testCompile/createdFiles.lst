@@ -3,6 +3,7 @@ com/cobol/translator/semantic/SemanticFoundationTest.class
 com/cobol/translator/integration/IdiomaticPatternIntegrationTest.class
 com/cobol/translator/redefines/UnionTypeGeneratorTest.class
 com/cobol/translator/generator/JobConfigGeneratorTest.class
+com/cobol/translator/demo/ImprovedPatternDemo.class
 com/cobol/translator/project/ProjectGeneratorTest.class
 com/cobol/translator/converter/FileSectionConverterTest.class
 com/cobol/translator/CobolParserTest.class

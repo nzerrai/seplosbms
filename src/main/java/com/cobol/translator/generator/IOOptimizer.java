@@ -174,25 +174,81 @@ public class IOOptimizer {
     private FileFormat detectFileFormat(FileDefinition fileDef) {
         String organization = fileDef.getOrganization();
 
+        // Use explicit organization metadata if available
         if (organization != null) {
             switch (organization.toUpperCase()) {
                 case "INDEXED":
                 case "ORGANIZATION IS INDEXED":
+                    logger.info("Detected INDEXED file: {}", fileDef.getFileName());
                     return FileFormat.INDEXED_SEQUENTIAL;
 
                 case "SEQUENTIAL":
-                case "LINE SEQUENTIAL":
-                    // Could be delimited or fixed-length
-                    // Check record description for hints
+                case "ORGANIZATION IS SEQUENTIAL":
+                    // Check if fixed or variable length
+                    if (fileDef.isFixedLength() && fileDef.getMinRecordLength() != null) {
+                        logger.info("Detected FIXED LENGTH sequential file: {} (length: {})", 
+                                   fileDef.getFileName(), fileDef.getMinRecordLength());
+                        return FileFormat.FIXED_LENGTH;
+                    }
+                    logger.info("Detected SEQUENTIAL file: {}", fileDef.getFileName());
                     return FileFormat.SEQUENTIAL;
 
+                case "LINE SEQUENTIAL":
+                case "ORGANIZATION IS LINE SEQUENTIAL":
+                    // Line sequential files are typically delimited
+                    logger.info("Detected LINE SEQUENTIAL (delimited) file: {}", fileDef.getFileName());
+                    return FileFormat.DELIMITED;
+
                 case "RELATIVE":
+                case "ORGANIZATION IS RELATIVE":
+                    logger.info("Detected RELATIVE file: {}", fileDef.getFileName());
                     return FileFormat.SEQUENTIAL;
             }
         }
 
-        // Default to fixed-length if no organization specified
-        return FileFormat.FIXED_LENGTH;
+        // Check for binary fields (COMP-3, COMP, BINARY)
+        if (fileDef.getRecordLayout() != null) {
+            boolean hasBinary = containsBinaryFields(fileDef.getRecordLayout());
+            if (hasBinary) {
+                logger.info("Detected BINARY fields in file: {}", fileDef.getFileName());
+                return FileFormat.BINARY;
+            }
+        }
+
+        // Use RECORD CONTAINS metadata to determine format
+        if (fileDef.isFixedLength() && fileDef.getMinRecordLength() != null) {
+            logger.info("Detected FIXED LENGTH file: {} (length: {})", 
+                       fileDef.getFileName(), fileDef.getMinRecordLength());
+            return FileFormat.FIXED_LENGTH;
+        }
+
+        // Default to fixed-length if record layout is defined
+        if (fileDef.getRecordLayout() != null) {
+            logger.info("Defaulting to FIXED LENGTH for: {}", fileDef.getFileName());
+            return FileFormat.FIXED_LENGTH;
+        }
+
+        // Final fallback
+        logger.warn("Could not determine format for {}, defaulting to SEQUENTIAL", fileDef.getFileName());
+        return FileFormat.SEQUENTIAL;
+    }
+
+    /**
+     * Check if a record contains binary fields (COMP-3, COMP, BINARY)
+     */
+    private boolean containsBinaryFields(DataItem record) {
+        if (record.getUsage() != null) {
+            String usage = record.getUsage().toUpperCase();
+            if (usage.contains("COMP") || usage.contains("BINARY")) {
+                return true;
+            }
+        }
+
+        // Note: DataItem doesn't have a getChildren() method in the current model
+        // This would require traversal through all data items separately
+        // For now, we check only the top-level record
+
+        return false;
     }
 
     /**
@@ -430,6 +486,10 @@ public class IOOptimizer {
                 generateFixedLengthReader(code, metadata, entityType);
                 break;
 
+            case INDEXED_SEQUENTIAL:
+                // For VSAM KSDS, generate JPA/JDBC reader instead
+                return generateIndexedFileReader(metadata, entityType, beanName);
+
             case SEQUENTIAL:
             default:
                 // Auto-detect: use delimited if delimiter detected, else fixed-length
@@ -443,6 +503,40 @@ public class IOOptimizer {
         }
 
         code.append("    }\n\n");
+
+        return code.toString();
+    }
+
+    /**
+     * Generates JdbcCursorItemReader for INDEXED files (VSAM KSDS)
+     */
+    private String generateIndexedFileReader(FileIOMetadata metadata, String entityType, String beanName) {
+        StringBuilder code = new StringBuilder();
+
+        code.append("    @Bean\n");
+        code.append("    public JdbcCursorItemReader<").append(entityType).append("> ")
+            .append(beanName).append("() {\n");
+        code.append("        // INDEXED file (VSAM KSDS) - using JdbcCursorItemReader\n");
+        code.append("        return new JdbcCursorItemReaderBuilder<").append(entityType).append(">()\n");
+        code.append("            .name(\"").append(entityType.toLowerCase()).append("Reader\")\n");
+        code.append("            .dataSource(dataSource)  // Inject DataSource\n");
+        code.append("            .sql(\"SELECT * FROM ").append(entityType.toUpperCase()).append(" ORDER BY ");
+
+        // Use first field as key if no explicit key specified
+        if (metadata.getFieldMappings().isEmpty()) {
+            code.append("ID");
+        } else {
+            code.append(metadata.getFieldMappings().get(0).getJavaFieldName().toUpperCase());
+        }
+
+        code.append("\")\n");
+        code.append("            .rowMapper(new BeanPropertyRowMapper<>(" + entityType + ".class))\n");
+        code.append("            .build();\n");
+        code.append("    }\n\n");
+
+        // Add comment about database migration
+        code.append("    // NOTE: VSAM KSDS files should be migrated to relational database\n");
+        code.append("    // Use db2move or similar tools to export VSAM to DB2/PostgreSQL\n\n");
 
         return code.toString();
     }

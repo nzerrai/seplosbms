@@ -877,3 +877,16 @@ com.cobol.translator.jcl.parser.JCLParseException: JCL Syntax error at line 48:2
 2026-01-08T15:32:35.245+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.service.CobolConversionService     : Total files generated: 3
 2026-01-08T15:32:35.245+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.service.CobolConversionService     : Using actual project directory with files: /tmp/projettest
 2026-01-08T15:32:35.245+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.controller.ConversionController    : Conversion completed. Output directory: /tmp/projettest
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1;31mBUILD FAILURE[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] Total time:  02:00 h
+[[1;34mINFO[m] Finished at: 2026-01-08T16:02:51+01:00
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;31mERROR[m] Failed to execute goal [32morg.springframework.boot:spring-boot-maven-plugin:3.2.0:run[m [1m(default-cli)[m on project [36mcobol-to-java-translator[m: [1;31mProcess terminated with exit code: 137[m -> [1m[Help 1][m
+[[1;31mERROR[m] 
+[[1;31mERROR[m] To see the full stack trace of the errors, re-run Maven with the [1m-e[m switch.
+[[1;31mERROR[m] Re-run Maven using the [1m-X[m switch to enable full debug logging.
+[[1;31mERROR[m] 
+[[1;31mERROR[m] For more information about the errors and possible solutions, please read the following articles:
+[[1;31mERROR[m] [1m[Help 1][m http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException

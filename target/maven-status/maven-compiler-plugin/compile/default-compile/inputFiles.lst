@@ -46,6 +46,7 @@
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/ast/PerformStatementNode.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/copybook/RenamesHandler.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/ast/LiteralNode.java
+/home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/converter/FileSectionConverter.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/config/TranslatorConfiguration.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/ast/ProcedureDivisionNode.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/jcl/parser/JCLParser.java

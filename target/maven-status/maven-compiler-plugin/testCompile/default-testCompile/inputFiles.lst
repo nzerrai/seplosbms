@@ -1,5 +1,6 @@
 /home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/generator/JobConfigGeneratorTest.java
 /home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/converter/FileSectionConverterTest.java
+/home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/analyzer/CobolPatternDetectorTest.java
 /home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/redefines/RedefinesOptimizerTest.java
 /home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/semantic/SemanticFoundationTest.java
 /home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/generator/BusinessLogicTranslatorTest.java
@@ -10,5 +11,6 @@
 /home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/FillerFieldTest.java
 /home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/CobolParserTest.java
 /home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/parser/CobolASTParserTest.java
+/home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/integration/IdiomaticPatternIntegrationTest.java
 /home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/vsam/VsamSupportTest.java
 /home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/redefines/UnionTypeGeneratorTest.java

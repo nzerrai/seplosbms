@@ -15,6 +15,7 @@
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/ast/ASTNode.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/generator/RepositoryGenerator.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/redefines/RedefinesExample.java
+/home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/analyzer/CobolPatternDetector.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/copybook/CopybookNotFoundException.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/generator/JobConfigGenerator.java
 /home/seplos/projets/cobol-to-java-translator/target/generated-sources/antlr4/com/cobol/translator/grammar/CobolListener.java
@@ -120,4 +121,5 @@
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/controller/ConversionResponse.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/vsam/VsamFileAnalyzer.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/web/MappingViewController.java
+/home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/generator/IdiomaticCodeCommentator.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/jcl/model/JCLParameter.java

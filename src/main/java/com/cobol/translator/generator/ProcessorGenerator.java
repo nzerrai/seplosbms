@@ -1,5 +1,6 @@
 package com.cobol.translator.generator;
 
+import com.cobol.translator.analyzer.CobolPatternDetector;
 import com.cobol.translator.config.TranslationConfig;
 import com.cobol.translator.model.CobolProgram;
 import org.slf4j.Logger;
@@ -9,16 +10,19 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Map;
 
 /**
  * Generates Spring Batch ItemProcessor from COBOL procedure logic.
  * Now includes business rules translation from COBOL validation paragraphs.
+ * Enhanced with pattern detection to optimize code generation.
  */
 public class ProcessorGenerator {
 
     private static final Logger logger = LoggerFactory.getLogger(ProcessorGenerator.class);
     private final BusinessRuleGenerator businessRuleGenerator = new BusinessRuleGenerator();
     private final BusinessLogicTranslator logicTranslator = new BusinessLogicTranslator();
+    private final CobolPatternDetector patternDetector = new CobolPatternDetector();
 
     public File generate(CobolProgram program, TranslationConfig config, Path outputDir) throws IOException {
 
@@ -95,6 +99,26 @@ public class ProcessorGenerator {
         code.append("    @Override\n");
         code.append("    public ").append(inputRecordType).append(" process(")
             .append(inputRecordType).append(" record) throws Exception {\n");
+        
+        // Detect idiomatic COBOL patterns
+        Map<String, Object> detectedPatterns = patternDetector.detectPatterns(program);
+        
+        if (detectedPatterns.containsKey("IDIOMATIC_SCORE")) {
+            int score = (Integer) detectedPatterns.get("IDIOMATIC_SCORE");
+            code.append("        // ✅ COBOL Idiomatic Score: ").append(score).append("/100\n");
+            
+            if (detectedPatterns.containsKey("FILE_PROCESSING")) {
+                CobolPatternDetector.FileProcessingPattern pattern = 
+                    (CobolPatternDetector.FileProcessingPattern) detectedPatterns.get("FILE_PROCESSING");
+                code.append("        // ✅ Standard file processing pattern detected (OPEN-READ-PERFORM-CLOSE)\n");
+                code.append("        // This is handled automatically by Spring Batch ItemReader\n");
+            }
+            
+            if (detectedPatterns.containsKey("BATCH_STRUCTURE")) {
+                code.append("        // ✅ Standard batch structure pattern detected (INIT-PROCESS-FINALIZE)\n");
+            }
+        }
+        
         code.append("        logger.debug(\"Processing record: {}\", record);\n\n");
 
         // Step 1: Validate transaction (210-VALIDATE-TRANSACTION)

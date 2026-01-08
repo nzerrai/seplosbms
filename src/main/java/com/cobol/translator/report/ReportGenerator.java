@@ -95,6 +95,44 @@ public class ReportGenerator {
     }
     
     /**
+     * Vérifie si un statement est une section déclarative (non-exécutable).
+     * Ces sections ne doivent pas générer de warnings.
+     */
+    private boolean isDeclarativeSection(Statement stmt) {
+        if (stmt == null || stmt.getOriginalCobol() == null) return false;
+        
+        String cobol = stmt.getOriginalCobol().toUpperCase().trim();
+        
+        // Sections déclaratives de DATA DIVISION
+        return cobol.equals("WORKING-STORAGE SECTION") ||
+               cobol.equals("WORKING-STORAGE SECTION.") ||
+               cobol.equals("FILE SECTION") ||
+               cobol.equals("FILE SECTION.") ||
+               cobol.equals("LINKAGE SECTION") ||
+               cobol.equals("LINKAGE SECTION.") ||
+               cobol.equals("LOCAL-STORAGE SECTION") ||
+               cobol.equals("LOCAL-STORAGE SECTION.") ||
+               cobol.equals("SCREEN SECTION") ||
+               cobol.equals("SCREEN SECTION.") ||
+               cobol.equals("REPORT SECTION") ||
+               cobol.equals("REPORT SECTION.") ||
+               // En-têtes de divisions
+               cobol.equals("IDENTIFICATION DIVISION") ||
+               cobol.equals("IDENTIFICATION DIVISION.") ||
+               cobol.equals("ENVIRONMENT DIVISION") ||
+               cobol.equals("ENVIRONMENT DIVISION.") ||
+               cobol.equals("DATA DIVISION") ||
+               cobol.equals("DATA DIVISION.") ||
+               cobol.equals("PROCEDURE DIVISION") ||
+               cobol.equals("PROCEDURE DIVISION.") ||
+               // Sous-sections ENVIRONMENT
+               cobol.equals("CONFIGURATION SECTION") ||
+               cobol.equals("CONFIGURATION SECTION.") ||
+               cobol.equals("INPUT-OUTPUT SECTION") ||
+               cobol.equals("INPUT-OUTPUT SECTION.");
+    }
+    
+    /**
      * Vérifie si une instruction fait partie d'un pattern idiomatique.
      */
     private boolean isPartOfIdiomaticPattern(Statement stmt) {
@@ -265,6 +303,11 @@ public class ReportGenerator {
      * Ajoute un cas de conversion partielle au rapport.
      */
     private void addPartialConversionCase(Statement stmt) {
+        // Ignorer les sections déclaratives (non-exécutables)
+        if (isDeclarativeSection(stmt)) {
+            return;
+        }
+        
         // Ne pas ajouter de warning si fait partie d'un pattern idiomatique
         if (isPartOfIdiomaticPattern(stmt)) {
             return;
@@ -315,6 +358,11 @@ public class ReportGenerator {
      * Ajoute un cas non converti au rapport.
      */
     private void addUnconvertedCase(Statement stmt) {
+        // Ignorer les sections déclaratives (non-exécutables)
+        if (isDeclarativeSection(stmt)) {
+            return;
+        }
+        
         // Ne pas ajouter de warning si fait partie d'un pattern idiomatique
         if (isPartOfIdiomaticPattern(stmt)) {
             return;

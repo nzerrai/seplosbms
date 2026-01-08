@@ -9,6 +9,7 @@
 /home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/project/ProjectGeneratorTest.java
 /home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/generator/EntityGeneratorTest.java
 /home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/redefines/RedefinesAnalyzerTest.java
+/home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/demo/DeclarativeSectionDemo.java
 /home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/FillerFieldTest.java
 /home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/CobolParserTest.java
 /home/seplos/projets/cobol-to-java-translator/src/test/java/com/cobol/translator/parser/CobolASTParserTest.java

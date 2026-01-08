@@ -41,6 +41,9 @@ public class ConversionReport {
 
     // Avertissements
     private List<String> warnings = new ArrayList<>();
+    
+    // Notes positives sur les patterns idiomatiques
+    private List<String> positiveNotes = new ArrayList<>();
 
     public ConversionReport(String sourceFile, String programName) {
         this.sourceFile = sourceFile;
@@ -64,6 +67,13 @@ public class ConversionReport {
      */
     public void addWarning(String warning) {
         warnings.add(warning);
+    }
+    
+    /**
+     * Ajoute une note positive sur un pattern idiomatique détecté.
+     */
+    public void addPositiveNote(String note) {
+        positiveNotes.add(note);
     }
 
     /**
@@ -187,6 +197,16 @@ public class ConversionReport {
                 if (case_.example != null && !case_.example.isEmpty()) {
                     report.append(String.format("   Exemple      :\n%s\n", indent(case_.example, 6)));
                 }
+            }
+            report.append("\n");
+        }
+
+        // Notes positives sur les patterns idiomatiques
+        if (!positiveNotes.isEmpty()) {
+            report.append("✅ PATTERNS IDIOMATIQUES DÉTECTÉS\n");
+            report.append("═══════════════════════════════════════════════════════════════════════════\n");
+            for (int i = 0; i < positiveNotes.size(); i++) {
+                report.append(String.format("%d. %s\n", i + 1, positiveNotes.get(i)));
             }
             report.append("\n");
         }

@@ -1,10 +1,12 @@
 package com.cobol.translator.report;
 
+import com.cobol.translator.analyzer.CobolPatternDetector;
 import com.cobol.translator.model.CobolProgram;
 import com.cobol.translator.model.DataItem;
 import com.cobol.translator.model.Statement;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -15,6 +17,8 @@ public class ReportGenerator {
 
     private final CobolProgram program;
     private final ConversionReport report;
+    private final CobolPatternDetector patternDetector;
+    private Map<String, Object> detectedPatterns;
 
     // Constructions COBOL non supportées
     private static final Set<String> UNSUPPORTED_KEYWORDS = new HashSet<>();
@@ -42,16 +46,82 @@ public class ReportGenerator {
             program.getSourceFile() != null ? program.getSourceFile() : "unknown",
             program.getProgramName()
         );
+        this.patternDetector = new CobolPatternDetector();
     }
 
     /**
      * Analyse le programme COBOL et génère le rapport complet.
      */
     public ConversionReport generate() {
+        // Détecter les patterns idiomatiques en premier
+        detectedPatterns = patternDetector.detectPatterns(program);
+        
         analyzeDataItems();
         analyzeStatements();
         report.calculateConfidence();
+        
+        // Ajouter des notes positives pour les patterns détectés
+        addPatternNotes();
+        
         return report;
+    }
+    
+    /**
+     * Ajoute des notes positives pour les patterns idiomatiques détectés.
+     */
+    private void addPatternNotes() {
+        if (detectedPatterns == null) return;
+        
+        Integer score = (Integer) detectedPatterns.get("IDIOMATIC_SCORE");
+        if (score != null && score >= 80) {
+            report.addPositiveNote(String.format(
+                "✅ Code COBOL idiomatique détecté (Score: %d/100)", score
+            ));
+            
+            if (detectedPatterns.containsKey("FILE_PROCESSING_PATTERN")) {
+                report.addPositiveNote(
+                    "✅ Pattern standard de traitement de fichier COBOL reconnu " +
+                    "(OPEN-READ-PERFORM-CLOSE)"
+                );
+            }
+            
+            if (detectedPatterns.containsKey("BATCH_STRUCTURE_PATTERN")) {
+                report.addPositiveNote(
+                    "✅ Structure batch bien organisée " +
+                    "(paragraphes INIT-PROCESS-FINALIZE)"
+                );
+            }
+        }
+    }
+    
+    /**
+     * Vérifie si une instruction fait partie d'un pattern idiomatique.
+     */
+    private boolean isPartOfIdiomaticPattern(Statement stmt) {
+        if (detectedPatterns == null) return false;
+        
+        Integer score = (Integer) detectedPatterns.get("IDIOMATIC_SCORE");
+        if (score == null || score < 80) return false;
+        
+        // Vérifier si c'est un pattern de traitement de fichier
+        Object patternObj = detectedPatterns.get("FILE_PROCESSING_PATTERN");
+        if (patternObj instanceof CobolPatternDetector.FileProcessingPattern) {
+            CobolPatternDetector.FileProcessingPattern pattern = 
+                (CobolPatternDetector.FileProcessingPattern) patternObj;
+            
+            // Les instructions OPEN, READ, PERFORM, CLOSE, DISPLAY font partie du pattern
+            Statement.StatementType type = stmt.getType();
+            if (type == Statement.StatementType.OPEN ||
+                type == Statement.StatementType.READ ||
+                type == Statement.StatementType.PERFORM ||
+                type == Statement.StatementType.PERFORM_UNTIL ||
+                type == Statement.StatementType.CLOSE ||
+                type == Statement.StatementType.DISPLAY) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     /**
@@ -173,6 +243,11 @@ public class ReportGenerator {
      * Ajoute un cas de conversion partielle au rapport.
      */
     private void addPartialConversionCase(Statement stmt) {
+        // Ne pas ajouter de warning si fait partie d'un pattern idiomatique
+        if (isPartOfIdiomaticPattern(stmt)) {
+            return;
+        }
+        
         String code = stmt.getOriginalCobol() != null ? stmt.getOriginalCobol().toUpperCase() : "";
 
         if (code.contains("EVALUATE")) {
@@ -218,6 +293,11 @@ public class ReportGenerator {
      * Ajoute un cas non converti au rapport.
      */
     private void addUnconvertedCase(Statement stmt) {
+        // Ne pas ajouter de warning si fait partie d'un pattern idiomatique
+        if (isPartOfIdiomaticPattern(stmt)) {
+            return;
+        }
+        
         String code = stmt.getOriginalCobol() != null ? stmt.getOriginalCobol().toUpperCase() : "";
 
         if (code.contains("EXEC CICS")) {

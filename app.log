@@ -1,0 +1,879 @@
+nohup: les entrées sont ignorées
+[[1;34mINFO[m] Scanning for projects...
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m-----------------< [0;36mcom.cobol:cobol-to-java-translator[0;1m >-----------------[m
+[[1;34mINFO[m] [1mBuilding COBOL to Java Spring Batch Translator 1.0.0-SNAPSHOT[m
+[[1;34mINFO[m]   from pom.xml
+[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m>>> [0;32mspring-boot:3.2.0:run[m [1m(default-cli)[0;1m > [0;1mtest-compile[m @ [36mcobol-to-java-translator[0;1m >>>[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mantlr4:4.13.1:antlr4[m [1m(default)[m @ [36mcobol-to-java-translator[0;1m ---[m
+[[1;34mINFO[m] No grammars to process
+[[1;34mINFO[m] ANTLR 4: Processing source directory /home/seplos/projets/cobol-to-java-translator/src/main/antlr4
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mresources:3.3.1:resources[m [1m(default-resources)[m @ [36mcobol-to-java-translator[0;1m ---[m
+[[1;34mINFO[m] Copying 7 resources from src/main/resources to target/classes
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mcompiler:3.11.0:compile[m [1m(default-compile)[m @ [36mcobol-to-java-translator[0;1m ---[m
+[[1;34mINFO[m] Nothing to compile - all classes are up to date
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mresources:3.3.1:testResources[m [1m(default-testResources)[m @ [36mcobol-to-java-translator[0;1m ---[m
+[[1;34mINFO[m] Copying 3 resources from src/test/resources to target/test-classes
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mcompiler:3.11.0:testCompile[m [1m(default-testCompile)[m @ [36mcobol-to-java-translator[0;1m ---[m
+[[1;34mINFO[m] Nothing to compile - all classes are up to date
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m<<< [0;32mspring-boot:3.2.0:run[m [1m(default-cli)[0;1m < [0;1mtest-compile[m @ [36mcobol-to-java-translator[0;1m <<<[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mspring-boot:3.2.0:run[m [1m(default-cli)[m @ [36mcobol-to-java-translator[0;1m ---[m
+[[1;34mINFO[m] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.0)
+
+2026-01-08T14:02:07.245+01:00  INFO 52859 --- [cobol-to-java-translator] [           main] c.c.t.CobolTranslatorWebApplication      : Starting CobolTranslatorWebApplication using Java 21.0.9 with PID 52859 (/home/seplos/projets/cobol-to-java-translator/target/classes started by seplos in /home/seplos/projets/cobol-to-java-translator)
+2026-01-08T14:02:07.246+01:00  INFO 52859 --- [cobol-to-java-translator] [           main] c.c.t.CobolTranslatorWebApplication      : No active profile set, falling back to 1 default profile: "default"
+2026-01-08T14:02:07.702+01:00  WARN 52859 --- [cobol-to-java-translator] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.boot.autoconfigure.jdbc.DataSourceConfiguration$Hikari' of type [org.springframework.boot.autoconfigure.jdbc.DataSourceConfiguration$Hikari] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [jobRegistryBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-01-08T14:02:07.709+01:00  WARN 52859 --- [cobol-to-java-translator] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'spring.datasource-org.springframework.boot.autoconfigure.jdbc.DataSourceProperties' of type [org.springframework.boot.autoconfigure.jdbc.DataSourceProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [jobRegistryBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-01-08T14:02:07.710+01:00  WARN 52859 --- [cobol-to-java-translator] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration$PooledDataSourceConfiguration' of type [org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration$PooledDataSourceConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [jobRegistryBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-01-08T14:02:07.710+01:00  WARN 52859 --- [cobol-to-java-translator] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'jdbcConnectionDetails' of type [org.springframework.boot.autoconfigure.jdbc.PropertiesJdbcConnectionDetails] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [jobRegistryBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-01-08T14:02:07.724+01:00  WARN 52859 --- [cobol-to-java-translator] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'dataSource' of type [com.zaxxer.hikari.HikariDataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [jobRegistryBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-01-08T14:02:07.725+01:00  WARN 52859 --- [cobol-to-java-translator] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration$JdbcTransactionManagerConfiguration' of type [org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration$JdbcTransactionManagerConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [jobRegistryBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-01-08T14:02:07.728+01:00  WARN 52859 --- [cobol-to-java-translator] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.boot.autoconfigure.transaction.TransactionManagerCustomizationAutoConfiguration' of type [org.springframework.boot.autoconfigure.transaction.TransactionManagerCustomizationAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [jobRegistryBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-01-08T14:02:07.730+01:00  WARN 52859 --- [cobol-to-java-translator] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'transactionExecutionListeners' of type [org.springframework.boot.autoconfigure.transaction.ExecutionListenersTransactionManagerCustomizer] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [jobRegistryBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-01-08T14:02:07.733+01:00  WARN 52859 --- [cobol-to-java-translator] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'spring.transaction-org.springframework.boot.autoconfigure.transaction.TransactionProperties' of type [org.springframework.boot.autoconfigure.transaction.TransactionProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [jobRegistryBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-01-08T14:02:07.733+01:00  WARN 52859 --- [cobol-to-java-translator] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'platformTransactionManagerCustomizers' of type [org.springframework.boot.autoconfigure.transaction.TransactionManagerCustomizers] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [jobRegistryBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-01-08T14:02:07.736+01:00  WARN 52859 --- [cobol-to-java-translator] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'transactionManager' of type [org.springframework.jdbc.support.JdbcTransactionManager] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [jobRegistryBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-01-08T14:02:07.740+01:00  WARN 52859 --- [cobol-to-java-translator] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'spring.batch-org.springframework.boot.autoconfigure.batch.BatchProperties' of type [org.springframework.boot.autoconfigure.batch.BatchProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [jobRegistryBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-01-08T14:02:07.743+01:00  WARN 52859 --- [cobol-to-java-translator] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.boot.autoconfigure.batch.BatchAutoConfiguration$SpringBootBatchConfiguration' of type [org.springframework.boot.autoconfigure.batch.BatchAutoConfiguration$SpringBootBatchConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [jobRegistryBeanPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2026-01-08T14:02:07.822+01:00  INFO 52859 --- [cobol-to-java-translator] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 9090 (http)
+2026-01-08T14:02:07.826+01:00  INFO 52859 --- [cobol-to-java-translator] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-01-08T14:02:07.827+01:00  INFO 52859 --- [cobol-to-java-translator] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.16]
+2026-01-08T14:02:07.852+01:00  INFO 52859 --- [cobol-to-java-translator] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-01-08T14:02:07.853+01:00  INFO 52859 --- [cobol-to-java-translator] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 588 ms
+2026-01-08T14:02:07.882+01:00  INFO 52859 --- [cobol-to-java-translator] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-01-08T14:02:07.985+01:00  INFO 52859 --- [cobol-to-java-translator] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:translatordb user=SA
+2026-01-08T14:02:07.986+01:00  INFO 52859 --- [cobol-to-java-translator] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-01-08T14:02:07.990+01:00  INFO 52859 --- [cobol-to-java-translator] [           main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:translatordb'
+2026-01-08T14:02:08.265+01:00  INFO 52859 --- [cobol-to-java-translator] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint(s) beneath base path '/actuator'
+2026-01-08T14:02:08.297+01:00  INFO 52859 --- [cobol-to-java-translator] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 9090 (http) with context path ''
+2026-01-08T14:02:08.304+01:00  INFO 52859 --- [cobol-to-java-translator] [           main] c.c.t.CobolTranslatorWebApplication      : Started CobolTranslatorWebApplication in 1.238 seconds (process running for 1.369)
+2026-01-08T14:02:20.474+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-01-08T14:02:20.476+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-01-08T14:02:20.477+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
+2026-01-08T14:09:02.025+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.controller.ConversionController    : Received conversion request - Project: projet, Package: com.example.batch, Files: 2
+2026-01-08T14:09:02.026+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.controller.ConversionController    : Saved COBOL file: banking-transaction.cob
+2026-01-08T14:09:02.026+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.controller.ConversionController    : Saved JCL file: customer-batch.jcl
+2026-01-08T14:09:02.026+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.controller.ConversionController    : Using JCL-enhanced conversion
+2026-01-08T14:09:02.026+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.service.CobolConversionService     : Starting conversion with JCL - Project: projet, Package: com.example.batch, COBOL Files: 1, JCL: customer-batch.jcl
+2026-01-08T14:09:02.026+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.service.CobolConversionService     : Starting conversion - Project: projet, Package: com.example.batch, Files: 1
+2026-01-08T14:09:02.028+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.config.TranslatorConfiguration     : Configuration loaded from: /tmp/cobol-output/translator-web-temp-projet.properties
+2026-01-08T14:09:02.031+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : CobolTranslator initialized with configuration: TranslatorConfiguration[project=projet, location=/tmp/projet, package=com.example.batch]
+2026-01-08T14:09:02.031+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Copybook resolver and VSAM support enabled
+2026-01-08T14:09:02.031+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.service.CobolConversionService     : Converting COBOL file: banking-transaction.cob
+2026-01-08T14:09:02.031+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Starting translation of: /tmp/cobol-upload/upload-1767877742025-5538/banking-transaction.cob
+2026-01-08T14:09:02.031+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Target project: projet
+2026-01-08T14:09:02.031+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Target location: /tmp/projet
+2026-01-08T14:09:02.031+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Parsing COBOL program...
+2026-01-08T14:09:02.032+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.parser.CobolASTParser     : Parsing COBOL source: /tmp/cobol-upload/upload-1767877742025-5538/banking-transaction.cob
+2026-01-08T14:09:02.112+01:00 ERROR 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.parser.CobolErrorListener          : Syntax error in /tmp/cobol-upload/upload-1767877742025-5538/banking-transaction.cob at line 4:6 - mismatched input '******************************************************************' expecting {<EOF>, DATA, ENVIRONMENT, PROCEDURE}
+2026-01-08T14:09:02.112+01:00 ERROR 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.parser.CobolASTParser     : Error parsing COBOL source /tmp/cobol-upload/upload-1767877742025-5538/banking-transaction.cob: Syntax error in /tmp/cobol-upload/upload-1767877742025-5538/banking-transaction.cob at line 4:6 - mismatched input '******************************************************************' expecting {<EOF>, DATA, ENVIRONMENT, PROCEDURE}
+
+java.lang.RuntimeException: Syntax error in /tmp/cobol-upload/upload-1767877742025-5538/banking-transaction.cob at line 4:6 - mismatched input '******************************************************************' expecting {<EOF>, DATA, ENVIRONMENT, PROCEDURE}
+	at com.cobol.translator.parser.CobolErrorListener.syntaxError(CobolErrorListener.java:41) ~[classes/:na]
+	at org.antlr.v4.runtime.ProxyErrorListener.syntaxError(ProxyErrorListener.java:41) ~[antlr4-runtime-4.13.1.jar:4.13.1]
+	at org.antlr.v4.runtime.Parser.notifyErrorListeners(Parser.java:544) ~[antlr4-runtime-4.13.1.jar:4.13.1]
+	at org.antlr.v4.runtime.DefaultErrorStrategy.reportInputMismatch(DefaultErrorStrategy.java:327) ~[antlr4-runtime-4.13.1.jar:4.13.1]
+	at org.antlr.v4.runtime.DefaultErrorStrategy.reportError(DefaultErrorStrategy.java:139) ~[antlr4-runtime-4.13.1.jar:4.13.1]
+	at com.cobol.translator.grammar.CobolParser.compilationUnit(CobolParser.java:386) ~[classes/:na]
+	at com.cobol.translator.parser.CobolASTParser.parse(CobolASTParser.java:71) ~[classes/:na]
+	at com.cobol.translator.parser.CobolASTParser.parseString(CobolASTParser.java:51) ~[classes/:na]
+	at com.cobol.translator.CobolTranslator.translate(CobolTranslator.java:139) ~[classes/:na]
+	at com.cobol.translator.service.CobolConversionService.convertToSpringBatchProject(CobolConversionService.java:94) ~[classes/:na]
+	at com.cobol.translator.service.CobolConversionService.convertWithJCL(CobolConversionService.java:468) ~[classes/:na]
+	at com.cobol.translator.controller.ConversionController.uploadAndConvert(ConversionController.java:126) ~[classes/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:254) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:182) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:917) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:829) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590) ~[tomcat-embed-core-10.1.16.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.16.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:109) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:340) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+Caused by: org.antlr.v4.runtime.InputMismatchException: null
+	at org.antlr.v4.runtime.DefaultErrorStrategy.sync(DefaultErrorStrategy.java:270) ~[antlr4-runtime-4.13.1.jar:4.13.1]
+	at com.cobol.translator.grammar.CobolParser.compilationUnit(CobolParser.java:351) ~[classes/:na]
+	... 58 common frames omitted
+
+2026-01-08T14:09:02.116+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : ANTLR parse failed, falling back to legacy parser: Failed to parse COBOL source: /tmp/cobol-upload/upload-1767877742025-5538/banking-transaction.cob
+2026-01-08T14:09:02.116+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.cobol.translator.parser.CobolParser    : Parsing COBOL source...
+2026-01-08T14:09:02.122+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.cobol.translator.parser.CobolParser    : Parsed 133 data items, 113 statements, and 22 paragraphs
+2026-01-08T14:09:02.122+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Parsed program: BANKTRAN with 133 data items and 113 statements
+2026-01-08T14:09:02.122+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Performing contextual analysis...
+2026-01-08T14:09:02.123+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.analyzer.CobolContextAnalyzer      : Starting contextual analysis of COBOL program: BANKTRAN
+2026-01-08T14:09:02.126+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.analyzer.CobolContextAnalyzer      : Complexity metrics: cyclomatic=14, data items=133, statements=113
+2026-01-08T14:09:02.126+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.analyzer.CobolContextAnalyzer      : Contextual analysis completed with 32 warnings
+2026-01-08T14:09:02.127+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [MEDIUM] Circular dependency detected: Variable WS-CURR-OLD-BALANCE has circular dependencies - Review the data flow logic
+2026-01-08T14:09:02.127+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [MEDIUM] Circular dependency detected: Variable MA-CURRENT-BALANCE has circular dependencies - Review the data flow logic
+2026-01-08T14:09:02.127+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable WS-CURRENT-ACCOUNT is defined but never used - Consider removing unused variables
+2026-01-08T14:09:02.127+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsSwitches is defined but never used - Consider removing unused variables
+2026-01-08T14:09:02.127+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsCounters is defined but never used - Consider removing unused variables
+2026-01-08T14:09:02.127+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable AUDIT-TRAIL-RECORD is defined but never used - Consider removing unused variables
+2026-01-08T14:09:02.127+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable ERROR-REPORT-RECORD is defined but never used - Consider removing unused variables
+2026-01-08T14:09:02.127+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable TRANSACTION-RECORD is defined but never used - Consider removing unused variables
+2026-01-08T14:09:02.127+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable errorReportRecord is defined but never used - Consider removing unused variables
+2026-01-08T14:09:02.127+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsDateTimeFields is defined but never used - Consider removing unused variables
+2026-01-08T14:09:02.128+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable WS-DATE-TIME-FIELDS is defined but never used - Consider removing unused variables
+2026-01-08T14:09:02.128+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable WS-ERROR-MESSAGE is defined but never used - Consider removing unused variables
+2026-01-08T14:09:02.128+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsAuditRecord is defined but never used - Consider removing unused variables
+2026-01-08T14:09:02.128+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable WS-SUMMARY-REPORT is defined but never used - Consider removing unused variables
+2026-01-08T14:09:02.128+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable UPDATED-ACCOUNT-RECORD is defined but never used - Consider removing unused variables
+2026-01-08T14:09:02.128+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsFileStatusCodes is defined but never used - Consider removing unused variables
+2026-01-08T14:09:02.128+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable WS-AUDIT-RECORD is defined but never used - Consider removing unused variables
+2026-01-08T14:09:02.128+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable transactionRecord is defined but never used - Consider removing unused variables
+2026-01-08T14:09:02.128+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable masterAccountRecord is defined but never used - Consider removing unused variables
+2026-01-08T14:09:02.128+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsSummaryReport is defined but never used - Consider removing unused variables
+2026-01-08T14:09:02.128+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable auditTrailRecord is defined but never used - Consider removing unused variables
+2026-01-08T14:09:02.128+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsValidationFlags is defined but never used - Consider removing unused variables
+2026-01-08T14:09:02.128+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable updatedAccountRecord is defined but never used - Consider removing unused variables
+2026-01-08T14:09:02.128+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable WS-SWITCHES is defined but never used - Consider removing unused variables
+2026-01-08T14:09:02.128+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable WS-VALIDATION-FLAGS is defined but never used - Consider removing unused variables
+2026-01-08T14:09:02.128+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsErrorMessage is defined but never used - Consider removing unused variables
+2026-01-08T14:09:02.128+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable MASTER-ACCOUNT-RECORD is defined but never used - Consider removing unused variables
+2026-01-08T14:09:02.128+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable WS-COUNTERS is defined but never used - Consider removing unused variables
+2026-01-08T14:09:02.128+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsCurrentAccount is defined but never used - Consider removing unused variables
+2026-01-08T14:09:02.128+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable WS-FILE-STATUS-CODES is defined but never used - Consider removing unused variables
+2026-01-08T14:09:02.128+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [MEDIUM] Type incompatibility: MOVE from TR-TRANSACTION-DATE (LocalDate) to MA-LAST-TRANSACTION (Integer) may lose data - Review type compatibility and add explicit conversion if needed
+2026-01-08T14:09:02.128+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [MEDIUM] High complexity: Control flow nesting level is 31 - Consider refactoring for better readability
+2026-01-08T14:09:02.128+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Contextual analysis completed with 32 warnings (0 high priority)
+2026-01-08T14:09:02.128+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Ensuring target project exists...
+2026-01-08T14:09:02.128+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Creating new target project: /tmp/projet
+2026-01-08T14:09:02.129+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.project.ProjectGenerator  : Creating target project: /tmp/projet
+2026-01-08T14:09:02.130+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.project.ProjectGenerator  : Directory structure created
+2026-01-08T14:09:02.130+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.project.ProjectGenerator  : Generated pom.xml
+2026-01-08T14:09:02.130+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.project.ProjectGenerator  : Generated application.properties
+2026-01-08T14:09:02.131+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.project.ProjectGenerator  : Generated README.md
+2026-01-08T14:09:02.131+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.project.ProjectGenerator  : Generated .gitignore
+2026-01-08T14:09:02.131+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.project.ProjectGenerator  : Generated build scripts
+2026-01-08T14:09:02.131+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.project.ProjectGenerator  : Generated main application class: ProjetApplication
+2026-01-08T14:09:02.131+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.project.ProjectGenerator  : Project structure created successfully at: /tmp/projet
+2026-01-08T14:09:02.132+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Copied COBOL source to: /tmp/projet/src/main/resources/cobol-original/banking-transaction.cob
+2026-01-08T14:09:02.132+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Generating entity classes...
+2026-01-08T14:09:02.133+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.EntityGenerator          : Generating entity: TransactionFileRecord
+2026-01-08T14:09:02.133+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.EntityGenerator          : Generated: /tmp/projet/src/main/java/com/example/batch/model/TransactionFileRecord.java
+2026-01-08T14:09:02.133+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.EntityGenerator          : Generating entity: MasterAccountFileRecord
+2026-01-08T14:09:02.133+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.EntityGenerator          : Generated: /tmp/projet/src/main/java/com/example/batch/model/MasterAccountFileRecord.java
+2026-01-08T14:09:02.133+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.EntityGenerator          : Generating entity: UpdatedAccountFileRecord
+2026-01-08T14:09:02.134+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.EntityGenerator          : Generated: /tmp/projet/src/main/java/com/example/batch/model/UpdatedAccountFileRecord.java
+2026-01-08T14:09:02.134+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.EntityGenerator          : Generating entity: ErrorReportFileRecord
+2026-01-08T14:09:02.134+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.EntityGenerator          : Generated: /tmp/projet/src/main/java/com/example/batch/model/ErrorReportFileRecord.java
+2026-01-08T14:09:02.134+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.EntityGenerator          : Generating entity: AuditTrailFileRecord
+2026-01-08T14:09:02.134+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.EntityGenerator          : Generated: /tmp/projet/src/main/java/com/example/batch/model/AuditTrailFileRecord.java
+2026-01-08T14:09:02.134+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Generating processor...
+2026-01-08T14:09:02.134+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.ProcessorGenerator       : Generating processor: BanktranProcessor
+2026-01-08T14:09:02.134+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.BusinessRuleGenerator    : Generating business rule validator: BanktranValidator
+2026-01-08T14:09:02.135+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.BusinessRuleGenerator    : Generated: /tmp/projet/src/main/java/com/example/batch/processor/BanktranValidator.java
+2026-01-08T14:09:02.136+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.ProcessorGenerator       : Generated: /tmp/projet/src/main/java/com/example/batch/processor/BanktranProcessor.java
+2026-01-08T14:09:02.136+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Generating job configuration...
+2026-01-08T14:09:02.136+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.JobConfigGenerator       : Generating job configuration: BanktranJobConfiguration
+2026-01-08T14:09:02.137+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.JobConfigGenerator       : Generated: /tmp/projet/src/main/java/com/example/batch/config/BanktranJobConfiguration.java
+2026-01-08T14:09:02.137+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Generating tests...
+2026-01-08T14:09:02.137+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.generator.TestGenerator   : Test generation not yet implemented
+2026-01-08T14:09:02.137+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Generating conversion report...
+2026-01-08T14:09:02.140+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Conversion report saved to: /tmp/projet/docs/BANKTRAN_CONVERSION_REPORT.txt
+2026-01-08T14:09:02.140+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Conversion rate: {:.1f}%
+2026-01-08T14:09:02.140+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Confidence level: HAUTE
+2026-01-08T14:09:02.141+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Translation completed successfully!
+2026-01-08T14:09:02.141+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Files generated in: /tmp/projet
+2026-01-08T14:09:02.141+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.service.CobolConversionService     : Successfully converted: banking-transaction.cob (7 files generated)
+2026-01-08T14:09:02.141+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.service.CobolConversionService     : Conversion completed successfully.
+2026-01-08T14:09:02.141+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.service.CobolConversionService     : Configured project directory: /tmp/cobol-output/projet
+2026-01-08T14:09:02.141+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.service.CobolConversionService     : Actual project directory: /tmp/projet
+2026-01-08T14:09:02.141+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.service.CobolConversionService     : Total files generated: 7
+2026-01-08T14:09:02.141+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.service.CobolConversionService     : Using actual project directory with files: /tmp/projet
+2026-01-08T14:09:02.141+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.controller.ConversionController    : Conversion completed. Output directory: /tmp/projet
+2026-01-08T14:59:19.971+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.controller.ConversionController    : Received conversion request - Project: projettest, Package: com.example.batch, Files: 2
+2026-01-08T14:59:19.971+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.controller.ConversionController    : Saved COBOL file: banking-transaction.cob
+2026-01-08T14:59:19.971+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.controller.ConversionController    : Saved JCL file: banking-transaction.jcl
+2026-01-08T14:59:19.971+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.controller.ConversionController    : Using JCL-enhanced conversion
+2026-01-08T14:59:19.971+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.service.CobolConversionService     : Starting conversion with JCL - Project: projettest, Package: com.example.batch, COBOL Files: 1, JCL: banking-transaction.jcl
+2026-01-08T14:59:19.971+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.service.CobolConversionService     : Starting conversion - Project: projettest, Package: com.example.batch, Files: 1
+2026-01-08T14:59:19.971+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.config.TranslatorConfiguration     : Configuration loaded from: /tmp/cobol-output/translator-web-temp-projettest.properties
+2026-01-08T14:59:19.971+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : CobolTranslator initialized with configuration: TranslatorConfiguration[project=projettest, location=/tmp/projettest, package=com.example.batch]
+2026-01-08T14:59:19.971+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Copybook resolver and VSAM support enabled
+2026-01-08T14:59:19.971+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.service.CobolConversionService     : Converting COBOL file: banking-transaction.cob
+2026-01-08T14:59:19.972+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Starting translation of: /tmp/cobol-upload/upload-1767880759971-3181/banking-transaction.cob
+2026-01-08T14:59:19.972+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Target project: projettest
+2026-01-08T14:59:19.972+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Target location: /tmp/projettest
+2026-01-08T14:59:19.972+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Parsing COBOL program...
+2026-01-08T14:59:19.972+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.translator.parser.CobolASTParser     : Parsing COBOL source: /tmp/cobol-upload/upload-1767880759971-3181/banking-transaction.cob
+2026-01-08T14:59:19.972+01:00 ERROR 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.parser.CobolErrorListener          : Syntax error in /tmp/cobol-upload/upload-1767880759971-3181/banking-transaction.cob at line 4:6 - mismatched input '******************************************************************' expecting {<EOF>, DATA, ENVIRONMENT, PROCEDURE}
+2026-01-08T14:59:19.972+01:00 ERROR 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.translator.parser.CobolASTParser     : Error parsing COBOL source /tmp/cobol-upload/upload-1767880759971-3181/banking-transaction.cob: Syntax error in /tmp/cobol-upload/upload-1767880759971-3181/banking-transaction.cob at line 4:6 - mismatched input '******************************************************************' expecting {<EOF>, DATA, ENVIRONMENT, PROCEDURE}
+
+java.lang.RuntimeException: Syntax error in /tmp/cobol-upload/upload-1767880759971-3181/banking-transaction.cob at line 4:6 - mismatched input '******************************************************************' expecting {<EOF>, DATA, ENVIRONMENT, PROCEDURE}
+	at com.cobol.translator.parser.CobolErrorListener.syntaxError(CobolErrorListener.java:41) ~[classes/:na]
+	at org.antlr.v4.runtime.ProxyErrorListener.syntaxError(ProxyErrorListener.java:41) ~[antlr4-runtime-4.13.1.jar:4.13.1]
+	at org.antlr.v4.runtime.Parser.notifyErrorListeners(Parser.java:544) ~[antlr4-runtime-4.13.1.jar:4.13.1]
+	at org.antlr.v4.runtime.DefaultErrorStrategy.reportInputMismatch(DefaultErrorStrategy.java:327) ~[antlr4-runtime-4.13.1.jar:4.13.1]
+	at org.antlr.v4.runtime.DefaultErrorStrategy.reportError(DefaultErrorStrategy.java:139) ~[antlr4-runtime-4.13.1.jar:4.13.1]
+	at com.cobol.translator.grammar.CobolParser.compilationUnit(CobolParser.java:386) ~[classes/:na]
+	at com.cobol.translator.parser.CobolASTParser.parse(CobolASTParser.java:71) ~[classes/:na]
+	at com.cobol.translator.parser.CobolASTParser.parseString(CobolASTParser.java:51) ~[classes/:na]
+	at com.cobol.translator.CobolTranslator.translate(CobolTranslator.java:139) ~[classes/:na]
+	at com.cobol.translator.service.CobolConversionService.convertToSpringBatchProject(CobolConversionService.java:94) ~[classes/:na]
+	at com.cobol.translator.service.CobolConversionService.convertWithJCL(CobolConversionService.java:468) ~[classes/:na]
+	at com.cobol.translator.controller.ConversionController.uploadAndConvert(ConversionController.java:126) ~[classes/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:254) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:182) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:917) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:829) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590) ~[tomcat-embed-core-10.1.16.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.16.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:109) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:340) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+Caused by: org.antlr.v4.runtime.InputMismatchException: null
+	at org.antlr.v4.runtime.DefaultErrorStrategy.sync(DefaultErrorStrategy.java:270) ~[antlr4-runtime-4.13.1.jar:4.13.1]
+	at com.cobol.translator.grammar.CobolParser.compilationUnit(CobolParser.java:351) ~[classes/:na]
+	... 58 common frames omitted
+
+2026-01-08T14:59:19.973+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : ANTLR parse failed, falling back to legacy parser: Failed to parse COBOL source: /tmp/cobol-upload/upload-1767880759971-3181/banking-transaction.cob
+2026-01-08T14:59:19.973+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.cobol.translator.parser.CobolParser    : Parsing COBOL source...
+2026-01-08T14:59:19.975+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.cobol.translator.parser.CobolParser    : Parsed 133 data items, 113 statements, and 22 paragraphs
+2026-01-08T14:59:19.975+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Parsed program: BANKTRAN with 133 data items and 113 statements
+2026-01-08T14:59:19.975+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Performing contextual analysis...
+2026-01-08T14:59:19.975+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.analyzer.CobolContextAnalyzer      : Starting contextual analysis of COBOL program: BANKTRAN
+2026-01-08T14:59:19.976+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.analyzer.CobolContextAnalyzer      : Complexity metrics: cyclomatic=14, data items=133, statements=113
+2026-01-08T14:59:19.976+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.analyzer.CobolContextAnalyzer      : Contextual analysis completed with 32 warnings
+2026-01-08T14:59:19.976+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [MEDIUM] Circular dependency detected: Variable WS-CURR-OLD-BALANCE has circular dependencies - Review the data flow logic
+2026-01-08T14:59:19.976+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [MEDIUM] Circular dependency detected: Variable MA-CURRENT-BALANCE has circular dependencies - Review the data flow logic
+2026-01-08T14:59:19.976+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable WS-CURRENT-ACCOUNT is defined but never used - Consider removing unused variables
+2026-01-08T14:59:19.976+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsSwitches is defined but never used - Consider removing unused variables
+2026-01-08T14:59:19.976+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsCounters is defined but never used - Consider removing unused variables
+2026-01-08T14:59:19.976+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable AUDIT-TRAIL-RECORD is defined but never used - Consider removing unused variables
+2026-01-08T14:59:19.976+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable ERROR-REPORT-RECORD is defined but never used - Consider removing unused variables
+2026-01-08T14:59:19.976+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable TRANSACTION-RECORD is defined but never used - Consider removing unused variables
+2026-01-08T14:59:19.976+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable errorReportRecord is defined but never used - Consider removing unused variables
+2026-01-08T14:59:19.976+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsDateTimeFields is defined but never used - Consider removing unused variables
+2026-01-08T14:59:19.976+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable WS-DATE-TIME-FIELDS is defined but never used - Consider removing unused variables
+2026-01-08T14:59:19.976+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable WS-ERROR-MESSAGE is defined but never used - Consider removing unused variables
+2026-01-08T14:59:19.976+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsAuditRecord is defined but never used - Consider removing unused variables
+2026-01-08T14:59:19.976+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable WS-SUMMARY-REPORT is defined but never used - Consider removing unused variables
+2026-01-08T14:59:19.976+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable UPDATED-ACCOUNT-RECORD is defined but never used - Consider removing unused variables
+2026-01-08T14:59:19.976+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsFileStatusCodes is defined but never used - Consider removing unused variables
+2026-01-08T14:59:19.976+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable WS-AUDIT-RECORD is defined but never used - Consider removing unused variables
+2026-01-08T14:59:19.976+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable transactionRecord is defined but never used - Consider removing unused variables
+2026-01-08T14:59:19.976+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable masterAccountRecord is defined but never used - Consider removing unused variables
+2026-01-08T14:59:19.976+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsSummaryReport is defined but never used - Consider removing unused variables
+2026-01-08T14:59:19.976+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable auditTrailRecord is defined but never used - Consider removing unused variables
+2026-01-08T14:59:19.977+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsValidationFlags is defined but never used - Consider removing unused variables
+2026-01-08T14:59:19.977+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable updatedAccountRecord is defined but never used - Consider removing unused variables
+2026-01-08T14:59:19.977+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable WS-SWITCHES is defined but never used - Consider removing unused variables
+2026-01-08T14:59:19.977+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable WS-VALIDATION-FLAGS is defined but never used - Consider removing unused variables
+2026-01-08T14:59:19.977+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsErrorMessage is defined but never used - Consider removing unused variables
+2026-01-08T14:59:19.977+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable MASTER-ACCOUNT-RECORD is defined but never used - Consider removing unused variables
+2026-01-08T14:59:19.977+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable WS-COUNTERS is defined but never used - Consider removing unused variables
+2026-01-08T14:59:19.977+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsCurrentAccount is defined but never used - Consider removing unused variables
+2026-01-08T14:59:19.977+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable WS-FILE-STATUS-CODES is defined but never used - Consider removing unused variables
+2026-01-08T14:59:19.977+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [MEDIUM] Type incompatibility: MOVE from TR-TRANSACTION-DATE (LocalDate) to MA-LAST-TRANSACTION (Integer) may lose data - Review type compatibility and add explicit conversion if needed
+2026-01-08T14:59:19.977+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Analysis warning: [MEDIUM] High complexity: Control flow nesting level is 31 - Consider refactoring for better readability
+2026-01-08T14:59:19.977+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Contextual analysis completed with 32 warnings (0 high priority)
+2026-01-08T14:59:19.977+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Ensuring target project exists...
+2026-01-08T14:59:19.977+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Creating new target project: /tmp/projettest
+2026-01-08T14:59:19.977+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.translator.project.ProjectGenerator  : Creating target project: /tmp/projettest
+2026-01-08T14:59:19.977+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.translator.project.ProjectGenerator  : Directory structure created
+2026-01-08T14:59:19.977+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.translator.project.ProjectGenerator  : Generated pom.xml
+2026-01-08T14:59:19.977+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.translator.project.ProjectGenerator  : Generated application.properties
+2026-01-08T14:59:19.977+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.translator.project.ProjectGenerator  : Generated README.md
+2026-01-08T14:59:19.977+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.translator.project.ProjectGenerator  : Generated .gitignore
+2026-01-08T14:59:19.977+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.translator.project.ProjectGenerator  : Generated build scripts
+2026-01-08T14:59:19.978+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.translator.project.ProjectGenerator  : Generated main application class: ProjettestApplication
+2026-01-08T14:59:19.978+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.translator.project.ProjectGenerator  : Project structure created successfully at: /tmp/projettest
+2026-01-08T14:59:19.978+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Copied COBOL source to: /tmp/projettest/src/main/resources/cobol-original/banking-transaction.cob
+2026-01-08T14:59:19.978+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Generating entity classes...
+2026-01-08T14:59:19.978+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.generator.EntityGenerator          : Generating entity: TransactionFileRecord
+2026-01-08T14:59:19.978+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.generator.EntityGenerator          : Generated: /tmp/projettest/src/main/java/com/example/batch/model/TransactionFileRecord.java
+2026-01-08T14:59:19.978+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.generator.EntityGenerator          : Generating entity: MasterAccountFileRecord
+2026-01-08T14:59:19.978+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.generator.EntityGenerator          : Generated: /tmp/projettest/src/main/java/com/example/batch/model/MasterAccountFileRecord.java
+2026-01-08T14:59:19.978+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.generator.EntityGenerator          : Generating entity: UpdatedAccountFileRecord
+2026-01-08T14:59:19.978+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.generator.EntityGenerator          : Generated: /tmp/projettest/src/main/java/com/example/batch/model/UpdatedAccountFileRecord.java
+2026-01-08T14:59:19.978+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.generator.EntityGenerator          : Generating entity: ErrorReportFileRecord
+2026-01-08T14:59:19.978+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.generator.EntityGenerator          : Generated: /tmp/projettest/src/main/java/com/example/batch/model/ErrorReportFileRecord.java
+2026-01-08T14:59:19.978+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.generator.EntityGenerator          : Generating entity: AuditTrailFileRecord
+2026-01-08T14:59:19.978+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.generator.EntityGenerator          : Generated: /tmp/projettest/src/main/java/com/example/batch/model/AuditTrailFileRecord.java
+2026-01-08T14:59:19.979+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Generating processor...
+2026-01-08T14:59:19.979+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.generator.ProcessorGenerator       : Generating processor: BanktranProcessor
+2026-01-08T14:59:19.979+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.generator.BusinessRuleGenerator    : Generating business rule validator: BanktranValidator
+2026-01-08T14:59:19.979+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.generator.BusinessRuleGenerator    : Generated: /tmp/projettest/src/main/java/com/example/batch/processor/BanktranValidator.java
+2026-01-08T14:59:19.979+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.generator.ProcessorGenerator       : Generated: /tmp/projettest/src/main/java/com/example/batch/processor/BanktranProcessor.java
+2026-01-08T14:59:19.979+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Found corresponding JCL file: banking-transaction.jcl
+2026-01-08T14:59:19.979+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Parsing JCL file: banking-transaction.jcl
+2026-01-08T14:59:19.994+01:00 ERROR 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.jcl.parser.JCLErrorListener        : JCL Syntax error at line 48:2 - extraneous input 'SORT' expecting {<EOF>, '//', COMMENT}
+2026-01-08T14:59:19.994+01:00 ERROR 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.cobol.translator.jcl.parser.JCLParser  : Error parsing JCL: JCL Syntax error at line 48:2 - extraneous input 'SORT' expecting {<EOF>, '//', COMMENT}
+
+com.cobol.translator.jcl.parser.JCLParseException: JCL Syntax error at line 48:2 - extraneous input 'SORT' expecting {<EOF>, '//', COMMENT}
+	at com.cobol.translator.jcl.parser.JCLErrorListener.syntaxError(JCLErrorListener.java:26) ~[classes/:na]
+	at org.antlr.v4.runtime.ProxyErrorListener.syntaxError(ProxyErrorListener.java:41) ~[antlr4-runtime-4.13.1.jar:4.13.1]
+	at org.antlr.v4.runtime.Parser.notifyErrorListeners(Parser.java:544) ~[antlr4-runtime-4.13.1.jar:4.13.1]
+	at org.antlr.v4.runtime.DefaultErrorStrategy.reportUnwantedToken(DefaultErrorStrategy.java:377) ~[antlr4-runtime-4.13.1.jar:4.13.1]
+	at org.antlr.v4.runtime.DefaultErrorStrategy.sync(DefaultErrorStrategy.java:275) ~[antlr4-runtime-4.13.1.jar:4.13.1]
+	at com.cobol.translator.grammar.JCLParser.jclFile(JCLParser.java:179) ~[classes/:na]
+	at com.cobol.translator.jcl.parser.JCLParser.parse(JCLParser.java:55) ~[classes/:na]
+	at com.cobol.translator.jcl.parser.JCLParser.parse(JCLParser.java:31) ~[classes/:na]
+	at com.cobol.translator.CobolTranslator.translateJCL(CobolTranslator.java:386) ~[classes/:na]
+	at com.cobol.translator.CobolTranslator.translate(CobolTranslator.java:205) ~[classes/:na]
+	at com.cobol.translator.service.CobolConversionService.convertToSpringBatchProject(CobolConversionService.java:94) ~[classes/:na]
+	at com.cobol.translator.service.CobolConversionService.convertWithJCL(CobolConversionService.java:468) ~[classes/:na]
+	at com.cobol.translator.controller.ConversionController.uploadAndConvert(ConversionController.java:126) ~[classes/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:254) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:182) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:917) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:829) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590) ~[tomcat-embed-core-10.1.16.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.16.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:109) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:340) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+
+2026-01-08T14:59:19.994+01:00 ERROR 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Error parsing JCL: Failed to parse JCL: JCL Syntax error at line 48:2 - extraneous input 'SORT' expecting {<EOF>, '//', COMMENT}
+2026-01-08T14:59:19.994+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Continuing without JCL translation
+2026-01-08T14:59:19.994+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Generating job configuration...
+2026-01-08T14:59:19.994+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.generator.JobConfigGenerator       : Generating job configuration: BanktranJobConfiguration
+2026-01-08T14:59:19.995+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.generator.JobConfigGenerator       : Generated: /tmp/projettest/src/main/java/com/example/batch/config/BanktranJobConfiguration.java
+2026-01-08T14:59:19.995+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Generating tests...
+2026-01-08T14:59:19.995+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.translator.generator.TestGenerator   : Test generation not yet implemented
+2026-01-08T14:59:19.995+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Generating conversion report...
+2026-01-08T14:59:19.996+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Conversion report saved to: /tmp/projettest/docs/BANKTRAN_CONVERSION_REPORT.txt
+2026-01-08T14:59:19.996+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Conversion rate: {:.1f}%
+2026-01-08T14:59:19.996+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Confidence level: HAUTE
+2026-01-08T14:59:19.996+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Translation completed successfully!
+2026-01-08T14:59:19.996+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] com.cobol.translator.CobolTranslator     : Files generated in: /tmp/projettest
+2026-01-08T14:59:19.996+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.service.CobolConversionService     : Successfully converted: banking-transaction.cob (7 files generated)
+2026-01-08T14:59:19.996+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.service.CobolConversionService     : Conversion completed successfully.
+2026-01-08T14:59:19.996+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.service.CobolConversionService     : Configured project directory: /tmp/cobol-output/projettest
+2026-01-08T14:59:19.996+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.service.CobolConversionService     : Actual project directory: /tmp/projettest
+2026-01-08T14:59:19.996+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.service.CobolConversionService     : Total files generated: 7
+2026-01-08T14:59:19.997+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.service.CobolConversionService     : Using actual project directory with files: /tmp/projettest
+2026-01-08T14:59:19.997+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-1] c.c.t.controller.ConversionController    : Conversion completed. Output directory: /tmp/projettest
+2026-01-08T15:00:05.769+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.controller.ConversionController    : Received conversion request - Project: projettest, Package: com.example.batch, Files: 2
+2026-01-08T15:00:05.769+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.controller.ConversionController    : Saved COBOL file: banking-transaction.cob
+2026-01-08T15:00:05.769+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.controller.ConversionController    : Saved JCL file: banking-transaction.jcl
+2026-01-08T15:00:05.770+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.controller.ConversionController    : Using JCL-enhanced conversion
+2026-01-08T15:00:05.770+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.service.CobolConversionService     : Starting conversion with JCL - Project: projettest, Package: com.example.batch, COBOL Files: 1, JCL: banking-transaction.jcl
+2026-01-08T15:00:05.770+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.service.CobolConversionService     : Starting conversion - Project: projettest, Package: com.example.batch, Files: 1
+2026-01-08T15:00:05.770+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.config.TranslatorConfiguration     : Configuration loaded from: /tmp/cobol-output/translator-web-temp-projettest.properties
+2026-01-08T15:00:05.770+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : CobolTranslator initialized with configuration: TranslatorConfiguration[project=projettest, location=/tmp/projettest, package=com.example.batch]
+2026-01-08T15:00:05.770+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Copybook resolver and VSAM support enabled
+2026-01-08T15:00:05.771+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.service.CobolConversionService     : Converting COBOL file: banking-transaction.cob
+2026-01-08T15:00:05.771+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Starting translation of: /tmp/cobol-upload/upload-1767880805769-1165/banking-transaction.cob
+2026-01-08T15:00:05.771+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Target project: projettest
+2026-01-08T15:00:05.771+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Target location: /tmp/projettest
+2026-01-08T15:00:05.771+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Parsing COBOL program...
+2026-01-08T15:00:05.771+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.translator.parser.CobolASTParser     : Parsing COBOL source: /tmp/cobol-upload/upload-1767880805769-1165/banking-transaction.cob
+2026-01-08T15:00:05.771+01:00 ERROR 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.parser.CobolErrorListener          : Syntax error in /tmp/cobol-upload/upload-1767880805769-1165/banking-transaction.cob at line 4:6 - mismatched input '******************************************************************' expecting {<EOF>, DATA, ENVIRONMENT, PROCEDURE}
+2026-01-08T15:00:05.771+01:00 ERROR 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.translator.parser.CobolASTParser     : Error parsing COBOL source /tmp/cobol-upload/upload-1767880805769-1165/banking-transaction.cob: Syntax error in /tmp/cobol-upload/upload-1767880805769-1165/banking-transaction.cob at line 4:6 - mismatched input '******************************************************************' expecting {<EOF>, DATA, ENVIRONMENT, PROCEDURE}
+
+java.lang.RuntimeException: Syntax error in /tmp/cobol-upload/upload-1767880805769-1165/banking-transaction.cob at line 4:6 - mismatched input '******************************************************************' expecting {<EOF>, DATA, ENVIRONMENT, PROCEDURE}
+	at com.cobol.translator.parser.CobolErrorListener.syntaxError(CobolErrorListener.java:41) ~[classes/:na]
+	at org.antlr.v4.runtime.ProxyErrorListener.syntaxError(ProxyErrorListener.java:41) ~[antlr4-runtime-4.13.1.jar:4.13.1]
+	at org.antlr.v4.runtime.Parser.notifyErrorListeners(Parser.java:544) ~[antlr4-runtime-4.13.1.jar:4.13.1]
+	at org.antlr.v4.runtime.DefaultErrorStrategy.reportInputMismatch(DefaultErrorStrategy.java:327) ~[antlr4-runtime-4.13.1.jar:4.13.1]
+	at org.antlr.v4.runtime.DefaultErrorStrategy.reportError(DefaultErrorStrategy.java:139) ~[antlr4-runtime-4.13.1.jar:4.13.1]
+	at com.cobol.translator.grammar.CobolParser.compilationUnit(CobolParser.java:386) ~[classes/:na]
+	at com.cobol.translator.parser.CobolASTParser.parse(CobolASTParser.java:71) ~[classes/:na]
+	at com.cobol.translator.parser.CobolASTParser.parseString(CobolASTParser.java:51) ~[classes/:na]
+	at com.cobol.translator.CobolTranslator.translate(CobolTranslator.java:139) ~[classes/:na]
+	at com.cobol.translator.service.CobolConversionService.convertToSpringBatchProject(CobolConversionService.java:94) ~[classes/:na]
+	at com.cobol.translator.service.CobolConversionService.convertWithJCL(CobolConversionService.java:468) ~[classes/:na]
+	at com.cobol.translator.controller.ConversionController.uploadAndConvert(ConversionController.java:126) ~[classes/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:254) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:182) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:917) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:829) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590) ~[tomcat-embed-core-10.1.16.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.16.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:109) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:340) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+Caused by: org.antlr.v4.runtime.InputMismatchException: null
+	at org.antlr.v4.runtime.DefaultErrorStrategy.sync(DefaultErrorStrategy.java:270) ~[antlr4-runtime-4.13.1.jar:4.13.1]
+	at com.cobol.translator.grammar.CobolParser.compilationUnit(CobolParser.java:351) ~[classes/:na]
+	... 58 common frames omitted
+
+2026-01-08T15:00:05.772+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : ANTLR parse failed, falling back to legacy parser: Failed to parse COBOL source: /tmp/cobol-upload/upload-1767880805769-1165/banking-transaction.cob
+2026-01-08T15:00:05.772+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.cobol.translator.parser.CobolParser    : Parsing COBOL source...
+2026-01-08T15:00:05.774+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.cobol.translator.parser.CobolParser    : Parsed 133 data items, 113 statements, and 22 paragraphs
+2026-01-08T15:00:05.774+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Parsed program: BANKTRAN with 133 data items and 113 statements
+2026-01-08T15:00:05.774+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Performing contextual analysis...
+2026-01-08T15:00:05.774+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.analyzer.CobolContextAnalyzer      : Starting contextual analysis of COBOL program: BANKTRAN
+2026-01-08T15:00:05.776+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.analyzer.CobolContextAnalyzer      : Complexity metrics: cyclomatic=14, data items=133, statements=113
+2026-01-08T15:00:05.776+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.analyzer.CobolContextAnalyzer      : Contextual analysis completed with 32 warnings
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [MEDIUM] Circular dependency detected: Variable WS-CURR-OLD-BALANCE has circular dependencies - Review the data flow logic
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [MEDIUM] Circular dependency detected: Variable MA-CURRENT-BALANCE has circular dependencies - Review the data flow logic
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable WS-CURRENT-ACCOUNT is defined but never used - Consider removing unused variables
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsSwitches is defined but never used - Consider removing unused variables
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsCounters is defined but never used - Consider removing unused variables
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable AUDIT-TRAIL-RECORD is defined but never used - Consider removing unused variables
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable ERROR-REPORT-RECORD is defined but never used - Consider removing unused variables
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable TRANSACTION-RECORD is defined but never used - Consider removing unused variables
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable errorReportRecord is defined but never used - Consider removing unused variables
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsDateTimeFields is defined but never used - Consider removing unused variables
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable WS-DATE-TIME-FIELDS is defined but never used - Consider removing unused variables
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable WS-ERROR-MESSAGE is defined but never used - Consider removing unused variables
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsAuditRecord is defined but never used - Consider removing unused variables
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable WS-SUMMARY-REPORT is defined but never used - Consider removing unused variables
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable UPDATED-ACCOUNT-RECORD is defined but never used - Consider removing unused variables
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsFileStatusCodes is defined but never used - Consider removing unused variables
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable WS-AUDIT-RECORD is defined but never used - Consider removing unused variables
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable transactionRecord is defined but never used - Consider removing unused variables
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable masterAccountRecord is defined but never used - Consider removing unused variables
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsSummaryReport is defined but never used - Consider removing unused variables
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable auditTrailRecord is defined but never used - Consider removing unused variables
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsValidationFlags is defined but never used - Consider removing unused variables
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable updatedAccountRecord is defined but never used - Consider removing unused variables
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable WS-SWITCHES is defined but never used - Consider removing unused variables
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable WS-VALIDATION-FLAGS is defined but never used - Consider removing unused variables
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsErrorMessage is defined but never used - Consider removing unused variables
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable MASTER-ACCOUNT-RECORD is defined but never used - Consider removing unused variables
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable WS-COUNTERS is defined but never used - Consider removing unused variables
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsCurrentAccount is defined but never used - Consider removing unused variables
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable WS-FILE-STATUS-CODES is defined but never used - Consider removing unused variables
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [MEDIUM] Type incompatibility: MOVE from TR-TRANSACTION-DATE (LocalDate) to MA-LAST-TRANSACTION (Integer) may lose data - Review type compatibility and add explicit conversion if needed
+2026-01-08T15:00:05.776+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Analysis warning: [MEDIUM] High complexity: Control flow nesting level is 31 - Consider refactoring for better readability
+2026-01-08T15:00:05.777+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Contextual analysis completed with 32 warnings (0 high priority)
+2026-01-08T15:00:05.777+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Ensuring target project exists...
+2026-01-08T15:00:05.777+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Creating new target project: /tmp/projettest
+2026-01-08T15:00:05.777+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.translator.project.ProjectGenerator  : Creating target project: /tmp/projettest
+2026-01-08T15:00:05.777+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.translator.project.ProjectGenerator  : Directory structure created
+2026-01-08T15:00:05.777+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.translator.project.ProjectGenerator  : Generated pom.xml
+2026-01-08T15:00:05.777+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.translator.project.ProjectGenerator  : Generated application.properties
+2026-01-08T15:00:05.777+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.translator.project.ProjectGenerator  : Generated README.md
+2026-01-08T15:00:05.777+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.translator.project.ProjectGenerator  : Generated .gitignore
+2026-01-08T15:00:05.777+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.translator.project.ProjectGenerator  : Generated build scripts
+2026-01-08T15:00:05.778+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.translator.project.ProjectGenerator  : Generated main application class: ProjettestApplication
+2026-01-08T15:00:05.778+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.translator.project.ProjectGenerator  : Project structure created successfully at: /tmp/projettest
+2026-01-08T15:00:05.778+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Copied COBOL source to: /tmp/projettest/src/main/resources/cobol-original/banking-transaction.cob
+2026-01-08T15:00:05.778+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Generating entity classes...
+2026-01-08T15:00:05.778+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.generator.EntityGenerator          : Generating entity: TransactionFileRecord
+2026-01-08T15:00:05.778+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.generator.EntityGenerator          : Generated: /tmp/projettest/src/main/java/com/example/batch/model/TransactionFileRecord.java
+2026-01-08T15:00:05.778+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.generator.EntityGenerator          : Generating entity: MasterAccountFileRecord
+2026-01-08T15:00:05.778+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.generator.EntityGenerator          : Generated: /tmp/projettest/src/main/java/com/example/batch/model/MasterAccountFileRecord.java
+2026-01-08T15:00:05.778+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.generator.EntityGenerator          : Generating entity: UpdatedAccountFileRecord
+2026-01-08T15:00:05.778+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.generator.EntityGenerator          : Generated: /tmp/projettest/src/main/java/com/example/batch/model/UpdatedAccountFileRecord.java
+2026-01-08T15:00:05.778+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.generator.EntityGenerator          : Generating entity: ErrorReportFileRecord
+2026-01-08T15:00:05.778+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.generator.EntityGenerator          : Generated: /tmp/projettest/src/main/java/com/example/batch/model/ErrorReportFileRecord.java
+2026-01-08T15:00:05.778+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.generator.EntityGenerator          : Generating entity: AuditTrailFileRecord
+2026-01-08T15:00:05.778+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.generator.EntityGenerator          : Generated: /tmp/projettest/src/main/java/com/example/batch/model/AuditTrailFileRecord.java
+2026-01-08T15:00:05.778+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Generating processor...
+2026-01-08T15:00:05.778+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.generator.ProcessorGenerator       : Generating processor: BanktranProcessor
+2026-01-08T15:00:05.778+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.generator.BusinessRuleGenerator    : Generating business rule validator: BanktranValidator
+2026-01-08T15:00:05.778+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.generator.BusinessRuleGenerator    : Generated: /tmp/projettest/src/main/java/com/example/batch/processor/BanktranValidator.java
+2026-01-08T15:00:05.778+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.generator.ProcessorGenerator       : Generated: /tmp/projettest/src/main/java/com/example/batch/processor/BanktranProcessor.java
+2026-01-08T15:00:05.778+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Found corresponding JCL file: banking-transaction.jcl
+2026-01-08T15:00:05.778+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Parsing JCL file: banking-transaction.jcl
+2026-01-08T15:00:05.780+01:00 ERROR 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.jcl.parser.JCLErrorListener        : JCL Syntax error at line 48:2 - extraneous input 'SORT' expecting {<EOF>, '//', COMMENT}
+2026-01-08T15:00:05.780+01:00 ERROR 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.cobol.translator.jcl.parser.JCLParser  : Error parsing JCL: JCL Syntax error at line 48:2 - extraneous input 'SORT' expecting {<EOF>, '//', COMMENT}
+
+com.cobol.translator.jcl.parser.JCLParseException: JCL Syntax error at line 48:2 - extraneous input 'SORT' expecting {<EOF>, '//', COMMENT}
+	at com.cobol.translator.jcl.parser.JCLErrorListener.syntaxError(JCLErrorListener.java:26) ~[classes/:na]
+	at org.antlr.v4.runtime.ProxyErrorListener.syntaxError(ProxyErrorListener.java:41) ~[antlr4-runtime-4.13.1.jar:4.13.1]
+	at org.antlr.v4.runtime.Parser.notifyErrorListeners(Parser.java:544) ~[antlr4-runtime-4.13.1.jar:4.13.1]
+	at org.antlr.v4.runtime.DefaultErrorStrategy.reportUnwantedToken(DefaultErrorStrategy.java:377) ~[antlr4-runtime-4.13.1.jar:4.13.1]
+	at org.antlr.v4.runtime.DefaultErrorStrategy.sync(DefaultErrorStrategy.java:275) ~[antlr4-runtime-4.13.1.jar:4.13.1]
+	at com.cobol.translator.grammar.JCLParser.jclFile(JCLParser.java:179) ~[classes/:na]
+	at com.cobol.translator.jcl.parser.JCLParser.parse(JCLParser.java:55) ~[classes/:na]
+	at com.cobol.translator.jcl.parser.JCLParser.parse(JCLParser.java:31) ~[classes/:na]
+	at com.cobol.translator.CobolTranslator.translateJCL(CobolTranslator.java:386) ~[classes/:na]
+	at com.cobol.translator.CobolTranslator.translate(CobolTranslator.java:205) ~[classes/:na]
+	at com.cobol.translator.service.CobolConversionService.convertToSpringBatchProject(CobolConversionService.java:94) ~[classes/:na]
+	at com.cobol.translator.service.CobolConversionService.convertWithJCL(CobolConversionService.java:468) ~[classes/:na]
+	at com.cobol.translator.controller.ConversionController.uploadAndConvert(ConversionController.java:126) ~[classes/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:254) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:182) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:917) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:829) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590) ~[tomcat-embed-core-10.1.16.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.16.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:109) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:340) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+
+2026-01-08T15:00:05.781+01:00 ERROR 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Error parsing JCL: Failed to parse JCL: JCL Syntax error at line 48:2 - extraneous input 'SORT' expecting {<EOF>, '//', COMMENT}
+2026-01-08T15:00:05.781+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Continuing without JCL translation
+2026-01-08T15:00:05.781+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Generating job configuration...
+2026-01-08T15:00:05.781+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.generator.JobConfigGenerator       : Generating job configuration: BanktranJobConfiguration
+2026-01-08T15:00:05.782+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.generator.JobConfigGenerator       : Generated: /tmp/projettest/src/main/java/com/example/batch/config/BanktranJobConfiguration.java
+2026-01-08T15:00:05.782+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Generating tests...
+2026-01-08T15:00:05.782+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.translator.generator.TestGenerator   : Test generation not yet implemented
+2026-01-08T15:00:05.782+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Generating conversion report...
+2026-01-08T15:00:05.782+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Conversion report saved to: /tmp/projettest/docs/BANKTRAN_CONVERSION_REPORT.txt
+2026-01-08T15:00:05.783+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Conversion rate: {:.1f}%
+2026-01-08T15:00:05.783+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Confidence level: HAUTE
+2026-01-08T15:00:05.783+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Translation completed successfully!
+2026-01-08T15:00:05.783+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] com.cobol.translator.CobolTranslator     : Files generated in: /tmp/projettest
+2026-01-08T15:00:05.783+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.service.CobolConversionService     : Successfully converted: banking-transaction.cob (7 files generated)
+2026-01-08T15:00:05.783+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.service.CobolConversionService     : Conversion completed successfully.
+2026-01-08T15:00:05.783+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.service.CobolConversionService     : Configured project directory: /tmp/cobol-output/projettest
+2026-01-08T15:00:05.783+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.service.CobolConversionService     : Actual project directory: /tmp/projettest
+2026-01-08T15:00:05.783+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.service.CobolConversionService     : Total files generated: 7
+2026-01-08T15:00:05.783+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.service.CobolConversionService     : Using actual project directory with files: /tmp/projettest
+2026-01-08T15:00:05.783+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-2] c.c.t.controller.ConversionController    : Conversion completed. Output directory: /tmp/projettest
+2026-01-08T15:15:16.920+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.controller.ConversionController    : Received conversion request - Project: projettest, Package: com.example.batch, Files: 1
+2026-01-08T15:15:16.920+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.controller.ConversionController    : Saved COBOL file: simple-customer.cob
+2026-01-08T15:15:16.920+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.controller.ConversionController    : Using standard COBOL conversion
+2026-01-08T15:15:16.921+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.service.CobolConversionService     : Starting conversion - Project: projettest, Package: com.example.batch, Files: 1
+2026-01-08T15:15:16.921+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.config.TranslatorConfiguration     : Configuration loaded from: /tmp/cobol-output/translator-web-temp-projettest.properties
+2026-01-08T15:15:16.921+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : CobolTranslator initialized with configuration: TranslatorConfiguration[project=projettest, location=/tmp/projettest, package=com.example.batch]
+2026-01-08T15:15:16.921+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Copybook resolver and VSAM support enabled
+2026-01-08T15:15:16.921+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.service.CobolConversionService     : Converting COBOL file: simple-customer.cob
+2026-01-08T15:15:16.921+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Starting translation of: /tmp/cobol-upload/upload-1767881716920-289/simple-customer.cob
+2026-01-08T15:15:16.921+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Target project: projettest
+2026-01-08T15:15:16.921+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Target location: /tmp/projettest
+2026-01-08T15:15:16.921+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Parsing COBOL program...
+2026-01-08T15:15:16.921+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.parser.CobolASTParser     : Parsing COBOL source: /tmp/cobol-upload/upload-1767881716920-289/simple-customer.cob
+2026-01-08T15:15:16.970+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.parser.CobolASTBuilder    : Built AST for program: CUSTPROC
+2026-01-08T15:15:16.970+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.parser.CobolASTParser     : Successfully parsed program: CUSTPROC
+2026-01-08T15:15:16.970+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : ANTLR parse success - program name: CUSTPROC
+2026-01-08T15:15:16.970+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.cobol.translator.parser.CobolParser    : Parsing COBOL source...
+2026-01-08T15:15:16.970+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.cobol.translator.parser.CobolParser    : Parsed 7 data items, 6 statements, and 3 paragraphs
+2026-01-08T15:15:16.970+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Parsed program: CUSTPROC with 7 data items and 6 statements
+2026-01-08T15:15:16.970+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Performing contextual analysis...
+2026-01-08T15:15:16.970+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.analyzer.CobolContextAnalyzer      : Starting contextual analysis of COBOL program: CUSTPROC
+2026-01-08T15:15:16.970+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.analyzer.CobolContextAnalyzer      : Detected file processing pattern
+2026-01-08T15:15:16.970+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.analyzer.CobolContextAnalyzer      : Complexity metrics: cyclomatic=3, data items=7, statements=6
+2026-01-08T15:15:16.970+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.analyzer.CobolContextAnalyzer      : Contextual analysis completed with 4 warnings
+2026-01-08T15:15:16.970+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsEof is defined but never used - Consider removing unused variables
+2026-01-08T15:15:16.970+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable CUSTOMER-RECORD is defined but never used - Consider removing unused variables
+2026-01-08T15:15:16.970+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsCount is defined but never used - Consider removing unused variables
+2026-01-08T15:15:16.970+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable customerRecord is defined but never used - Consider removing unused variables
+2026-01-08T15:15:16.970+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Contextual analysis completed with 4 warnings (0 high priority)
+2026-01-08T15:15:16.970+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Ensuring target project exists...
+2026-01-08T15:15:16.970+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Creating new target project: /tmp/projettest
+2026-01-08T15:15:16.970+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.project.ProjectGenerator  : Creating target project: /tmp/projettest
+2026-01-08T15:15:16.971+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.project.ProjectGenerator  : Directory structure created
+2026-01-08T15:15:16.971+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.project.ProjectGenerator  : Generated pom.xml
+2026-01-08T15:15:16.971+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.project.ProjectGenerator  : Generated application.properties
+2026-01-08T15:15:16.971+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.project.ProjectGenerator  : Generated README.md
+2026-01-08T15:15:16.972+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.project.ProjectGenerator  : Generated .gitignore
+2026-01-08T15:15:16.972+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.project.ProjectGenerator  : Generated build scripts
+2026-01-08T15:15:16.972+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.project.ProjectGenerator  : Generated main application class: ProjettestApplication
+2026-01-08T15:15:16.972+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.project.ProjectGenerator  : Project structure created successfully at: /tmp/projettest
+2026-01-08T15:15:16.972+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Copied COBOL source to: /tmp/projettest/src/main/resources/cobol-original/simple-customer.cob
+2026-01-08T15:15:16.972+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Generating entity classes...
+2026-01-08T15:15:16.972+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.EntityGenerator          : Generating entity: CustomerFileRecord
+2026-01-08T15:15:16.972+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.EntityGenerator          : Generated: /tmp/projettest/src/main/java/com/example/batch/model/CustomerFileRecord.java
+2026-01-08T15:15:16.972+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Generating processor...
+2026-01-08T15:15:16.972+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.ProcessorGenerator       : Generating processor: CustprocProcessor
+2026-01-08T15:15:16.972+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.BusinessRuleGenerator    : Generating business rule validator: CustprocValidator
+2026-01-08T15:15:16.972+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.BusinessRuleGenerator    : Generated: /tmp/projettest/src/main/java/com/example/batch/processor/CustprocValidator.java
+2026-01-08T15:15:16.972+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.ProcessorGenerator       : Generated: /tmp/projettest/src/main/java/com/example/batch/processor/CustprocProcessor.java
+2026-01-08T15:15:16.972+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Generating job configuration...
+2026-01-08T15:15:16.972+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.JobConfigGenerator       : Generating job configuration: CustprocJobConfiguration
+2026-01-08T15:15:16.972+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.JobConfigGenerator       : Generated: /tmp/projettest/src/main/java/com/example/batch/config/CustprocJobConfiguration.java
+2026-01-08T15:15:16.972+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Generating tests...
+2026-01-08T15:15:16.973+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.generator.TestGenerator   : Test generation not yet implemented
+2026-01-08T15:15:16.973+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Generating conversion report...
+2026-01-08T15:15:16.973+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Conversion report saved to: /tmp/projettest/docs/CUSTPROC_CONVERSION_REPORT.txt
+2026-01-08T15:15:16.973+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Conversion rate: {:.1f}%
+2026-01-08T15:15:16.973+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Confidence level: FAIBLE
+2026-01-08T15:15:16.973+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Translation completed successfully!
+2026-01-08T15:15:16.973+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Files generated in: /tmp/projettest
+2026-01-08T15:15:16.974+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.service.CobolConversionService     : Successfully converted: simple-customer.cob (3 files generated)
+2026-01-08T15:15:16.974+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.service.CobolConversionService     : Conversion completed successfully.
+2026-01-08T15:15:16.974+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.service.CobolConversionService     : Configured project directory: /tmp/cobol-output/projettest
+2026-01-08T15:15:16.974+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.service.CobolConversionService     : Actual project directory: /tmp/projettest
+2026-01-08T15:15:16.974+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.service.CobolConversionService     : Total files generated: 3
+2026-01-08T15:15:16.974+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.service.CobolConversionService     : Using actual project directory with files: /tmp/projettest
+2026-01-08T15:15:16.974+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.controller.ConversionController    : Conversion completed. Output directory: /tmp/projettest
+2026-01-08T15:32:35.236+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.controller.ConversionController    : Received conversion request - Project: projettest, Package: com.example.batch, Files: 2
+2026-01-08T15:32:35.236+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.controller.ConversionController    : Saved COBOL file: simple-customer.cob
+2026-01-08T15:32:35.239+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.controller.ConversionController    : Saved JCL file: customer-batch.jcl
+2026-01-08T15:32:35.239+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.controller.ConversionController    : Using JCL-enhanced conversion
+2026-01-08T15:32:35.239+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.service.CobolConversionService     : Starting conversion with JCL - Project: projettest, Package: com.example.batch, COBOL Files: 1, JCL: customer-batch.jcl
+2026-01-08T15:32:35.239+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.service.CobolConversionService     : Starting conversion - Project: projettest, Package: com.example.batch, Files: 1
+2026-01-08T15:32:35.239+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.config.TranslatorConfiguration     : Configuration loaded from: /tmp/cobol-output/translator-web-temp-projettest.properties
+2026-01-08T15:32:35.239+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : CobolTranslator initialized with configuration: TranslatorConfiguration[project=projettest, location=/tmp/projettest, package=com.example.batch]
+2026-01-08T15:32:35.239+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Copybook resolver and VSAM support enabled
+2026-01-08T15:32:35.239+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.service.CobolConversionService     : Converting COBOL file: simple-customer.cob
+2026-01-08T15:32:35.239+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Starting translation of: /tmp/cobol-upload/upload-1767882755236-2297/simple-customer.cob
+2026-01-08T15:32:35.239+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Target project: projettest
+2026-01-08T15:32:35.239+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Target location: /tmp/projettest
+2026-01-08T15:32:35.239+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Parsing COBOL program...
+2026-01-08T15:32:35.239+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.parser.CobolASTParser     : Parsing COBOL source: /tmp/cobol-upload/upload-1767882755236-2297/simple-customer.cob
+2026-01-08T15:32:35.242+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.parser.CobolASTBuilder    : Built AST for program: CUSTPROC
+2026-01-08T15:32:35.242+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.parser.CobolASTParser     : Successfully parsed program: CUSTPROC
+2026-01-08T15:32:35.242+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : ANTLR parse success - program name: CUSTPROC
+2026-01-08T15:32:35.242+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.cobol.translator.parser.CobolParser    : Parsing COBOL source...
+2026-01-08T15:32:35.242+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.cobol.translator.parser.CobolParser    : Parsed 7 data items, 6 statements, and 3 paragraphs
+2026-01-08T15:32:35.242+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Parsed program: CUSTPROC with 7 data items and 6 statements
+2026-01-08T15:32:35.242+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Performing contextual analysis...
+2026-01-08T15:32:35.242+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.analyzer.CobolContextAnalyzer      : Starting contextual analysis of COBOL program: CUSTPROC
+2026-01-08T15:32:35.242+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.analyzer.CobolContextAnalyzer      : Detected file processing pattern
+2026-01-08T15:32:35.242+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.analyzer.CobolContextAnalyzer      : Complexity metrics: cyclomatic=3, data items=7, statements=6
+2026-01-08T15:32:35.242+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.analyzer.CobolContextAnalyzer      : Contextual analysis completed with 4 warnings
+2026-01-08T15:32:35.242+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsEof is defined but never used - Consider removing unused variables
+2026-01-08T15:32:35.242+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable CUSTOMER-RECORD is defined but never used - Consider removing unused variables
+2026-01-08T15:32:35.242+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable wsCount is defined but never used - Consider removing unused variables
+2026-01-08T15:32:35.242+01:00  WARN 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Analysis warning: [LOW] Unused variable: Variable customerRecord is defined but never used - Consider removing unused variables
+2026-01-08T15:32:35.242+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Contextual analysis completed with 4 warnings (0 high priority)
+2026-01-08T15:32:35.242+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Ensuring target project exists...
+2026-01-08T15:32:35.242+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Creating new target project: /tmp/projettest
+2026-01-08T15:32:35.242+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.project.ProjectGenerator  : Creating target project: /tmp/projettest
+2026-01-08T15:32:35.243+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.project.ProjectGenerator  : Directory structure created
+2026-01-08T15:32:35.243+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.project.ProjectGenerator  : Generated pom.xml
+2026-01-08T15:32:35.243+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.project.ProjectGenerator  : Generated application.properties
+2026-01-08T15:32:35.243+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.project.ProjectGenerator  : Generated README.md
+2026-01-08T15:32:35.243+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.project.ProjectGenerator  : Generated .gitignore
+2026-01-08T15:32:35.243+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.project.ProjectGenerator  : Generated build scripts
+2026-01-08T15:32:35.243+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.project.ProjectGenerator  : Generated main application class: ProjettestApplication
+2026-01-08T15:32:35.243+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.project.ProjectGenerator  : Project structure created successfully at: /tmp/projettest
+2026-01-08T15:32:35.243+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Copied COBOL source to: /tmp/projettest/src/main/resources/cobol-original/simple-customer.cob
+2026-01-08T15:32:35.243+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Generating entity classes...
+2026-01-08T15:32:35.244+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.EntityGenerator          : Generating entity: CustomerFileRecord
+2026-01-08T15:32:35.244+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.EntityGenerator          : Generated: /tmp/projettest/src/main/java/com/example/batch/model/CustomerFileRecord.java
+2026-01-08T15:32:35.244+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Generating processor...
+2026-01-08T15:32:35.244+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.ProcessorGenerator       : Generating processor: CustprocProcessor
+2026-01-08T15:32:35.244+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.BusinessRuleGenerator    : Generating business rule validator: CustprocValidator
+2026-01-08T15:32:35.244+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.BusinessRuleGenerator    : Generated: /tmp/projettest/src/main/java/com/example/batch/processor/CustprocValidator.java
+2026-01-08T15:32:35.244+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.ProcessorGenerator       : Generated: /tmp/projettest/src/main/java/com/example/batch/processor/CustprocProcessor.java
+2026-01-08T15:32:35.244+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Generating job configuration...
+2026-01-08T15:32:35.244+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.JobConfigGenerator       : Generating job configuration: CustprocJobConfiguration
+2026-01-08T15:32:35.244+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.generator.JobConfigGenerator       : Generated: /tmp/projettest/src/main/java/com/example/batch/config/CustprocJobConfiguration.java
+2026-01-08T15:32:35.244+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Generating tests...
+2026-01-08T15:32:35.244+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.translator.generator.TestGenerator   : Test generation not yet implemented
+2026-01-08T15:32:35.244+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Generating conversion report...
+2026-01-08T15:32:35.245+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Conversion report saved to: /tmp/projettest/docs/CUSTPROC_CONVERSION_REPORT.txt
+2026-01-08T15:32:35.245+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Conversion rate: {:.1f}%
+2026-01-08T15:32:35.245+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Confidence level: FAIBLE
+2026-01-08T15:32:35.245+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Translation completed successfully!
+2026-01-08T15:32:35.245+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] com.cobol.translator.CobolTranslator     : Files generated in: /tmp/projettest
+2026-01-08T15:32:35.245+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.service.CobolConversionService     : Successfully converted: simple-customer.cob (3 files generated)
+2026-01-08T15:32:35.245+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.service.CobolConversionService     : Conversion completed successfully.
+2026-01-08T15:32:35.245+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.service.CobolConversionService     : Configured project directory: /tmp/cobol-output/projettest
+2026-01-08T15:32:35.245+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.service.CobolConversionService     : Actual project directory: /tmp/projettest
+2026-01-08T15:32:35.245+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.service.CobolConversionService     : Total files generated: 3
+2026-01-08T15:32:35.245+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.service.CobolConversionService     : Using actual project directory with files: /tmp/projettest
+2026-01-08T15:32:35.245+01:00  INFO 52859 --- [cobol-to-java-translator] [nio-9090-exec-6] c.c.t.controller.ConversionController    : Conversion completed. Output directory: /tmp/projettest

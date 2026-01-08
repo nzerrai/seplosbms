@@ -145,7 +145,7 @@ public class ConversionController {
             ConversionResponse response = ConversionResponse.success(
                     "Conversion completed successfully",
                     projectName,
-                    result.getReport()
+                    result
             );
             
             // Encode ZIP file as base64 for JSON response

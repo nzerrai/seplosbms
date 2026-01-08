@@ -21,6 +21,7 @@ import java.util.List;
 public class JobConfigGenerator {
 
     private static final Logger logger = LoggerFactory.getLogger(JobConfigGenerator.class);
+    private final IOOptimizer ioOptimizer = new IOOptimizer();
 
     public File generate(CobolProgram program, TranslationConfig config, Path outputDir) throws IOException {
 
@@ -122,46 +123,68 @@ public class JobConfigGenerator {
         }
         code.append("    }\n\n");
 
-        // Reader bean
+        // Reader bean - use IOOptimizer if file definitions available
         List<String> fieldNames = extractFieldNames(program);
-        String fieldNamesStr = String.join("\", \"", fieldNames);
-        
-        code.append("    @Bean\n");
-        code.append("    public ItemReader<").append(entityType).append("> ")
-            .append(jobName).append("Reader() {\n");
-        code.append("        return new FlatFileItemReaderBuilder<").append(entityType).append(">()\n");
-        code.append("                .name(\"").append(jobName).append("-reader\")\n");
-        code.append("                .resource(new FileSystemResource(\"data/input/input.csv\"))\n");
-        code.append("                .delimited()\n");
-        code.append("                .delimiter(\",\")\n");
-        if (!fieldNames.isEmpty()) {
-            code.append("                .names(\"").append(fieldNamesStr).append("\")\n");
-        } else {
-            code.append("                .names(\"TODO-MAP-FIELDS\")\n");
-        }
-        code.append("                .targetType(").append(entityType).append(".class)\n");
-        code.append("                .build();\n");
-        code.append("    }\n\n");
 
-        // Writer bean
-        code.append("    @Bean\n");
-        code.append("    public ItemWriter<").append(entityType).append("> ")
-            .append(jobName).append("Writer() {\n");
-        code.append("        return new FlatFileItemWriterBuilder<").append(entityType).append(">()\n");
-        code.append("                .name(\"").append(jobName).append("-writer\")\n");
-        code.append("                .resource(new FileSystemResource(\"data/output/output.csv\"))\n");
-        code.append("                .delimited()\n");
-        code.append("                .delimiter(\",\")\n");
-        if (!fieldNames.isEmpty()) {
-            code.append("                .names(new String[]{");
-            for (int i = 0; i < fieldNames.size(); i++) {
-                if (i > 0) code.append(", ");
-                code.append("\"").append(fieldNames.get(i)).append("\"");
+        if (!program.getFileDefinitions().isEmpty() && program.getFileDefinitions().get(0).getRecordLayout() != null) {
+            // Use optimized reader generation
+            FileDefinition inputFile = program.getFileDefinitions().get(0);
+
+            logger.info("Using IOOptimizer for file: {}", inputFile.getFileName());
+            IOOptimizer.FileIOMetadata metadata = ioOptimizer.analyzeFileDefinition(inputFile, program);
+            String readerCode = ioOptimizer.generateOptimizedReader(metadata, entityType, jobName + "Reader");
+            code.append(readerCode);
+        } else {
+            // Fallback to basic reader
+            String fieldNamesStr = String.join("\", \"", fieldNames);
+
+            code.append("    @Bean\n");
+            code.append("    public ItemReader<").append(entityType).append("> ")
+                .append(jobName).append("Reader() {\n");
+            code.append("        return new FlatFileItemReaderBuilder<").append(entityType).append(">()\n");
+            code.append("                .name(\"").append(jobName).append("-reader\")\n");
+            code.append("                .resource(new FileSystemResource(\"data/input/input.csv\"))\n");
+            code.append("                .delimited()\n");
+            code.append("                .delimiter(\",\")\n");
+            if (!fieldNames.isEmpty()) {
+                code.append("                .names(\"").append(fieldNamesStr).append("\")\n");
+            } else {
+                code.append("                .names(\"TODO-MAP-FIELDS\")\n");
             }
-            code.append("})\n");
+            code.append("                .targetType(").append(entityType).append(".class)\n");
+            code.append("                .build();\n");
+            code.append("    }\n\n");
         }
-        code.append("                .build();\n");
-        code.append("    }\n\n");
+
+        // Writer bean - use IOOptimizer if file definitions available
+        if (!program.getFileDefinitions().isEmpty() && program.getFileDefinitions().get(0).getRecordLayout() != null) {
+            // Use optimized writer generation
+            FileDefinition writerFile = program.getFileDefinitions().get(0);
+
+            IOOptimizer.FileIOMetadata writerMetadata = ioOptimizer.analyzeFileDefinition(writerFile, program);
+            String writerCode = ioOptimizer.generateOptimizedWriter(writerMetadata, entityType, jobName + "Writer");
+            code.append(writerCode);
+        } else {
+            // Fallback to basic writer
+            code.append("    @Bean\n");
+            code.append("    public ItemWriter<").append(entityType).append("> ")
+                .append(jobName).append("Writer() {\n");
+            code.append("        return new FlatFileItemWriterBuilder<").append(entityType).append(">()\n");
+            code.append("                .name(\"").append(jobName).append("-writer\")\n");
+            code.append("                .resource(new FileSystemResource(\"data/output/output.csv\"))\n");
+            code.append("                .delimited()\n");
+            code.append("                .delimiter(\",\")\n");
+            if (!fieldNames.isEmpty()) {
+                code.append("                .names(new String[]{");
+                for (int i = 0; i < fieldNames.size(); i++) {
+                    if (i > 0) code.append(", ");
+                    code.append("\"").append(fieldNames.get(i)).append("\"");
+                }
+                code.append("})\n");
+            }
+            code.append("                .build();\n");
+            code.append("    }\n\n");
+        }
 
         // Generate audit trail writer
         generateAuditTrailWriter(code, program, config);

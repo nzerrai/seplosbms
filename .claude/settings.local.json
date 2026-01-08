@@ -30,7 +30,10 @@
       "Bash(./generate-html-guide.sh:*)",
       "Bash(timeout 15 mvn spring-boot:run:*)",
       "Bash(timeout 20 mvn spring-boot:run:*)",
-      "Bash(timeout 25 mvn spring-boot:run:*)"
+      "Bash(timeout 25 mvn spring-boot:run:*)",
+      "Bash(wc:*)",
+      "Bash(./generate-roadmap-pdf.sh:*)",
+      "Bash(./generate-roadmap-html.sh:*)"
     ]
   }
 }

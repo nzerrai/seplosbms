@@ -75,7 +75,7 @@ public class CobolConversionService {
         try {
             // Convert each COBOL file using the full translator
             List<TranslationResult> results = new ArrayList<>();
-            ConversionReport lastReport = null;
+            List<ConversionResult.FileConversionReport> allReports = new ArrayList<>();
             for (Path cobolFile : cobolFiles) {
                 try {
                     logger.info("Converting COBOL file: {}", cobolFile.getFileName());
@@ -94,9 +94,12 @@ public class CobolConversionService {
                     TranslationResult result = customTranslator.translate(config);
                     results.add(result);
                     
-                    // Keep the last conversion report
+                    // Collect report for this file
                     if (result.getConversionReport() != null) {
-                        lastReport = result.getConversionReport();
+                        allReports.add(new ConversionResult.FileConversionReport(
+                            cobolFile.getFileName().toString(),
+                            result.getConversionReport()
+                        ));
                     }
 
                     if (!result.isSuccess()) {
@@ -132,7 +135,7 @@ public class CobolConversionService {
                 finalProjectDir = projectDir;
             }
             
-            return new ConversionResult(finalProjectDir, lastReport);
+            return new ConversionResult(finalProjectDir, allReports);
 
         } finally {
             // Clean up temp properties file

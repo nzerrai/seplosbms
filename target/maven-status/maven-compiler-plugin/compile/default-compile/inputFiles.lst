@@ -14,6 +14,7 @@
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/generator/BusinessLogicTranslator.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/ast/ASTNode.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/generator/RepositoryGenerator.java
+/home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/redefines/RedefinesExample.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/copybook/CopybookNotFoundException.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/generator/JobConfigGenerator.java
 /home/seplos/projets/cobol-to-java-translator/target/generated-sources/antlr4/com/cobol/translator/grammar/CobolListener.java
@@ -33,9 +34,11 @@
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/ast/WorkingStorageSectionNode.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/ast/StatementNode.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/service/CobolConversionService.java
+/home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/redefines/UnionTypeGenerator.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/semantic/SymbolType.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/ast/WriteStatementNode.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/ast/SearchStatementNode.java
+/home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/generator/IOOptimizer.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/semantic/Symbol.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/generator/EntityGenerator.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/ast/ASTVisitor.java
@@ -62,6 +65,7 @@
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/model/Statement.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/ast/CloseStatementNode.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/ast/ProgramNode.java
+/home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/redefines/RedefinesInfo.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/semantic/Scope.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/ast/DataItemNode.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/ast/DataDivisionNode.java
@@ -90,8 +94,10 @@
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/semantic/SymbolTable.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/ast/IfStatementNode.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/ast/ReadStatementNode.java
+/home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/redefines/RedefinesAnalyzer.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/parser/CobolASTParser.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/jcl/model/DDStatement.java
+/home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/redefines/RedefinesOptimizer.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/ast/GotoStatementNode.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/CobolTranslatorWebApplication.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/CobolTranslator.java
@@ -99,6 +105,8 @@
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/ast/ComputeStatementNode.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/vsam/VsamToJdbcMapper.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/ast/SubtractStatementNode.java
+/home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/redefines/RedefinesView.java
+/home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/redefines/ViewType.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/model/Paragraph.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/service/ConversionResult.java
 /home/seplos/projets/cobol-to-java-translator/target/generated-sources/antlr4/com/cobol/translator/grammar/CobolLexer.java
@@ -110,4 +118,5 @@
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/parser/CobolASTBuilder.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/controller/ConversionResponse.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/vsam/VsamFileAnalyzer.java
+/home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/web/MappingViewController.java
 /home/seplos/projets/cobol-to-java-translator/src/main/java/com/cobol/translator/jcl/model/JCLParameter.java

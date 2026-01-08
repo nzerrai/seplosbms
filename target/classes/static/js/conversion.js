@@ -1,8 +1,11 @@
 // ===== DOM Elements =====
 const conversionForm = document.getElementById('conversionForm');
-const fileInput = document.getElementById('cobolFiles');
-const fileUploadArea = document.getElementById('fileUploadArea');
-const fileList = document.getElementById('fileList');
+const cobolFileInput = document.getElementById('cobolFiles');
+const jclFileInput = document.getElementById('jclFiles');
+const cobolUploadArea = document.getElementById('cobolUploadArea');
+const jclUploadArea = document.getElementById('jclUploadArea');
+const cobolFileList = document.getElementById('cobolFileList');
+const jclFileList = document.getElementById('jclFileList');
 const convertBtn = document.getElementById('convertBtn');
 const progressSection = document.getElementById('progressSection');
 const progressFill = document.getElementById('progressFill');
@@ -16,8 +19,9 @@ const themeBtn = document.getElementById('themeBtn');
 const advancedToggle = document.getElementById('advancedToggle');
 const advancedOptions = document.getElementById('advancedOptions');
 
-// Selected files array
-let selectedFiles = [];
+// Selected files arrays
+let selectedCobolFiles = [];
+let selectedJclFiles = [];
 let conversionStartTime = null;
 
 // ===== Theme Toggle =====
@@ -43,89 +47,152 @@ advancedToggle?.addEventListener('click', () => {
     advancedOptions.classList.toggle('show');
 });
 
-// ===== File Upload - Drag and Drop =====
-fileUploadArea.addEventListener('dragover', (e) => {
-    console.log('dragover event');
+// ===== File Upload - Drag and Drop for COBOL =====
+cobolUploadArea.addEventListener('dragover', (e) => {
     e.preventDefault();
     e.stopPropagation();
-    fileUploadArea.classList.add('dragover');
+    cobolUploadArea.classList.add('dragover');
 });
 
-fileUploadArea.addEventListener('dragleave', (e) => {
-    console.log('dragleave event');
+cobolUploadArea.addEventListener('dragleave', (e) => {
     e.preventDefault();
     e.stopPropagation();
-    fileUploadArea.classList.remove('dragover');
+    cobolUploadArea.classList.remove('dragover');
 });
 
-fileUploadArea.addEventListener('drop', (e) => {
-    console.log('drop event - files count:', e.dataTransfer.files.length);
+cobolUploadArea.addEventListener('drop', (e) => {
     e.preventDefault();
     e.stopPropagation();
-    fileUploadArea.classList.remove('dragover');
+    cobolUploadArea.classList.remove('dragover');
 
     const files = Array.from(e.dataTransfer.files);
-    console.log('Files received:', files.map(f => f.name));
-    
     const validFiles = files.filter(file =>
-        file.name.endsWith('.cob') || file.name.endsWith('.cbl') || file.name.endsWith('.jcl')
+        file.name.endsWith('.cob') || file.name.endsWith('.cbl')
     );
 
-    console.log('Valid files:', validFiles.map(f => f.name));
+    if (validFiles.length > 0) {
+        addCobolFiles(validFiles);
+    } else {
+        showError('Veuillez déposer des fichiers COBOL (.cob, .cbl)');
+    }
+});
+
+// ===== File Upload - Drag and Drop for JCL =====
+jclUploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    jclUploadArea.classList.add('dragover');
+});
+
+jclUploadArea.addEventListener('dragleave', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    jclUploadArea.classList.remove('dragover');
+});
+
+jclUploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    jclUploadArea.classList.remove('dragover');
+
+    const files = Array.from(e.dataTransfer.files);
+    const validFiles = files.filter(file => file.name.endsWith('.jcl'));
 
     if (validFiles.length > 0) {
-        addFiles(validFiles);
+        addJclFiles(validFiles);
     } else {
-        showError('Veuillez déposer des fichiers COBOL (.cob, .cbl) ou JCL (.jcl)');
+        showError('Veuillez déposer des fichiers JCL (.jcl)');
     }
 });
 
 // ===== File Input Change =====
-fileInput.addEventListener('change', (e) => {
+cobolFileInput.addEventListener('change', (e) => {
     const files = Array.from(e.target.files);
-    addFiles(files);
+    addCobolFiles(files);
+});
+
+jclFileInput.addEventListener('change', (e) => {
+    const files = Array.from(e.target.files);
+    addJclFiles(files);
 });
 
 // ===== File Upload Area Click =====
-fileUploadArea.addEventListener('click', () => {
-    fileInput.click();
+cobolUploadArea.addEventListener('click', () => {
+    cobolFileInput.click();
 });
 
-// ===== Add Files =====
-function addFiles(files) {
-    console.log('addFiles called with:', files.length, 'files');
+jclUploadArea.addEventListener('click', () => {
+    jclFileInput.click();
+});
+
+// ===== Add COBOL Files =====
+function addCobolFiles(files) {
     files.forEach(file => {
-        if (!selectedFiles.find(f => f.name === file.name)) {
-            selectedFiles.push(file);
-            console.log('Added file:', file.name, 'Total now:', selectedFiles.length);
+        if (!selectedCobolFiles.find(f => f.name === file.name)) {
+            selectedCobolFiles.push(file);
         }
     });
-    console.log('Final selectedFiles length:', selectedFiles.length);
-    renderFileList();
+    renderCobolFileList();
 }
 
-// ===== Remove File =====
-function removeFile(index) {
-    selectedFiles.splice(index, 1);
-    renderFileList();
+// ===== Add JCL Files =====
+function addJclFiles(files) {
+    files.forEach(file => {
+        if (!selectedJclFiles.find(f => f.name === file.name)) {
+            selectedJclFiles.push(file);
+        }
+    });
+    renderJclFileList();
 }
 
-// ===== Render File List =====
-function renderFileList() {
-    if (selectedFiles.length === 0) {
-        fileList.innerHTML = '';
-        fileList.classList.add('hidden');
+// ===== Remove COBOL File =====
+function removeCobolFile(index) {
+    selectedCobolFiles.splice(index, 1);
+    renderCobolFileList();
+}
+
+// ===== Remove JCL File =====
+function removeJclFile(index) {
+    selectedJclFiles.splice(index, 1);
+    renderJclFileList();
+}
+
+// ===== Render COBOL File List =====
+function renderCobolFileList() {
+    if (selectedCobolFiles.length === 0) {
+        cobolFileList.innerHTML = '';
+        cobolFileList.classList.add('hidden');
         return;
     }
 
-    fileList.classList.remove('hidden');
-    fileList.innerHTML = selectedFiles.map((file, index) => `
+    cobolFileList.classList.remove('hidden');
+    cobolFileList.innerHTML = selectedCobolFiles.map((file, index) => `
         <div class="file-item">
             <div>
                 <span class="file-item-name">📄 ${file.name}</span>
                 <span class="file-item-size">(${formatFileSize(file.size)})</span>
             </div>
-            <button type="button" class="file-remove-btn" onclick="removeFile(${index})" title="Retirer">✕</button>
+            <button type="button" class="file-remove-btn" onclick="removeCobolFile(${index})" title="Retirer">✕</button>
+        </div>
+    `).join('');
+}
+
+// ===== Render JCL File List =====
+function renderJclFileList() {
+    if (selectedJclFiles.length === 0) {
+        jclFileList.innerHTML = '';
+        jclFileList.classList.add('hidden');
+        return;
+    }
+
+    jclFileList.classList.remove('hidden');
+    jclFileList.innerHTML = selectedJclFiles.map((file, index) => `
+        <div class="file-item">
+            <div>
+                <span class="file-item-name">📋 ${file.name}</span>
+                <span class="file-item-size">(${formatFileSize(file.size)})</span>
+            </div>
+            <button type="button" class="file-remove-btn" onclick="removeJclFile(${index})" title="Retirer">✕</button>
         </div>
     `).join('');
 }
@@ -141,8 +208,6 @@ function formatFileSize(bytes) {
 conversionForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    console.log('Form submit event - selectedFiles.length:', selectedFiles.length);
-
     // Validate form
     const projectName = document.getElementById('projectName').value.trim();
     const basePackage = document.getElementById('basePackage').value.trim();
@@ -152,8 +217,7 @@ conversionForm.addEventListener('submit', async (e) => {
         return;
     }
 
-    if (selectedFiles.length === 0) {
-        console.error('No files selected! selectedFiles:', selectedFiles);
+    if (selectedCobolFiles.length === 0) {
         showError('Veuillez sélectionner au moins un fichier COBOL');
         return;
     }
@@ -187,7 +251,13 @@ conversionForm.addEventListener('submit', async (e) => {
     formData.append('generateTests', generateTests);
     formData.append('generateDocs', generateDocs);
 
-    selectedFiles.forEach(file => {
+    // Add COBOL files
+    selectedCobolFiles.forEach(file => {
+        formData.append('files', file);
+    });
+    
+    // Add JCL files
+    selectedJclFiles.forEach(file => {
         formData.append('files', file);
     });
 
@@ -311,43 +381,23 @@ function showSuccessWithReport(projectName, responseData) {
     const elapsedText = elapsed < 60 ? `${elapsed}s` : `${Math.round(elapsed/60)}m ${elapsed % 60}s`;
     document.getElementById('timeElapsed').textContent = `(${elapsedText})`;
     
-    // Display conversion report if available
-    if (responseData.report) {
-        const report = responseData.report;
+    // Display conversion reports if available
+    const reportContainer = document.getElementById('reportCardsContainer');
+    if (responseData.reports && responseData.reports.length > 0) {
+        // Clear any existing reports
+        reportContainer.innerHTML = '';
         
-        // Update conversion percentage
-        const conversionPercent = report.conversionPercentage || 0;
-        document.getElementById('conversionProgressBar').style.width = conversionPercent + '%';
-        document.getElementById('conversionPercent').textContent = conversionPercent.toFixed(1) + '%';
+        // Create a report card for each file
+        responseData.reports.forEach(report => {
+            const reportCard = createReportCard(report);
+            reportContainer.appendChild(reportCard);
+        });
         
-        // Set progress bar color based on percentage
-        const progressBar = document.getElementById('conversionProgressBar');
-        if (conversionPercent >= 80) {
-            progressBar.style.backgroundColor = '#28a745';
-        } else if (conversionPercent >= 50) {
-            progressBar.style.backgroundColor = '#ffc107';
-        } else {
-            progressBar.style.backgroundColor = '#dc3545';
-        }
-        
-        // Update confidence level
-        document.getElementById('confidenceIcon').textContent = report.confidenceIcon || '❓';
-        document.getElementById('confidenceLevel').textContent = report.confidenceLevel || 'Unknown';
-        document.getElementById('confidenceDescription').textContent = report.confidenceDescription || '';
-        
-        // Update statement counts
-        document.getElementById('totalStatements').textContent = report.totalStatements || 0;
-        document.getElementById('convertedStatements').textContent = report.convertedStatements || 0;
-        document.getElementById('partialStatements').textContent = report.partiallyConvertedStatements || 0;
-        document.getElementById('unconvertedStatements').textContent = report.unconvertedStatements || 0;
-        
-        // Update data item counts
-        document.getElementById('totalDataItems').textContent = report.totalDataItems || 0;
-        document.getElementById('convertedDataItems').textContent = report.convertedDataItems || 0;
-        
-        downloadMessage.textContent = `${selectedFiles.length} fichier(s) COBOL converti(s) avec ${conversionPercent.toFixed(1)}% de réussite.`;
+        const totalFiles = selectedCobolFiles.length + selectedJclFiles.length;
+        downloadMessage.textContent = `${totalFiles} fichier(s) converti(s).`;
     } else {
-        downloadMessage.textContent = `Le fichier ${projectName}.zip a été généré avec succès. ${selectedFiles.length} fichier(s) COBOL converti(s).`;
+        const totalFiles = selectedCobolFiles.length + selectedJclFiles.length;
+        downloadMessage.textContent = `Le fichier ${projectName}.zip a été généré avec succès. ${totalFiles} fichier(s) converti(s).`;
     }
 
     // Set up download button with base64 ZIP
@@ -382,9 +432,83 @@ function showSuccessWithReport(projectName, responseData) {
     };
 }
 
+// Create a report card for a single file
+function createReportCard(report) {
+    const conversionPercent = report.conversionPercentage || 0;
+    
+    // Set color based on percentage
+    let progressColor = '#28a745';
+    if (conversionPercent < 80) {
+        progressColor = '#ffc107';
+    }
+    if (conversionPercent < 50) {
+        progressColor = '#dc3545';
+    }
+    
+    const card = document.createElement('div');
+    card.className = 'report-card';
+    card.innerHTML = `
+        <div class="report-card-header">
+            <h4>📄 ${escapeHtml(report.fileName)}</h4>
+        </div>
+        <div class="report-card-body">
+            <div class="report-metric">
+                <div class="report-label">Progression de conversion</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" style="width: ${conversionPercent}%; background-color: ${progressColor}"></div>
+                </div>
+                <div class="report-value">${conversionPercent.toFixed(1)}%</div>
+            </div>
+            
+            <div class="report-metric">
+                <div class="report-label">
+                    <span class="confidence-icon">${report.confidenceIcon || '❓'}</span>
+                    Niveau de confiance
+                </div>
+                <div class="report-value">${report.confidenceLevel || 'Unknown'}</div>
+                <div class="report-description">${report.confidenceDescription || ''}</div>
+            </div>
+            
+            <div class="report-stats">
+                <div class="stat-item">
+                    <div class="stat-label">Instructions totales</div>
+                    <div class="stat-value">${report.totalStatements || 0}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Converties</div>
+                    <div class="stat-value stat-success">${report.convertedStatements || 0}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Partielles</div>
+                    <div class="stat-value stat-warning">${report.partiallyConvertedStatements || 0}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Non converties</div>
+                    <div class="stat-value stat-error">${report.unconvertedStatements || 0}</div>
+                </div>
+            </div>
+            
+            <div class="report-stats">
+                <div class="stat-item">
+                    <div class="stat-label">Données totales</div>
+                    <div class="stat-value">${report.totalDataItems || 0}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Données converties</div>
+                    <div class="stat-value stat-success">${report.convertedDataItems || 0}</div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    return card;
+}
+
 function resetForm() {
-    selectedFiles = [];
-    renderFileList();
+    selectedCobolFiles = [];
+    selectedJclFiles = [];
+    renderCobolFileList();
+    renderJclFileList();
     conversionForm.reset();
     resultSection.classList.add('hidden');
 }

@@ -1,9 +1,13 @@
 package com.cobol.translator.controller;
 
 import com.cobol.translator.report.ConversionReport;
+import com.cobol.translator.service.ConversionResult;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Response object for conversion endpoint including conversion report
+ * Response object for conversion endpoint including conversion reports per file
  */
 public class ConversionResponse {
     private boolean success;
@@ -11,20 +15,25 @@ public class ConversionResponse {
     private String projectName;
     private String downloadUrl;
     private String zipFileBase64;
-    private ConversionReportSummary report;
+    private List<ConversionReportSummary> reports;
 
     public ConversionResponse() {}
 
     public ConversionResponse(boolean success, String message) {
         this.success = success;
         this.message = message;
+        this.reports = new ArrayList<>();
     }
 
-    public static ConversionResponse success(String message, String projectName, ConversionReport report) {
+    public static ConversionResponse success(String message, String projectName, ConversionResult result) {
         ConversionResponse response = new ConversionResponse(true, message);
         response.setProjectName(projectName);
-        if (report != null) {
-            response.setReport(ConversionReportSummary.from(report));
+        if (result != null && result.getFileReports() != null) {
+            List<ConversionReportSummary> summaries = new ArrayList<>();
+            for (ConversionResult.FileConversionReport fileReport : result.getFileReports()) {
+                summaries.add(ConversionReportSummary.from(fileReport.getFileName(), fileReport.getReport()));
+            }
+            response.setReports(summaries);
         }
         return response;
     }
@@ -49,13 +58,14 @@ public class ConversionResponse {
     public String getZipFileBase64() { return zipFileBase64; }
     public void setZipFileBase64(String zipFileBase64) { this.zipFileBase64 = zipFileBase64; }
     
-    public ConversionReportSummary getReport() { return report; }
-    public void setReport(ConversionReportSummary report) { this.report = report; }
+    public List<ConversionReportSummary> getReports() { return reports; }
+    public void setReports(List<ConversionReportSummary> reports) { this.reports = reports; }
 
     /**
-     * Summary of conversion report for web display
+     * Summary of conversion report for web display (per file)
      */
     public static class ConversionReportSummary {
+        private String fileName;
         private String programName;
         private int totalStatements;
         private int convertedStatements;
@@ -71,8 +81,9 @@ public class ConversionResponse {
         private int convertedDataItems;
         private int unconvertedDataItems;
 
-        public static ConversionReportSummary from(ConversionReport report) {
+        public static ConversionReportSummary from(String fileName, ConversionReport report) {
             ConversionReportSummary summary = new ConversionReportSummary();
+            summary.setFileName(fileName);
             summary.setProgramName(report.getProgramName());
             summary.setTotalStatements(report.getTotalStatements());
             summary.setConvertedStatements(report.getConvertedStatements());
@@ -96,6 +107,9 @@ public class ConversionResponse {
         }
 
         // Getters and setters
+        public String getFileName() { return fileName; }
+        public void setFileName(String fileName) { this.fileName = fileName; }
+        
         public String getProgramName() { return programName; }
         public void setProgramName(String programName) { this.programName = programName; }
         

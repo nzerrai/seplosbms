@@ -6,6 +6,7 @@
 // État global
 let currentTheme = 'light';
 let currentCobolFile = null;
+let currentJclFile = null;
 let currentJavaFiles = [];
 let mappingData = null;
 let selectedLine = null;
@@ -45,10 +46,22 @@ function setTheme(theme) {
  * Initialisation de l'upload de fichier
  */
 function initFileUpload() {
+    // COBOL file upload
     const fileInput = document.getElementById('cobolFile');
     const fileUploadArea = document.getElementById('fileUploadArea');
     const fileInfo = document.getElementById('fileInfo');
     
+    setupFileUpload(fileInput, fileUploadArea, fileInfo);
+    
+    // JCL file upload
+    const jclInput = document.getElementById('jclFile');
+    const jclUploadArea = document.getElementById('jclUploadArea');
+    const jclInfo = document.getElementById('jclInfo');
+    
+    setupFileUpload(jclInput, jclUploadArea, jclInfo);
+}
+
+function setupFileUpload(fileInput, fileUploadArea, fileInfo) {
     // Événements de drag & drop
     fileUploadArea.addEventListener('dragover', function(e) {
         e.preventDefault();
@@ -66,7 +79,7 @@ function initFileUpload() {
         const files = e.dataTransfer.files;
         if (files.length > 0) {
             fileInput.files = files;
-            displayFileInfo(files[0]);
+            displayFileInfo(files[0], fileInfo);
         }
     });
     
@@ -78,20 +91,19 @@ function initFileUpload() {
     // Changement de fichier
     fileInput.addEventListener('change', function() {
         if (this.files.length > 0) {
-            displayFileInfo(this.files[0]);
+            displayFileInfo(this.files[0], fileInfo);
         }
     });
 }
 
-function displayFileInfo(file) {
-    const fileInfo = document.getElementById('fileInfo');
+function displayFileInfo(file, fileInfoElement) {
     const size = (file.size / 1024).toFixed(2);
     
-    fileInfo.innerHTML = `
+    fileInfoElement.innerHTML = `
         <strong>📄 ${file.name}</strong><br>
         <small>Taille: ${size} KB | Type: ${file.type || 'application/octet-stream'}</small>
     `;
-    fileInfo.classList.remove('hidden');
+    fileInfoElement.classList.remove('hidden');
 }
 
 /**
@@ -122,7 +134,9 @@ async function handleFileAnalysis(e) {
     e.preventDefault();
     
     const fileInput = document.getElementById('cobolFile');
+    const jclInput = document.getElementById('jclFile');
     const file = fileInput.files[0];
+    const jclFile = jclInput.files[0];
     
     if (!file) {
         showError('Veuillez sélectionner un fichier COBOL');
@@ -136,7 +150,7 @@ async function handleFileAnalysis(e) {
     
     try {
         // Simulation de l'analyse (à remplacer par un vrai appel API)
-        await simulateAnalysis(file);
+        await simulateAnalysis(file, jclFile);
         
         showMappingViewer();
     } catch (error) {
@@ -152,7 +166,7 @@ async function handleFileAnalysis(e) {
  * Simulation de l'analyse (temporaire)
  * TODO: Remplacer par un vrai appel API au backend
  */
-async function simulateAnalysis(file) {
+async function simulateAnalysis(file, jclFile) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         
@@ -164,14 +178,34 @@ async function simulateAnalysis(file) {
                 lines: content.split('\n')
             };
             
-            // Génération de données de mapping simulées
-            mappingData = generateMockMappingData(currentCobolFile);
-            
-            setTimeout(resolve, 1500); // Simulation d'un délai
+            // Lecture du fichier JCL si présent
+            if (jclFile) {
+                const jclReader = new FileReader();
+                jclReader.onload = function(jclEvent) {
+                    currentJclFile = {
+                        name: jclFile.name,
+                        content: jclEvent.target.result,
+                        lines: jclEvent.target.result.split('\n')
+                    };
+                    
+                    // Génération de données de mapping simulées
+                    mappingData = generateMockMappingData(currentCobolFile);
+                    setTimeout(resolve, 1500);
+                };
+                jclReader.onerror = function() {
+                    reject(new Error('Impossible de lire le fichier JCL'));
+                };
+                jclReader.readAsText(jclFile);
+            } else {
+                currentJclFile = null;
+                // Génération de données de mapping simulées
+                mappingData = generateMockMappingData(currentCobolFile);
+                setTimeout(resolve, 1500);
+            }
         };
         
         reader.onerror = function() {
-            reject(new Error('Impossible de lire le fichier'));
+            reject(new Error('Impossible de lire le fichier COBOL'));
         };
         
         reader.readAsText(file);
@@ -297,6 +331,7 @@ function showMappingViewer() {
     document.getElementById('mappingViewer').classList.remove('hidden');
     
     displayGlobalStats();
+    displayJclSection();
     displayCobolCode();
     displayJavaFiles();
     displayMappingLinks();
@@ -322,6 +357,42 @@ function displayGlobalStats() {
     const confidence = mappingData.averageConversionRate >= 90 ? 'Élevé' :
                       mappingData.averageConversionRate >= 70 ? 'Moyen' : 'Faible';
     document.getElementById('confidenceScore').textContent = confidence;
+    
+    // Afficher la carte JCL si un fichier JCL est présent
+    const jclCard = document.getElementById('jclStatCard');
+    if (currentJclFile) {
+        document.getElementById('jclFileName').textContent = currentJclFile.name;
+        jclCard.style.display = 'block';
+    } else {
+        jclCard.style.display = 'none';
+    }
+}
+
+/**
+ * Affichage de la section JCL
+ */
+function displayJclSection() {
+    const jclSection = document.getElementById('jclSection');
+    
+    if (!currentJclFile) {
+        jclSection.classList.add('hidden');
+        return;
+    }
+    
+    jclSection.classList.remove('hidden');
+    
+    const jclFileNameDisplay = document.getElementById('jclFileNameDisplay');
+    jclFileNameDisplay.textContent = `(${currentJclFile.name})`;
+    
+    const jclContent = document.getElementById('jclContent');
+    const html = currentJclFile.lines.map((line, index) => `
+        <div class="code-line" style="display: flex; gap: 10px; padding: 5px 10px; font-family: 'Courier New', monospace; font-size: 13px;">
+            <span style="color: #999; min-width: 40px; text-align: right;">${index + 1}</span>
+            <span style="color: #333;">${escapeHtml(line)}</span>
+        </div>
+    `).join('');
+    
+    jclContent.innerHTML = html;
 }
 
 /**
@@ -526,15 +597,20 @@ function showLineDetails(lineNum) {
         </div>
         
         <div class="detail-section">
-            <h5>☕ Fichiers Java générés</h5>
-            ${mapping.javaFiles.map(file => `<div class="detail-code">➜ ${file}</div>`).join('')}
+            <h5>☕ Code Java généré</h5>
+            <div class="detail-code-block">
+                ${mapping.javaCode ? `<pre style="background: #f5f5f5; padding: 10px; border-radius: 4px; overflow-x: auto; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.4;">${escapeHtml(mapping.javaCode)}</pre>` : '<p style="color: var(--sg-grey); font-style: italic;">Code Java non disponible pour cette ligne</p>'}
+            </div>
+            <div style="margin-top: 10px; font-size: 12px; color: var(--sg-grey);">
+                <strong>Fichiers générés:</strong> ${mapping.javaFiles.map(file => `<span style="display: inline-block; margin: 2px 5px; padding: 2px 8px; background: #e3f2fd; border-radius: 3px; color: #1976d2;">➜ ${file}</span>`).join('')}
+            </div>
         </div>
         
         <div class="detail-section">
             <h5>📊 Informations de conversion</h5>
             <div class="mapping-info">
                 <div class="info-item">
-                    <div class="info-label">Taux de conversion</div>
+                    <div class="info-label">Qualité de conversion</div>
                     <div class="info-value">${mapping.conversionRate}%</div>
                 </div>
                 <div class="info-item">

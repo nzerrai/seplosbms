@@ -126,13 +126,38 @@ public class CobolConversionService {
             logger.info("Total files generated: {}", results.stream().mapToInt(r -> r.getGeneratedFiles().size()).sum());
 
             // Return the actual directory where files were created along with the report
+            // IMPORTANT: Use the directory that actually has files (check recursively)
             Path finalProjectDir;
-            if (Files.exists(actualProjectDir) && Files.list(actualProjectDir).findAny().isPresent()) {
-                logger.info("Using actual project directory with files: {}", actualProjectDir);
+            boolean actualDirHasFiles = false;
+            boolean configuredDirHasFiles = false;
+            long actualDirFileCount = 0;
+            long configuredDirFileCount = 0;
+            
+            try (var stream = Files.walk(actualProjectDir)) {
+                actualDirFileCount = stream.filter(p -> !Files.isDirectory(p)).count();
+                actualDirHasFiles = actualDirFileCount > 0;
+            } catch (Exception e) {
+                logger.debug("Could not check actual directory: {}", actualProjectDir, e);
+            }
+            
+            try (var stream = Files.walk(projectDir)) {
+                configuredDirFileCount = stream.filter(p -> !Files.isDirectory(p)).count();
+                configuredDirHasFiles = configuredDirFileCount > 0;
+            } catch (Exception e) {
+                logger.debug("Could not check configured directory: {}", projectDir, e);
+            }
+            
+            if (actualDirHasFiles) {
+                logger.info("Using actual project directory with files: {} (found {} files)", actualProjectDir, actualDirFileCount);
                 finalProjectDir = actualProjectDir;
-            } else {
-                logger.info("Using configured project directory: {}", projectDir);
+            } else if (configuredDirHasFiles) {
+                logger.info("Using configured project directory with files: {} (found {} files)", projectDir, configuredDirFileCount);
                 finalProjectDir = projectDir;
+            } else {
+                // Fallback: use actual project dir since that's where CobolTranslator creates files
+                logger.warn("Neither actual nor configured directory has files! Actual: {}, Configured: {}", actualProjectDir, projectDir);
+                logger.warn("Actual dir exists: {}, Configured dir exists: {}", Files.exists(actualProjectDir), Files.exists(projectDir));
+                finalProjectDir = actualProjectDir;
             }
             
             return new ConversionResult(finalProjectDir, allReports);

@@ -399,6 +399,11 @@ function showSuccessWithReport(projectName, responseData) {
         const totalFiles = selectedCobolFiles.length + selectedJclFiles.length;
         downloadMessage.textContent = `Le fichier ${projectName}.zip a été généré avec succès. ${totalFiles} fichier(s) converti(s).`;
     }
+    
+    // Display inference report if available
+    if (responseData.inferenceReport) {
+        displayInferenceReport(responseData.inferenceReport);
+    }
 
     // Set up download button with base64 ZIP
     const downloadBtn = document.getElementById('downloadBtn');
@@ -453,7 +458,7 @@ function createReportCard(report) {
         </div>
         <div class="report-card-body">
             <div class="report-metric">
-                <div class="report-label">Progression de conversion</div>
+                <div class="report-label">Taux de complétion <small>(traitement terminé)</small></div>
                 <div class="progress-bar-container">
                     <div class="progress-bar-fill" style="width: ${conversionPercent}%; background-color: ${progressColor}"></div>
                 </div>
@@ -498,10 +503,217 @@ function createReportCard(report) {
                     <div class="stat-value stat-success">${report.convertedDataItems || 0}</div>
                 </div>
             </div>
+
+            ${createJclAnalysisSection(report.jclAnalysis)}
+            ${createGeneratedClassesSection(report.generatedClasses)}
+            ${createWarningDetailsSection(report.warningDetails)}
         </div>
     `;
-    
+
     return card;
+}
+
+function createJclAnalysisSection(jclAnalysis) {
+    if (!jclAnalysis) return '';
+
+    return `
+        <div class="report-section">
+            <h5>📋 Analyse JCL</h5>
+            <div class="jcl-info">
+                <div class="info-row">
+                    <span class="info-label">Fichier JCL:</span>
+                    <span class="info-value">${escapeHtml(jclAnalysis.jclFileName || 'N/A')}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Job:</span>
+                    <span class="info-value">${escapeHtml(jclAnalysis.jobName || 'N/A')}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Steps totaux:</span>
+                    <span class="info-value">${jclAnalysis.totalSteps || 0}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Steps conditionnels:</span>
+                    <span class="info-value">${jclAnalysis.conditionalSteps || 0}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Invocations PROC:</span>
+                    <span class="info-value">${jclAnalysis.procInvocations || 0}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Datasets temporaires:</span>
+                    <span class="info-value">${jclAnalysis.temporaryDatasets || 0}</span>
+                </div>
+            </div>
+            ${createArrayList('Steps détectés', jclAnalysis.stepsDetected)}
+            ${createArrayList('Conditions trouvées', jclAnalysis.conditionsFound)}
+            ${createArrayList('PROCs utilisées', jclAnalysis.procsUsed)}
+            ${createArrayList('Datasets temporaires', jclAnalysis.tempDatasetsUsed)}
+            ${createTranslationsSection(jclAnalysis.translations)}
+        </div>
+    `;
+}
+
+function createTranslationsSection(translations) {
+    if (!translations || translations.length === 0) return '';
+
+    return `
+        <div class="translations-section">
+            <h6>🔄 Traductions JCL → Java détaillées</h6>
+            <div class="translations-list">
+                ${translations.map((trans, index) => `
+                    <div class="translation-item">
+                        <div class="translation-header">
+                            <span class="translation-number">#${index + 1}</span>
+                            <span class="translation-type">${getTranslationIcon(trans.type)} ${trans.type?.label || trans.jclElement}</span>
+                            ${trans.javaClassName ? `<span class="translation-target">→ ${escapeHtml(trans.javaClassName)}</span>` : ''}
+                        </div>
+                        <div class="translation-body">
+                            <div class="code-comparison">
+                                <div class="code-block jcl-code">
+                                    <div class="code-header">
+                                        <span class="code-lang">JCL Source</span>
+                                    </div>
+                                    <pre><code>${escapeHtml(trans.jclSourceCode || 'N/A')}</code></pre>
+                                </div>
+                                <div class="code-arrow">→</div>
+                                <div class="code-block java-code">
+                                    <div class="code-header">
+                                        <span class="code-lang">Java Généré</span>
+                                    </div>
+                                    <pre><code>${escapeHtml(trans.javaTargetCode || 'N/A')}</code></pre>
+                                </div>
+                            </div>
+                            ${trans.explanation ? `
+                                <div class="translation-explanation">
+                                    <strong>💡 Explication:</strong> ${escapeHtml(trans.explanation)}
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+}
+
+function getTranslationIcon(type) {
+    if (!type || !type.label) return '🔄';
+
+    const icons = {
+        'Step Execution': '▶️',
+        'DD Statement': '📄',
+        'Conditional': '🔀',
+        'PROC Invocation': '📞',
+        'Temporary Dataset': '💾',
+        'Job Definition': '⚙️',
+        'Other': '🔄'
+    };
+
+    return icons[type.label] || '🔄';
+}
+
+function createGeneratedClassesSection(generatedClasses) {
+    if (!generatedClasses || generatedClasses.length === 0) return '';
+
+    return `
+        <div class="report-section">
+            <h5>☕ Classes Java générées</h5>
+            <div class="generated-classes-list">
+                ${generatedClasses.map(cls => `
+                    <div class="class-item ${cls.new ? 'class-new' : 'class-modified'}">
+                        <div class="class-header">
+                            <span class="class-icon">${getClassIcon(cls.type)}</span>
+                            <span class="class-name">${escapeHtml(cls.className)}</span>
+                            <span class="class-badge ${cls.new ? 'badge-new' : 'badge-modified'}">
+                                ${cls.new ? 'NEW' : 'MODIFIED'}
+                            </span>
+                        </div>
+                        <div class="class-details">
+                            <div class="class-type">${cls.type?.label || 'Other'}</div>
+                            <div class="class-package">${escapeHtml(cls.packageName || '')}</div>
+                            ${cls.purpose ? `<div class="class-purpose">${escapeHtml(cls.purpose)}</div>` : ''}
+                            ${cls.linesOfCode ? `<div class="class-loc">${cls.linesOfCode} lignes</div>` : ''}
+                        </div>
+                        ${cls.methods && cls.methods.length > 0 ? `
+                            <div class="class-methods">
+                                <details>
+                                    <summary>Méthodes (${cls.methods.length})</summary>
+                                    <ul>
+                                        ${cls.methods.map(method => `<li>${escapeHtml(method)}</li>`).join('')}
+                                    </ul>
+                                </details>
+                            </div>
+                        ` : ''}
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+}
+
+function createArrayList(title, items) {
+    if (!items || items.length === 0) return '';
+
+    return `
+        <div class="array-list">
+            <details>
+                <summary>${title} (${items.length})</summary>
+                <ul>
+                    ${items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}
+                </ul>
+            </details>
+        </div>
+    `;
+}
+
+function getClassIcon(type) {
+    if (!type || !type.label) return '📦';
+
+    const icons = {
+        'Configuration': '⚙️',
+        'Processor': '🔄',
+        'Reader': '📖',
+        'Writer': '✍️',
+        'Entity': '📊',
+        'Repository': '🗄️',
+        'Validator': '✅',
+        'Listener': '👂',
+        'Decider': '🔀',
+        'Mapper': '🗺️',
+        'Utility': '🔧',
+        'Other': '📦'
+    };
+
+    return icons[type.label] || '📦';
+}
+
+function createWarningDetailsSection(warningDetails) {
+    if (!warningDetails || warningDetails.length === 0) return '';
+
+    return `
+        <div class="report-section">
+            <h5>⚠️ Avertissements détaillés</h5>
+            <div class="warning-details-list">
+                ${warningDetails.map((warning, index) => `
+                    <div class="warning-detail-item">
+                        <div class="warning-header">
+                            <span class="warning-icon warning-clickable"
+                                  onclick='showCodeModal(${JSON.stringify(warning).replace(/'/g, "&apos;")})'
+                                  title="Cliquez pour voir le code Java">
+                                🔍
+                            </span>
+                            <span class="warning-message">${escapeHtml(warning.message)}</span>
+                        </div>
+                        <div class="warning-meta">
+                            <span class="warning-file">📄 ${escapeHtml(warning.javaFile)}</span>
+                            <span class="warning-line">📍 Ligne ${warning.javaLine}</span>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
 }
 
 function resetForm() {
@@ -549,4 +761,215 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
         document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
         document.getElementById(`tab-${tabName}`).classList.add('active');
     });
+});
+// ===== INFERENCE REPORT DISPLAY FUNCTIONS =====
+
+/**
+ * Display inference report with field analysis, type distribution, and recommendations
+ */
+function displayInferenceReport(inferenceData) {
+    if (!inferenceData) {
+        console.log('No inference data available');
+        return;
+    }
+    
+    const reportSection = document.getElementById('inferenceReportSection');
+    
+    // Update summary metrics
+    document.getElementById('inferenceFieldsCount').textContent = inferenceData.totalFieldsInferred || 0;
+    document.getElementById('inferenceQualityScore').textContent = (inferenceData.overallQualityScore || 0) + '%';
+    
+    // Calculate average confidence
+    const avgConfidence = inferenceData.conversionMetrics?.averageConfidence || 0;
+    document.getElementById('inferenceAvgConfidence').textContent = (avgConfidence * 100).toFixed(1) + '%';
+    
+    // Display inferred fields
+    if (inferenceData.inferredFieldsMap && Object.keys(inferenceData.inferredFieldsMap).length > 0) {
+        displayInferredFields(inferenceData.inferredFieldsMap);
+    }
+    
+    // Display type distribution
+    if (inferenceData.typeDistribution && Object.keys(inferenceData.typeDistribution).length > 0) {
+        displayTypeDistribution(inferenceData.typeDistribution);
+    }
+    
+    // Display recommendations
+    if (inferenceData.recommendations && inferenceData.recommendations.length > 0) {
+        displayRecommendations(inferenceData.recommendations);
+    }
+    
+    // Show the inference report section
+    reportSection.classList.remove('hidden');
+}
+
+/**
+ * Display inferred fields in table
+ */
+function displayInferredFields(fieldsMap) {
+    const tbody = document.getElementById('inferenceFieldsTbody');
+    tbody.innerHTML = '';
+    
+    Object.entries(fieldsMap).forEach(([fieldName, field]) => {
+        const row = document.createElement('tr');
+        
+        // Determine confidence color class
+        const confidenceLevel = field.confidenceLevel || 'MEDIUM';
+        const confidenceClass = `confidence-${confidenceLevel.toLowerCase()}`;
+        const confidenceText = getConfidenceText(field.confidenceScore);
+        
+        // Prepare contexts
+        const contextsHtml = (field.usageContexts || [])
+            .slice(0, 2) // Show first 2 contexts
+            .map(c => `<small>${c}</small>`)
+            .join('<br/>');
+        
+        // Prepare suggestions
+        const suggestionsHtml = (field.suggestedAnnotations || [])
+            .slice(0, 2) // Show first 2 suggestions
+            .map(s => `<small style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px; display: inline-block; margin: 2px;">${s}</small>`)
+            .join(' ');
+        
+        row.innerHTML = `
+            <td><strong>${fieldName}</strong></td>
+            <td><code>${field.javaType}</code></td>
+            <td><span class="confidence-badge ${confidenceClass}">${confidenceText}</span></td>
+            <td>${contextsHtml || '-'}</td>
+            <td>${suggestionsHtml || '-'}</td>
+        `;
+        
+        tbody.appendChild(row);
+    });
+}
+
+/**
+ * Display type distribution
+ */
+function displayTypeDistribution(typeDistribution) {
+    const chartContainer = document.getElementById('typeDistributionChart');
+    chartContainer.innerHTML = '';
+    
+    // Sort by count descending
+    const sorted = Object.entries(typeDistribution)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10); // Top 10 types
+    
+    sorted.forEach(([typeName, count]) => {
+        const item = document.createElement('div');
+        item.className = 'type-item';
+        item.innerHTML = `
+            <span class="type-name">${typeName}</span>
+            <span class="type-count">${count}</span>
+        `;
+        chartContainer.appendChild(item);
+    });
+}
+
+/**
+ * Display smart recommendations
+ */
+function displayRecommendations(recommendations) {
+    const container = document.getElementById('recommendationsContainer');
+    container.innerHTML = '';
+    
+    recommendations.forEach(recommendation => {
+        const card = document.createElement('div');
+        card.className = 'recommendation-card';
+        
+        // Determine card type based on recommendation text
+        if (recommendation.includes('✅')) {
+            card.classList.add('positive');
+        } else if (recommendation.includes('⚠️')) {
+            card.classList.add('warning');
+        } else if (recommendation.includes('❌')) {
+            card.classList.add('alert');
+        } else {
+            card.classList.add('warning');
+        }
+        
+        card.innerHTML = `<div class="recommendation-text">${recommendation}</div>`;
+        container.appendChild(card);
+    });
+}
+
+/**
+ * Get human-readable confidence text
+ */
+function getConfidenceText(score) {
+    if (score >= 0.9) return 'Très élevée';
+    if (score >= 0.7) return 'Élevée';
+    if (score >= 0.5) return 'Moyenne';
+    return 'Basse';
+}
+
+// ===== CODE MODAL FUNCTIONS =====
+
+/**
+ * Show code modal with Java snippet
+ */
+function showCodeModal(warningDetail) {
+    const modal = document.getElementById('codeModal');
+    const modalTitle = document.getElementById('codeModalTitle');
+    const modalFile = document.getElementById('codeModalFile');
+    const modalLine = document.getElementById('codeModalLine');
+    const modalCobol = document.getElementById('codeModalCobol');
+    const modalCobolContainer = document.getElementById('codeModalCobolContainer');
+    const modalSnippet = document.getElementById('codeModalSnippet');
+
+    // Set modal content
+    modalTitle.textContent = warningDetail.message || 'Code Java Généré';
+    modalFile.textContent = warningDetail.javaFile || 'N/A';
+    modalLine.textContent = `Ligne ${warningDetail.javaLine || '?'}`;
+
+    // Show COBOL line if available
+    if (warningDetail.cobolLine) {
+        modalCobol.textContent = warningDetail.cobolLine;
+        modalCobolContainer.style.display = 'flex';
+    } else {
+        modalCobolContainer.style.display = 'none';
+    }
+
+    // Set code snippet
+    modalSnippet.querySelector('code').textContent = warningDetail.javaCodeSnippet || '// Code non disponible';
+
+    // Show modal
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+/**
+ * Close code modal
+ */
+function closeCodeModal() {
+    const modal = document.getElementById('codeModal');
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+/**
+ * Copy code to clipboard
+ */
+function copyCodeToClipboard() {
+    const codeSnippet = document.getElementById('codeModalSnippet').querySelector('code').textContent;
+
+    navigator.clipboard.writeText(codeSnippet).then(() => {
+        const btn = document.querySelector('.copy-code-btn');
+        const originalText = btn.textContent;
+        btn.textContent = '✓ Copié!';
+        btn.style.background = '#00A650';
+
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.style.background = '#007acc';
+        }, 2000);
+    }).catch(err => {
+        console.error('Failed to copy:', err);
+        alert('Impossible de copier le code');
+    });
+}
+
+// Close modal when pressing Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeCodeModal();
+    }
 });

@@ -8,6 +8,7 @@ com/cobol/translator/demo/ImprovedPatternDemo.class
 com/cobol/translator/project/ProjectGeneratorTest.class
 com/cobol/translator/converter/FileSectionConverterTest.class
 com/cobol/translator/CobolParserTest.class
+com/cobol/translator/demo/PatternWarningDemo.class
 com/cobol/translator/generator/BusinessLogicTranslatorTest.class
 com/cobol/translator/vsam/VsamSupportTest.class
 com/cobol/translator/redefines/RedefinesAnalyzerTest.class

@@ -1,13 +1,23 @@
 package com.cobol.translator.controller;
 
 import com.cobol.translator.report.ConversionReport;
+import com.cobol.translator.report.InferenceReportData;
 import com.cobol.translator.service.ConversionResult;
+import com.cobol.translator.generator.ProcessorGenerationResult;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Response object for conversion endpoint including conversion reports per file
+ * and algorithmic field inference report data.
+ *
+ * Enhanced with InferenceReportData to provide detailed insights into:
+ * - Automatically inferred fields with confidence scores
+ * - Type distribution across entities
+ * - Usage context statistics
+ * - Smart recommendations for developers
  */
 public class ConversionResponse {
     private boolean success;
@@ -16,6 +26,9 @@ public class ConversionResponse {
     private String downloadUrl;
     private String zipFileBase64;
     private List<ConversionReportSummary> reports;
+    
+    @JsonProperty("inferenceReport")
+    private InferenceReportData inferenceReport;
 
     public ConversionResponse() {}
 
@@ -26,6 +39,21 @@ public class ConversionResponse {
     }
 
     public static ConversionResponse success(String message, String projectName, ConversionResult result) {
+        return success(message, projectName, result, null);
+    }
+    
+    /**
+     * Enhanced factory method supporting both ConversionResult and ProcessorGenerationResult
+     * for algorithmic inference reporting.
+     *
+     * @param message Success message
+     * @param projectName Project name
+     * @param result Conversion results with file reports
+     * @param processorResult Optional: ProcessorGenerationResult with InferenceReportData
+     * @return Populated ConversionResponse with optional inference report
+     */
+    public static ConversionResponse success(String message, String projectName, ConversionResult result,
+                                           ProcessorGenerationResult processorResult) {
         ConversionResponse response = new ConversionResponse(true, message);
         response.setProjectName(projectName);
         if (result != null && result.getFileReports() != null) {
@@ -35,6 +63,12 @@ public class ConversionResponse {
             }
             response.setReports(summaries);
         }
+        
+        // Add inference report data if provided
+        if (processorResult != null && processorResult.getInferenceReportData() != null) {
+            response.setInferenceReport(processorResult.getInferenceReportData());
+        }
+        
         return response;
     }
 
@@ -80,6 +114,9 @@ public class ConversionResponse {
         private int totalDataItems;
         private int convertedDataItems;
         private int unconvertedDataItems;
+        private ConversionReport.JCLAnalysis jclAnalysis;
+        private List<ConversionReport.GeneratedJavaClass> generatedClasses;
+        private List<ConversionReport.WarningDetail> warningDetails;
 
         public static ConversionReportSummary from(String fileName, ConversionReport report) {
             ConversionReportSummary summary = new ConversionReportSummary();
@@ -102,7 +139,12 @@ public class ConversionResponse {
             summary.setTotalDataItems(report.getTotalDataItems());
             summary.setConvertedDataItems(report.getConvertedDataItems());
             summary.setUnconvertedDataItems(report.getUnconvertedDataItems());
-            
+
+            // JCL Analysis and Generated Classes
+            summary.setJclAnalysis(report.getJclAnalysis());
+            summary.setGeneratedClasses(report.getGeneratedClasses());
+            summary.setWarningDetails(report.getWarningDetails());
+
             return summary;
         }
 
@@ -162,8 +204,36 @@ public class ConversionResponse {
         public void setConvertedDataItems(int convertedDataItems) { this.convertedDataItems = convertedDataItems; }
         
         public int getUnconvertedDataItems() { return unconvertedDataItems; }
-        public void setUnconvertedDataItems(int unconvertedDataItems) { 
-            this.unconvertedDataItems = unconvertedDataItems; 
+        public void setUnconvertedDataItems(int unconvertedDataItems) {
+            this.unconvertedDataItems = unconvertedDataItems;
         }
+
+        public ConversionReport.JCLAnalysis getJclAnalysis() { return jclAnalysis; }
+        public void setJclAnalysis(ConversionReport.JCLAnalysis jclAnalysis) {
+            this.jclAnalysis = jclAnalysis;
+        }
+
+        public List<ConversionReport.GeneratedJavaClass> getGeneratedClasses() { return generatedClasses; }
+        public void setGeneratedClasses(List<ConversionReport.GeneratedJavaClass> generatedClasses) {
+            this.generatedClasses = generatedClasses;
+        }
+
+        public List<ConversionReport.WarningDetail> getWarningDetails() { return warningDetails; }
+        public void setWarningDetails(List<ConversionReport.WarningDetail> warningDetails) {
+            this.warningDetails = warningDetails;
+        }
+    }
+    
+    // ============ Inference Report Data ============
+    public InferenceReportData getInferenceReport() {
+        return inferenceReport;
+    }
+    
+    public void setInferenceReport(InferenceReportData inferenceReport) {
+        this.inferenceReport = inferenceReport;
+    }
+    
+    public boolean hasInferenceReport() {
+        return inferenceReport != null;
     }
 }

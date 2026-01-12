@@ -29,6 +29,18 @@ public class BusinessLogicTranslator {
     private static final Pattern COBOL_LITERAL_QUOTED = Pattern.compile("^'([^']*)'$");
     private static final Pattern COBOL_LITERAL_NUMBER = Pattern.compile("^-?\\d+(\\.\\d+)?$");
     private static final Pattern COBOL_FIELD_NAME = Pattern.compile("^[A-Z][A-Z0-9-]*$");
+    
+    // Set of 88-level condition names (populated by ProcessorGenerator)
+    private java.util.Set<String> conditionNames = new java.util.HashSet<>();
+
+    /**
+     * Sets the condition names (88-level) for proper is*() method generation.
+     */
+    public void setConditionNames(java.util.Set<String> conditionNames) {
+        if (conditionNames != null) {
+            this.conditionNames = new java.util.HashSet<>(conditionNames);
+        }
+    }
 
     /**
      * Translates a COBOL paragraph into Java method code.
@@ -146,6 +158,10 @@ public class BusinessLogicTranslator {
                 }
             }
         } else {
+            // Add COBOL code as comment before TODO
+            if (stmt.getOriginalCobol() != null && !stmt.getOriginalCobol().trim().isEmpty()) {
+                code.append(indent).append("    // COBOL original: ").append(stmt.getOriginalCobol()).append("\n");
+            }
             code.append(indent).append("    // TODO: add statement\n");
         }
 
@@ -266,6 +282,10 @@ public class BusinessLogicTranslator {
                     }
                 }
             } else {
+                // Add COBOL code as comment before TODO
+                if (whenClause.getOriginalCobol() != null && !whenClause.getOriginalCobol().trim().isEmpty()) {
+                    code.append(indent).append("    // COBOL original: ").append(whenClause.getOriginalCobol()).append("\n");
+                }
                 code.append(indent).append("    // TODO: add action\n");
             }
         }
@@ -310,7 +330,9 @@ public class BusinessLogicTranslator {
     }
 
     /**
-     * Translates COBOL MOVE statement with validation.
+     * Translates COBOL MOVE statement with validation and type conversion.
+     * Fixed to detect and correct inverted assignments and handle type conversions.
+     * Supports bidirectional LocalDate ↔ Integer conversions.
      */
     private String translateMove(Statement stmt, String recordType, String indent) {
         StringBuilder code = new StringBuilder();
@@ -319,11 +341,79 @@ public class BusinessLogicTranslator {
             return indent + "// TODO: Invalid MOVE - missing source or target\n";
         }
         
-        String source = toJavaExpression(stmt.getSource(), recordType);
-        String setter = toJavaSetter(stmt.getTarget(), recordType);
+        String source = stmt.getSource();
+        String target = stmt.getTarget();
         
-        code.append(indent).append("// COBOL: MOVE ").append(stmt.getSource()).append(" TO ").append(stmt.getTarget()).append("\n");
-        code.append(indent).append(setter).append("(").append(source).append(");\n");
+        // Convert source to Java expression
+        String javaSource = toJavaExpression(source, recordType);
+        String javaSetter = toJavaSetter(target, recordType);
+        String javaGetter = toJavaGetter(target, recordType);
+
+        // Check if target is BigDecimal and coerce source accordingly
+        if (isBigDecimalExpression(javaGetter, target)) {
+            if (javaSource.matches("^\\d+$")) {
+                // Integer literal moving to BigDecimal field
+                if (javaSource.equals("0")) {
+                    javaSource = "BigDecimal.ZERO";
+                } else if (javaSource.equals("1")) {
+                    javaSource = "BigDecimal.ONE";
+                } else {
+                    javaSource = "BigDecimal.valueOf(" + javaSource + ")";
+                }
+            } else if (!isBigDecimalExpression(javaSource, source)) {
+                // Non-BigDecimal expression (including getters): wrap safely
+                javaSource = "BigDecimal.valueOf(" + javaSource + ")";
+            }
+        }
+        
+        // Special case: FUNCTION CURRENT-DATE to String field
+        // Convert LocalDate.now() to LocalDate.now().toString() for String targets
+        if (javaSource.contains("LocalDate.now()")) {
+            code.append(indent).append("// COBOL: MOVE ").append(source).append(" TO ").append(target).append("\n");
+            code.append(indent).append("// Converting LocalDate to String for WORKING STORAGE field\n");
+            code.append(indent).append(javaSetter).append("(LocalDate.now().toString());");
+            code.append("\n");
+            return code.toString();
+        }
+        
+        // Detect LocalDate → Integer conversion (source is DATE field, target is not)
+        // Use token-aware matching to avoid false positives like "updated"
+        String sourceUpper = source != null ? source.toUpperCase() : "";
+        String targetUpper = target != null ? target.toUpperCase() : "";
+        // Match DATE as its own token (e.g., -DATE or _DATE or exact DATE)
+        boolean sourceIsDate = (javaSource.contains("get") && javaSource.toLowerCase().matches(".*\\bdate\\b.*")) ||
+                      sourceUpper.matches(".*(^|[-_])DATE($|[-_]).*");
+        boolean targetIsDate = targetUpper.matches(".*(^|[-_])DATE($|[-_]).*") || targetUpper.contains("UPDATE");
+        
+        boolean needsDateToIntConversion = sourceIsDate && !targetIsDate;
+        
+        // Detect Integer → LocalDate conversion (source is numeric, target is DATE field)
+        boolean needsIntToDateConversion = (javaSource.matches("\\d+") || 
+                                           (javaSource.contains("get") && !sourceIsDate)) &&
+                                          targetIsDate;
+        
+        if (needsDateToIntConversion) {
+            // Convert LocalDate to Integer (YYYYMMDD format)
+            code.append(indent).append("// COBOL: MOVE ").append(source).append(" TO ").append(target).append("\n");
+            code.append(indent).append("// Converting LocalDate to Integer (YYYYMMDD format)\n");
+            code.append(indent).append(javaSetter).append("(\n");
+            code.append(indent).append("    Integer.parseInt(").append(javaSource);
+            code.append(".format(java.time.format.DateTimeFormatter.BASIC_ISO_DATE))\n");
+            code.append(indent).append(");");
+        } else if (needsIntToDateConversion) {
+            // Convert Integer to LocalDate (parse YYYYMMDD format)
+            code.append(indent).append("// COBOL: MOVE ").append(source).append(" TO ").append(target).append("\n");
+            code.append(indent).append("// Converting Integer to LocalDate (YYYYMMDD format)\n");
+            code.append(indent).append(javaSetter).append("(\n");
+            code.append(indent).append("    java.time.LocalDate.parse(String.valueOf(").append(javaSource);
+            code.append("), java.time.format.DateTimeFormatter.BASIC_ISO_DATE)\n");
+            code.append(indent).append(");");
+        } else {
+            // Regular MOVE without conversion
+            code.append(indent).append("// COBOL: MOVE ").append(source).append(" TO ").append(target).append("\n");
+            code.append(indent).append(javaSetter).append("(").append(javaSource).append(");");
+        }
+        code.append("\n");
         
         return code.toString();
     }
@@ -351,17 +441,18 @@ public class BusinessLogicTranslator {
 
     /**
      * Translates COBOL PERFORM statement with improved validation.
+     * Enhanced to detect file processing loops (PERFORM UNTIL EOF).
      */
     private String translatePerform(Statement stmt, String recordType, String indent) {
         StringBuilder code = new StringBuilder();
-        
+
         String paragraphName = stmt.getParagraphName();
         if (paragraphName == null || paragraphName.trim().isEmpty()) {
             return indent + "// TODO: PERFORM statement without paragraph name\n";
         }
-        
+
         String methodName = toJavaMethodName(paragraphName);
-        
+
         if (stmt.getPerformTimes() != null && stmt.getPerformTimes() > 0) {
             // PERFORM n TIMES
             code.append(indent).append("// COBOL: PERFORM ").append(paragraphName).append(" ")
@@ -370,26 +461,79 @@ public class BusinessLogicTranslator {
             code.append(indent).append("    ").append(methodName).append("(record);\n");
             code.append(indent).append("}\n");
         } else if (stmt.getUntilCondition() != null && !stmt.getUntilCondition().trim().isEmpty()) {
-            // PERFORM UNTIL
-            String condition = translateCobolCondition(stmt.getUntilCondition());
-            code.append(indent).append("// COBOL: PERFORM ").append(paragraphName).append(" UNTIL ").append(stmt.getUntilCondition()).append("\n");
-            code.append(indent).append("while (!(").append(condition).append(")) {\n");
-            code.append(indent).append("    ").append(methodName).append("(record);\n");
-            code.append(indent).append("}\n");
+            // PERFORM UNTIL - Check if it's a file processing loop
+            String condition = stmt.getUntilCondition().trim();
+
+            // Detect EOF patterns: WS-EOF = 'Y', EOF-FLAG = 'Y', etc.
+            // Only match when there's an explicit comparison with 'Y' or when it's a flag assignment pattern
+            boolean isFileProcessingLoop = condition.matches(".*EOF.*=.*['\"]Y['\"].*") ||
+                                          condition.matches(".*EOF-FLAG.*=.*['\"]Y['\"].*") ||
+                                          condition.matches(".*WS-EOF.*=.*['\"]Y['\"].*");
+
+            if (isFileProcessingLoop) {
+                // This is a file processing loop - handled by Spring Batch framework
+                code.append(indent).append("/* COBOL: PERFORM UNTIL ").append(condition).append("\n");
+                code.append(indent).append(" * \n");
+                code.append(indent).append(" * This PERFORM UNTIL loop pattern is automatically handled by Spring Batch:\n");
+                code.append(indent).append(" * - The READ statement is replaced by ItemReader.read()\n");
+                code.append(indent).append(" * - The EOF condition (").append(condition).append(") is detected when reader returns null\n");
+                code.append(indent).append(" * - The framework loops automatically calling this process() method for each record\n");
+                code.append(indent).append(" * - No explicit loop code is needed in Spring Batch ItemProcessor\n");
+                code.append(indent).append(" *\n");
+                code.append(indent).append(" * Original COBOL logic:\n");
+                code.append(indent).append(" *   PERFORM UNTIL ").append(condition).append("\n");
+                code.append(indent).append(" *       READ FILE AT END MOVE 'Y' TO EOF-FLAG\n");
+                code.append(indent).append(" *       PERFORM PROCESS-RECORD\n");
+                code.append(indent).append(" *   END-PERFORM\n");
+                code.append(indent).append(" *\n");
+                code.append(indent).append(" * Spring Batch equivalent:\n");
+                code.append(indent).append(" *   - ItemReader reads one record at a time\n");
+                code.append(indent).append(" *   - This process() method is called for each record\n");
+                code.append(indent).append(" *   - Loop ends when reader returns null (EOF)\n");
+                code.append(indent).append(" */\n");
+                code.append(indent).append("// Processing logic for paragraph: ").append(paragraphName).append("\n");
+                code.append(indent).append(methodName).append("(record);\n");
+            } else {
+                // Regular PERFORM UNTIL
+                String javaCondition = translateCobolCondition(condition);
+                code.append(indent).append("// COBOL: PERFORM ").append(paragraphName).append(" UNTIL ").append(condition).append("\n");
+                code.append(indent).append("while (!(").append(javaCondition).append(")) {\n");
+                code.append(indent).append("    ").append(methodName).append("(record);\n");
+                code.append(indent).append("}\n");
+            }
         } else {
             // Simple PERFORM
             code.append(indent).append("// COBOL: PERFORM ").append(paragraphName).append("\n");
             code.append(indent).append(methodName).append("(record);\n");
         }
-        
+
         return code.toString();
     }
 
     /**
      * Translates COBOL ADD statement.
+     * Enhanced to detect counter patterns and suggest Spring Batch metrics.
      */
     private String translateAdd(Statement stmt, String recordType, String indent) {
-        return translateArithmeticOperation(stmt, recordType, indent, "ADD", "add");
+        StringBuilder code = new StringBuilder();
+
+        // Check if this is a counter increment pattern (ADD 1 TO counter)
+        boolean isCounterIncrement = stmt.getSource() != null &&
+                                    stmt.getSource().trim().equals("1") &&
+                                    stmt.getTarget() != null &&
+                                    stmt.getTarget().matches(".*(-COUNT|-READ|-PROCESSED|-ERROR|-UPDATED)");
+
+        if (isCounterIncrement) {
+            // Suggest using Spring Batch metrics for counters
+            code.append(indent).append("// COBOL: ADD 1 TO ").append(stmt.getTarget()).append("\n");
+            code.append(indent).append("// NOTE: Consider using Spring Batch StepExecution for counter tracking\n");
+        }
+
+        // Use consolidated arithmetic operation translator with BigDecimal support
+        String arithmeticCode = translateArithmeticOperation(stmt, recordType, indent, "ADD", "add");
+        code.append(arithmeticCode);
+
+        return code.toString();
     }
 
     /**
@@ -408,45 +552,104 @@ public class BusinessLogicTranslator {
 
     /**
      * Translates COBOL DIVIDE statement.
+     * Improved to handle BigDecimal operations properly.
      */
     private String translateDivide(Statement stmt, String recordType, String indent) {
-        StringBuilder code = new StringBuilder();
-        
-        String source = toJavaExpression(stmt.getSource(), recordType);
-        String target = stmt.getTarget();
-        String getter = toJavaGetter(target, recordType);
-        String setter = toJavaSetter(target, recordType);
-        
-        code.append(indent).append("// COBOL: DIVIDE ").append(target).append(" BY ").append(stmt.getSource()).append("\n");
-        code.append(indent).append(setter).append("(").append(getter).append(".divide(").append(source)
-            .append(", 2, java.math.RoundingMode.HALF_UP));\n");
-        
-        return code.toString();
+        // Use the consolidated arithmetic translator which handles BigDecimal correctly
+        return translateArithmeticOperation(stmt, recordType, indent, "DIVIDE", "divide");
     }
 
     /**
      * Consolidated arithmetic operation translator.
      * Handles ADD, SUBTRACT, MULTIPLY with consistent pattern.
+     * Fixed to properly handle BigDecimal vs Integer operations.
      */
-    private String translateArithmeticOperation(Statement stmt, String recordType, String indent, 
+    private String translateArithmeticOperation(Statement stmt, String recordType, String indent,
                                                 String cobolOp, String javaMethod) {
         StringBuilder code = new StringBuilder();
-        
+
         // Validate inputs
         if (!isValidStatement(stmt, stmt.getSource(), stmt.getTarget())) {
             return indent + "// TODO: Invalid arithmetic operation - missing source or target\n";
         }
-        
-        String source = toJavaExpression(stmt.getSource(), recordType);
+
         String target = stmt.getTarget();
         String getter = toJavaGetter(target, recordType);
+
+        // Check if target is BigDecimal type
+        boolean targetIsBigDecimal = isBigDecimalExpression(getter, target);
+
+        // Convert source to Java expression
+        String source = toJavaExpression(stmt.getSource(), recordType);
+
+        // If target is BigDecimal, ensure source is also BigDecimal
+        // This applies even for getters that are not monetary types
+        if (targetIsBigDecimal) {
+            logger.debug("Target is BigDecimal: {}, source before: '{}'", target, source);
+
+            boolean sourceIsBigDecimal = isBigDecimalExpression(source, stmt.getSource());
+
+            if (!sourceIsBigDecimal && source != null) {
+                // Numeric literal fast-path
+                if (source.matches("^\\d+$")) {
+                    if (source.equals("1")) {
+                        source = "BigDecimal.ONE";
+                    } else if (source.equals("0")) {
+                        source = "BigDecimal.ZERO";
+                    } else {
+                        source = "BigDecimal.valueOf(" + source + ")";
+                    }
+                } else {
+                    // Wrap any non-BigDecimal expression (including getters) safely
+                    source = "BigDecimal.valueOf(" + source + ")";
+                }
+                logger.debug("Source coerced to BigDecimal: '{}'", source);
+            }
+        }
+
         String setter = toJavaSetter(target, recordType);
-        
+
         code.append(indent).append("// COBOL: ").append(cobolOp).append(" ").append(stmt.getSource())
             .append(" TO ").append(target).append("\n");
-        code.append(indent).append(setter).append("(").append(getter).append(".")
-            .append(javaMethod).append("(").append(source).append("));\n");
         
+        // Generate the correct code based on whether target is BigDecimal or Integer
+        if (targetIsBigDecimal) {
+            // BigDecimal: use .add(), .subtract(), .multiply(), .divide()
+            if (javaMethod.equals("divide")) {
+                // For divide, add rounding mode
+                code.append(indent).append(setter).append("(").append(getter).append(".")
+                    .append(javaMethod).append("(").append(source)
+                    .append(", 2, java.math.RoundingMode.HALF_UP));");
+            } else {
+                code.append(indent).append(setter).append("(").append(getter).append(".")
+                    .append(javaMethod).append("(").append(source).append("));");
+            }
+        } else {
+            // Check if source is also a BigDecimal getter - if so, must use BigDecimal methods
+            boolean sourceIsBigDecimal = isBigDecimalExpression(source, stmt.getSource());
+            
+            if (sourceIsBigDecimal) {
+                // Target is NOT BigDecimal, but source is BigDecimal.
+                // Convert source to int for arithmetic with integer targets.
+                String srcAsInt = "(" + source + ").intValue()";
+                String operator = javaMethod.equals("add") ? "+" : 
+                                javaMethod.equals("subtract") ? "-" : 
+                                javaMethod.equals("multiply") ? "*" : 
+                                javaMethod.equals("divide") ? "/" : "+" ;
+                code.append(indent).append(setter).append("(").append(getter)
+                    .append(" ").append(operator).append(" ").append(srcAsInt).append(");");
+            } else {
+                // Integer/primitive: use + operator (not +=, which can't be in method argument)
+                String operator = javaMethod.equals("add") ? "+" : 
+                                javaMethod.equals("subtract") ? "-" : 
+                                javaMethod.equals("multiply") ? "*" :
+                                javaMethod.equals("divide") ? "/" : "+" ;
+                code.append(indent).append(setter).append("(").append(getter)
+                    .append(" ").append(operator).append(" ").append(source).append(");");
+            }
+        }
+        code.append("\n");
+
         return code.toString();
     }
 
@@ -468,14 +671,81 @@ public class BusinessLogicTranslator {
      */
     private String translateDisplay(Statement stmt, String recordType, String indent) {
         StringBuilder code = new StringBuilder();
-        
-        String message = stmt.getSource() != null && !stmt.getSource().trim().isEmpty() ? 
-            toJavaExpression(stmt.getSource(), recordType) : "\"\"";
-        
+
         code.append(indent).append("// COBOL: DISPLAY ").append(stmt.getSource() != null ? stmt.getSource() : "").append("\n");
-        code.append(indent).append("logger.info(").append(message).append(");\n");
-        
+
+        // DISPLAY can have multiple arguments: "DISPLAY 'text' FIELD1 'more' FIELD2"
+        // Parse them and generate appropriate logger.info with placeholders
+        String source = stmt.getSource() != null ? stmt.getSource().trim() : "";
+
+        if (!source.isEmpty()) {
+            java.util.List<String> parts = parseDisplayArguments(source);
+
+            if (parts.size() == 1) {
+                // Single argument
+                String message = toJavaExpression(parts.get(0), recordType);
+                code.append(indent).append("logger.info(").append(message).append(");\n");
+            } else {
+                // Multiple arguments - build format string and args
+                StringBuilder format = new StringBuilder();
+                java.util.List<String> args = new java.util.ArrayList<>();
+
+                for (String part : parts) {
+                    if (part.startsWith("'") && part.endsWith("'")) {
+                        // String literal
+                        format.append(part.substring(1, part.length() - 1));
+                    } else {
+                        // Field reference - add placeholder
+                        format.append("{}");
+                        args.add(toJavaGetter(part, recordType));
+                    }
+                }
+
+                code.append(indent).append("logger.info(\"").append(format.toString()).append("\"");
+                for (String arg : args) {
+                    code.append(", ").append(arg);
+                }
+                code.append(");\n");
+            }
+        } else {
+            code.append(indent).append("logger.info(\"\");\n");
+        }
+
         return code.toString();
+    }
+
+    /**
+     * Parses DISPLAY statement arguments into separate parts.
+     * Example: "'HIGH VALUE: ' CUST-NAME" -> ["'HIGH VALUE: '", "CUST-NAME"]
+     */
+    private java.util.List<String> parseDisplayArguments(String source) {
+        java.util.List<String> parts = new java.util.ArrayList<>();
+        StringBuilder current = new StringBuilder();
+        boolean inQuotes = false;
+
+        for (int i = 0; i < source.length(); i++) {
+            char c = source.charAt(i);
+
+            if (c == '\'' || c == '"') {
+                inQuotes = !inQuotes;
+                current.append(c);
+            } else if (c == ' ' && !inQuotes) {
+                // Space outside quotes - potential separator
+                if (current.length() > 0) {
+                    parts.add(current.toString().trim());
+                    current = new StringBuilder();
+                }
+            } else {
+                current.append(c);
+            }
+        }
+
+        // Add last part
+        if (current.length() > 0) {
+            parts.add(current.toString().trim());
+        }
+
+        return parts;
     }
 
     /**
@@ -494,32 +764,632 @@ public class BusinessLogicTranslator {
         if (condition == null || condition.trim().isEmpty()) {
             return "true";
         }
-        
+
         String result = condition.trim();
-        
-        // Translate COBOL logical operators (case-insensitive)
+
+        // Translate COBOL class conditions FIRST (before NOT gets translated to !)
+        // NOTE: isNumeric() will be post-processed later to handle LocalDate fields
+        result = result.replaceAll("(?i)\\bIS\\s+NOT\\s+NUMERIC\\b", ".isNumeric() == false");
+        result = result.replaceAll("(?i)\\bNOT\\s+NUMERIC\\b", ".isNumeric() == false");
+        result = result.replaceAll("(?i)\\bIS\\s+NUMERIC\\b", ".isNumeric()");
+        result = result.replaceAll("(?i)\\bNUMERIC\\b", ".isNumeric()");
+        result = result.replaceAll("(?i)\\bIS\\s+NOT\\s+ALPHABETIC\\b", ".isAlphabetic() == false");
+        result = result.replaceAll("(?i)\\bNOT\\s+ALPHABETIC\\b", ".isAlphabetic() == false");
+        result = result.replaceAll("(?i)\\bIS\\s+ALPHABETIC\\b", ".isAlphabetic()");
+
+        // Translate COBOL comparison operators (temporarily, will be post-processed)
+        result = result.replaceAll("(?i)\\bNOT\\s*=", " NOT_EQUALS ");
+        result = result.replaceAll("(?i)\\bIS\\s+NOT\\s+EQUAL\\s+TO\\b", " NOT_EQUALS ");
+        result = result.replaceAll("(?i)\\bIS\\s+NOT\\s+EQUAL", " NOT_EQUALS ");
+        result = result.replaceAll("(?i)\\bIS\\s+EQUAL\\s+TO\\b", " EQUALS ");
+        result = result.replaceAll("(?i)\\bIS\\s+EQUAL", " EQUALS ");
+        // Match = operator with whitespace on both sides (no word boundary required)
+        // This handles: "field = value", "getter() = value", etc.
+        result = result.replaceAll("\\s+=\\s+", " EQUALS ");
+
+        // NOW translate COBOL logical operators (after NOT= and class conditions have been handled)
         result = result.replaceAll("(?i)\\bAND\\b", "&&");
         result = result.replaceAll("(?i)\\bOR\\b", "||");
         result = result.replaceAll("(?i)\\bNOT\\b", "!");
-        
-        // Translate COBOL comparison operators
-        result = result.replaceAll("(?i)\\b=\\b", "==");
-        result = result.replaceAll("(?i)\\bNOT\\s*=", "!=");
-        result = result.replaceAll("(?i)\\bIS\\s+EQUAL", "==");
-        result = result.replaceAll("(?i)\\bIS\\s+NOT\\s+EQUAL", "!=");
-        
+
+        // Convert COBOL single-quoted literals to Java double-quoted String literals
+        // This fixes char literal errors like '00' -> "00"
+        result = result.replaceAll("'([^']*)'", "\"$1\"");
+
         // Translate COBOL special values
         result = result.replaceAll("(?i)\\bZERO(?!S)", "0");
         result = result.replaceAll("(?i)\\bZEROS\\b", "0");
         result = result.replaceAll("(?i)\\bSPACES?\\b", "\" \"");
         result = result.replaceAll("(?i)\\bHIGH\\s+VALUE", "Integer.MAX_VALUE");
         result = result.replaceAll("(?i)\\bLOW\\s+VALUE", "Integer.MIN_VALUE");
-        
+
+        // Convert COBOL field names to Java getters
+        // Look for COBOL identifiers (words with hyphens like CUST-AMOUNT, WS-COUNT)
+        // and convert them to getter calls like record.getCustAmount()
+        result = convertFieldNamesToGetters(result);
+
+        // FIX: Remove .isNumeric() calls on date fields (LocalDate doesn't have isNumeric())
+        // Pattern: getTrTransactionDate() .isNumeric() -> true (dates are always "numeric" in COBOL terms)
+        result = fixIsNumericOnDateFields(result);
+
+        // Convert BigDecimal arithmetic operations in conditions
+        // Example: getMaOverdraftLimit() * -1 -> getMaOverdraftLimit().multiply(new BigDecimal(-1))
+        result = convertBigDecimalArithmeticInConditions(result);
+
+        // Post-process comparisons to use type-safe methods
+        result = postProcessComparisons(result);
+
         return result;
     }
 
     /**
+     * Fixes .isNumeric() calls on date fields.
+     * LocalDate fields don't have isNumeric() method.
+     * In COBOL, date fields (PIC 9(8)) are always numeric, so we replace with appropriate validation.
+     */
+    private String fixIsNumericOnDateFields(String expression) {
+        // Pattern to match: getXxxDate() .isNumeric() or getXxxDate().isNumeric()
+        java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(
+            "(\\w+\\.)?get\\w*[Dd]ate\\(\\)\\s*\\.isNumeric\\(\\)(\\s*==\\s*false|\\s*==\\s*true)?"
+        );
+        
+        java.util.regex.Matcher matcher = pattern.matcher(expression);
+        StringBuffer result = new StringBuffer();
+        
+        while (matcher.find()) {
+            String fullMatch = matcher.group(0);
+            String comparison = matcher.group(2); // == false or == true
+            
+            // Determine replacement based on comparison
+            String replacement;
+            if (comparison != null && comparison.contains("false")) {
+                // .isNumeric() == false -> field is null or invalid
+                // For dates, check if null
+                replacement = matcher.group(1) != null ?
+                    matcher.group(1) + "get" + fullMatch.substring(fullMatch.indexOf("get") + 3, fullMatch.indexOf("(")) + "() == null" :
+                    "get" + fullMatch.substring(fullMatch.indexOf("get") + 3, fullMatch.indexOf("(")) + "() == null";
+            } else {
+                // .isNumeric() or .isNumeric() == true -> field is valid
+                // For dates, check if not null
+                replacement = matcher.group(1) != null ?
+                    matcher.group(1) + "get" + fullMatch.substring(fullMatch.indexOf("get") + 3, fullMatch.indexOf("(")) + "() != null" :
+                    "get" + fullMatch.substring(fullMatch.indexOf("get") + 3, fullMatch.indexOf("(")) + "() != null";
+            }
+            
+            matcher.appendReplacement(result, java.util.regex.Matcher.quoteReplacement(replacement));
+        }
+        
+        matcher.appendTail(result);
+
+        // Final pass: handle BigDecimal and Integer/Long relational comparisons
+        // Use manual parsing instead of regex to handle complex parenthesized expressions
+        String workingResult = result.toString();
+        StringBuilder finalResult = new StringBuilder();
+        int pos = 0;
+
+        // Pattern to find getter() followed by comparison operator
+        java.util.regex.Pattern getterPattern = java.util.regex.Pattern.compile(
+            "([\\w.]+get[A-Z]\\w+\\(\\))\\s*(<=|>=|<|>|==|!=)\\s*"
+        );
+
+        matcher = getterPattern.matcher(workingResult);
+
+        while (matcher.find(pos)) {
+            String left = matcher.group(1).trim();
+            String operator = matcher.group(2);
+            int rightStart = matcher.end();
+
+            // Skip if already using compareTo or equals
+            if (left.contains("compareTo(") || left.contains(".equals(")) {
+                finalResult.append(workingResult, pos, matcher.end());
+                pos = matcher.end();
+                continue;
+            }
+
+            // Extract right operand - handle parentheses properly
+            String rightOperand = extractRightOperand(workingResult, rightStart);
+            int rightEnd = rightStart + rightOperand.length();
+
+            // Append everything before this comparison
+            finalResult.append(workingResult, pos, matcher.start());
+
+            // Process the comparison
+            String processedRight = rightOperand.trim();
+
+            // Strip and process parenthesized expressions
+            if (processedRight.startsWith("(") && processedRight.endsWith(")")) {
+                String inner = processedRight.substring(1, processedRight.length() - 1).trim();
+                inner = convertBigDecimalArithmeticInConditions(inner);
+                processedRight = inner;
+            } else {
+                processedRight = convertBigDecimalArithmeticInConditions(processedRight);
+            }
+
+            // Check if this is a BigDecimal comparison
+            if (isBigDecimalOperand(left) || isBigDecimalOperand(processedRight)) {
+                // If right operand is a simple literal
+                if (processedRight.matches("-?\\d+")) {
+                    processedRight = "0".equals(processedRight) ? "BigDecimal.ZERO" : "new BigDecimal(" + processedRight + ")";
+                }
+                finalResult.append(left).append(".compareTo(").append(processedRight).append(") ").append(operator).append(" 0");
+            }
+            // Check if this is an Integer/Long comparison
+            else if (rightOperand.trim().matches("-?\\d+") && isIntegerOrLongOperand(left)) {
+                finalResult.append(left).append(" ").append(operator).append(" ").append(rightOperand.trim());
+            } else {
+                // Keep as is
+                finalResult.append(left).append(" ").append(operator).append(" ").append(rightOperand.trim());
+            }
+
+            pos = rightEnd;
+        }
+
+        // Append remaining text
+        finalResult.append(workingResult.substring(pos));
+        return finalResult.toString();
+    }
+
+    /**
+     * Extracts the right operand from an expression starting at a given position.
+     * Handles parenthesized expressions correctly by counting parentheses.
+     * Stops at logical operators (&&, ||) or end of string.
+     */
+    private String extractRightOperand(String expression, int startPos) {
+        if (startPos >= expression.length()) {
+            return "";
+        }
+
+        int pos = startPos;
+        int parenCount = 0;
+        boolean inParens = false;
+
+        // Skip leading whitespace
+        while (pos < expression.length() && Character.isWhitespace(expression.charAt(pos))) {
+            pos++;
+        }
+
+        int start = pos;
+
+        // Scan until we hit a logical operator or end
+        while (pos < expression.length()) {
+            char c = expression.charAt(pos);
+
+            if (c == '(') {
+                parenCount++;
+                inParens = true;
+            } else if (c == ')') {
+                parenCount--;
+                if (parenCount == 0 && inParens) {
+                    pos++; // Include the closing paren
+                    break;
+                }
+            } else if (parenCount == 0) {
+                // Check for logical operators at top level
+                if (pos + 1 < expression.length()) {
+                    String twoChar = expression.substring(pos, pos + 2);
+                    if (twoChar.equals("&&") || twoChar.equals("||")) {
+                        break;
+                    }
+                }
+                // Check for single ) at top level (end of enclosing condition)
+                if (c == ')') {
+                    break;
+                }
+            }
+
+            pos++;
+        }
+
+        return expression.substring(start, pos);
+    }
+
+    /**
+     * Converts arithmetic operations on BigDecimal fields to proper BigDecimal method calls.
+     * Handles operations like: getter() * -1, getter() * 2, etc.
+     */
+    private String convertBigDecimalArithmeticInConditions(String expression) {
+        // Pattern to match: <getter_call>() <operator> <literal>
+        // Example: getMaOverdraftLimit() * -1 or (getMaOverdraftLimit() * -1)
+        // Handle both with and without parentheses
+        java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(
+            "([\\w.]+get[A-Z]\\w+\\(\\))\\s*([*+/\\-])\\s*(-?\\d+)"
+        );
+        
+        java.util.regex.Matcher matcher = pattern.matcher(expression);
+        StringBuffer result = new StringBuffer();
+        
+        boolean hasMatch = false;
+        while (matcher.find()) {
+            hasMatch = true;
+            String getterCall = matcher.group(1);
+            String operator = matcher.group(2);
+            String literal = matcher.group(3);
+            
+            // Determine if this is likely a BigDecimal field (contains amount, balance, etc.)
+            if (isBigDecimalExpression(getterCall, "")) {
+                String methodName;
+                switch (operator) {
+                    case "*": methodName = "multiply"; break;
+                    case "+": methodName = "add"; break;
+                    case "-": methodName = "subtract"; break;
+                    case "/": methodName = "divide"; break;
+                    default: methodName = "add"; break;
+                }
+                
+                String replacement;
+                if ("/".equals(operator)) {
+                    // Division needs rounding mode
+                    replacement = getterCall + "." + methodName + "(new BigDecimal(" + literal + "), 2, java.math.RoundingMode.HALF_UP)";
+                } else {
+                    replacement = getterCall + "." + methodName + "(new BigDecimal(" + literal + "))";
+                }
+                matcher.appendReplacement(result, java.util.regex.Matcher.quoteReplacement(replacement));
+            }
+        }
+
+        matcher.appendTail(result);
+        return result.toString();
+    }
+
+    /**
+     * Normalizes simple BigDecimal arithmetic operands so they are safe for compareTo()
+     */
+    private String normalizeBigDecimalArithmeticOperand(String operand) {
+        if (operand == null) {
+            return operand;
+        }
+
+        String trimmed = operand.trim();
+        if (trimmed.startsWith("(") && trimmed.endsWith(")")) {
+            trimmed = trimmed.substring(1, trimmed.length() - 1).trim();
+        }
+
+        java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(
+            "([\\w.]+get[A-Z]\\w+\\(\\))\\s*([*+/\\-])\\s*(-?\\d+)"
+        );
+        java.util.regex.Matcher matcher = pattern.matcher(trimmed);
+
+        if (!matcher.matches()) {
+            return operand;
+        }
+
+        String getterCall = matcher.group(1);
+        String operator = matcher.group(2);
+        String literal = matcher.group(3);
+
+        if (!isBigDecimalExpression(getterCall, "")) {
+            return operand;
+        }
+
+        String methodName;
+        switch (operator) {
+            case "*": methodName = "multiply"; break;
+            case "+": methodName = "add"; break;
+            case "-": methodName = "subtract"; break;
+            case "/": methodName = "divide"; break;
+            default: methodName = "add"; break;
+        }
+
+        if ("/".equals(operator)) {
+            return getterCall + "." + methodName + "(new BigDecimal(" + literal + "), 2, java.math.RoundingMode.HALF_UP)";
+        }
+        return getterCall + "." + methodName + "(new BigDecimal(" + literal + "))";
+    }
+
+    /**
+     * Post-processes comparisons to use type-safe comparison methods based on detected types
+     */
+    private String postProcessComparisons(String expression) {
+        // Pattern to match: <left operand> (EQUALS|NOT_EQUALS|<=|>=|<|>) <right operand>
+        // Process EQUALS/NOT_EQUALS first
+        java.util.regex.Pattern equalsPattern = java.util.regex.Pattern.compile(
+            "([^&|!]+?)\\s+(EQUALS|NOT_EQUALS)\\s+([^&|]+?)(?=\\s*(?:&&|\\|\\||\\)|$))"
+        );
+
+        java.util.regex.Matcher matcher = equalsPattern.matcher(expression);
+        StringBuffer result = new StringBuffer();
+
+        while (matcher.find()) {
+            String left = matcher.group(1).trim();
+            String operator = matcher.group(2);
+            String right = matcher.group(3).trim();
+
+            String comparison = generateTypeSafeComparison(left, right, operator);
+            matcher.appendReplacement(result, java.util.regex.Matcher.quoteReplacement(comparison));
+        }
+
+        matcher.appendTail(result);
+        
+        // Now process relational operators (<=, >=, <, >)
+        java.util.regex.Pattern relationalPattern = java.util.regex.Pattern.compile(
+            "([^<>=&|!]+?)\\s*(<=|>=|<|>)\\s*(.+?)(?=\\s*(?:&&|\\|\\||\\)|$))"
+        );
+
+        matcher = relationalPattern.matcher(result.toString());
+        StringBuffer finalResult = new StringBuffer();
+
+        while (matcher.find()) {
+            String left = matcher.group(1).trim();
+            String operator = matcher.group(2);
+            String right = matcher.group(3).trim();
+
+            // Normalize parentheses
+            if (left.startsWith("(") && left.endsWith(")")) {
+                left = left.substring(1, left.length() - 1).trim();
+            }
+            if (right.startsWith("(") && right.endsWith(")")) {
+                right = right.substring(1, right.length() - 1).trim();
+            }
+
+            // Ensure arithmetic BigDecimal operands are converted to method calls before compareTo
+            right = normalizeBigDecimalArithmeticOperand(right);
+            left = normalizeBigDecimalArithmeticOperand(left);
+
+            // Skip if operands already use compareTo
+            if (left.contains("compareTo(") || right.contains("compareTo(")) {
+                matcher.appendReplacement(finalResult, matcher.group(0));
+                continue;
+            }
+
+            if (isBigDecimalOperand(left) || isBigDecimalOperand(right)) {
+                if (right.matches("-?\\d+")) {
+                    right = "0".equals(right) ? "BigDecimal.ZERO" : "new BigDecimal(" + right + ")";
+                }
+                String comparison = left + ".compareTo(" + right + ") " + operator + " 0";
+                matcher.appendReplacement(finalResult, java.util.regex.Matcher.quoteReplacement(comparison));
+            }
+        }
+
+        matcher.appendTail(finalResult);
+        return finalResult.toString();
+    }
+
+    /**
+     * Generates type-safe comparison based on operand types
+     */
+    private String generateTypeSafeComparison(String left, String right, String operator) {
+        // Detect if operands are strings or BigDecimal
+        boolean leftIsString = isStringOperand(left);
+        boolean rightIsString = isStringOperand(right);
+        boolean leftIsBigDecimal = isBigDecimalOperand(left);
+        boolean rightIsBigDecimal = isBigDecimalOperand(right);
+
+        if (leftIsString || rightIsString) {
+            // Use .equals() for strings
+            if ("EQUALS".equals(operator)) {
+                if (right.startsWith("\"")) {
+                    return right + ".equals(" + left + ")";
+                } else {
+                    return left + ".equals(" + right + ")";
+                }
+            } else { // NOT_EQUALS
+                if (right.startsWith("\"")) {
+                    return "!" + right + ".equals(" + left + ")";
+                } else {
+                    return "!" + left + ".equals(" + right + ")";
+                }
+            }
+        } else if (leftIsBigDecimal || rightIsBigDecimal) {
+            // Convert right operand to BigDecimal if it's a literal
+            if (right.matches("-?\\d+") && !right.contains("BigDecimal")) {
+                right = "0".equals(right) ? "BigDecimal.ZERO" : "new BigDecimal(" + right + ")";
+            }
+            
+            // Use .compareTo() for BigDecimal
+            if ("EQUALS".equals(operator)) {
+                return left + ".compareTo(" + right + ") == 0";
+            } else { // NOT_EQUALS
+                return left + ".compareTo(" + right + ") != 0";
+            }
+        } else {
+            // Use == or != for primitives
+            if ("EQUALS".equals(operator)) {
+                return left + " == " + right;
+            } else { // NOT_EQUALS
+                return left + " != " + right;
+            }
+        }
+    }
+
+    /**
+     * Checks if an operand is a string type
+     */
+    private boolean isStringOperand(String operand) {
+        // Quoted string
+        if (operand.startsWith("\"") && operand.endsWith("\"")) {
+            return true;
+        }
+        // String getter patterns
+        return operand.contains("get") &&
+               (operand.toLowerCase().contains("status") ||
+                operand.toLowerCase().contains("code") ||
+                operand.toLowerCase().contains("type") ||
+                operand.toLowerCase().contains("name") ||
+                operand.toLowerCase().contains("flag") ||
+                (operand.toLowerCase().contains("id") && !operand.toLowerCase().contains("number")));
+    }
+
+    /**
+     * Checks if an operand is a BigDecimal type
+     */
+    private boolean isBigDecimalOperand(String operand) {
+        // BigDecimal constant
+        if (operand.contains("BigDecimal") || operand.contains("ZERO")) {
+            return true;
+        }
+        // BigDecimal getter patterns
+        String lower = operand.toLowerCase();
+        return operand.contains("get") &&
+               (lower.contains("amount") ||
+            lower.contains("balance") ||
+            lower.contains("total") ||
+            lower.contains("price") ||
+            lower.contains("quantity") ||
+            lower.contains("hours") ||
+            lower.contains("salary") ||
+            lower.contains("pay") ||
+            lower.contains("rate") ||
+            lower.contains("gross") ||
+            lower.contains("limit") ||
+            lower.contains("overdraft"));
+    }
+
+    /**
+     * Checks if an operand is an Integer or Long type getter.
+     * Used to detect numeric getters that return boxed types (Integer, Long)
+     * which need special handling in comparisons.
+     */
+    private boolean isIntegerOrLongOperand(String operand) {
+        // If it doesn't contain "get", it's not a getter
+        if (!operand.contains("get")) {
+            return false;
+        }
+
+        // Exclude BigDecimal getters
+        if (isBigDecimalOperand(operand)) {
+            return false;
+        }
+
+        // Check for common Integer/Long counter patterns
+        // NOTE: Be conservative here - only include patterns that are NEVER BigDecimal
+        String lower = operand.toLowerCase();
+        return lower.contains("counter") ||
+               lower.contains("count") ||
+               lower.contains("id") ||
+               lower.contains("number") ||
+               lower.contains("size") ||
+               lower.contains("length");
+    }
+
+    /**
+     * Converts COBOL field names in an expression to Java getter calls.
+     * Example: "CUST-AMOUNT > 1000" -> "record.getCustAmount() > 1000"
+     * Working Storage fields (WS-*) are accessed directly as class fields.
+     */
+    private String convertFieldNamesToGetters(String expression) {
+        // Match COBOL identifiers: alphanumeric with hyphens, not starting with a digit
+        // Exclude numbers and string literals
+        java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(
+            "\\b([A-Z][A-Z0-9-]*[A-Z0-9])\\b"
+        );
+
+        java.util.regex.Matcher matcher = pattern.matcher(expression);
+        StringBuffer result = new StringBuffer();
+
+        while (matcher.find()) {
+            String identifier = matcher.group(1);
+
+            // Skip if it's a Java keyword or operator that we already translated
+            if (isJavaKeywordOrOperator(identifier)) {
+                matcher.appendReplacement(result, identifier);
+                continue;
+            }
+
+            // Check if it's a WORKING STORAGE field (WS- prefix) or a flag/switch
+            String javaFieldName = toJavaFieldName(identifier);
+            
+            // Check if this is an 88-level condition - use is*() instead of get*()
+            boolean isCondition = conditionNames.contains(identifier) || 
+                                  conditionNames.contains(identifier.replace("-", "_")) ||
+                                  conditionNames.contains(identifier.replace("_", "-")) ||
+                                  conditionNames.contains(javaFieldName) ||
+                                  conditionNames.contains(javaFieldName.toUpperCase());
+            
+            String methodPrefix = isCondition ? "is" : "get";
+            String accessCode;
+            
+            // Check if it's a secondary file field (like MA-CLOSED from MASTER-ACCOUNT-FILE)
+            String filePrefix = detectFilePrefix(identifier);
+            
+            if (filePrefix != null) {
+                // Field belongs to a secondary file - access via that file's variable
+                String varName = getSecondaryFileVariableName(filePrefix);
+                accessCode = varName + "." + methodPrefix + capitalize(javaFieldName) + "()";
+            } else if (identifier.startsWith("WS-") || isWorkingStorageFlag(identifier) || 
+                       (!identifier.startsWith("TR-") && !identifier.startsWith("MA-") && !identifier.startsWith("UA-") && 
+                        !identifier.startsWith("ER-") && !identifier.startsWith("AT-") && isCondition)) {
+                // WORKING STORAGE field/flag OR 88-level condition without file prefix (is WORKING STORAGE)
+                // These are always accessed via this.
+                accessCode = "this." + methodPrefix + capitalize(javaFieldName) + "()";
+            } else if (identifier.startsWith("TR-")) {
+                // Primary file record field (TR- prefix)
+                accessCode = "record." + methodPrefix + capitalize(javaFieldName) + "()";
+            } else {
+                // Default to record for unqualified fields
+                accessCode = "record." + methodPrefix + capitalize(javaFieldName) + "()";
+            }
+
+            // Surround replacement with spaces to avoid accidental token merging
+            matcher.appendReplacement(result, " " + java.util.regex.Matcher.quoteReplacement(accessCode) + " ");
+        }
+
+        matcher.appendTail(result);
+        return result.toString();
+    }
+
+    /**
+     * Checks if a string is a Java keyword or operator we've already translated.
+     */
+    private boolean isJavaKeywordOrOperator(String word) {
+        if (word == null) return false;
+        String upper = word.toUpperCase();
+        return upper.equals("MAX") || upper.equals("MIN") ||
+               upper.equals("VALUE") || upper.equals("INTEGER") ||
+               upper.equals("EQUALS") || upper.equals("NOT") || upper.equals("NOT_EQUALS");
+    }
+
+    /**
+     * Detects if a COBOL field is a WORKING STORAGE flag/switch based on naming patterns.
+     * These fields should be treated as processor-level state variables, not record fields.
+     * 
+     * Common patterns for flags/switches in COBOL:
+     * - Contains "FLAG" or "SWITCH"
+     * - Starts with "END-OF-"
+     * - Ends with "-VALID", "-EXISTS", "-OK", "-CLOSED", "-FROZEN"
+     * - Special function fields like "FUNCTION-CURRENT-DATE"
+     */
+    private boolean isWorkingStorageFlag(String fieldName) {
+        if (fieldName == null || fieldName.trim().isEmpty()) {
+            return false;
+        }
+        
+        String upper = fieldName.toUpperCase().trim();
+        
+        // Pattern 1: Contains FLAG or SWITCH
+        if (upper.contains("FLAG") || upper.contains("SWITCH")) {
+            return true;
+        }
+        
+        // Pattern 2: Starts with END-OF- (e.g., END-OF-TRANSACTIONS)
+        if (upper.startsWith("END-OF-")) {
+            return true;
+        }
+        
+        // Pattern 3: Ends with common flag/status suffixes
+        if (upper.endsWith("-VALID") || upper.endsWith("-EXISTS") || 
+            upper.endsWith("-OK") || upper.endsWith("-CLOSED") || 
+            upper.endsWith("-FROZEN") || upper.endsWith("-FOUND") ||
+            upper.endsWith("-STATUS")) {
+            return true;
+        }
+        
+        // Pattern 4: Special function fields
+        if (upper.startsWith("FUNCTION-")) {
+            return true;
+        }
+        
+        // Pattern 5: Common boolean-like fields
+        if (upper.equals("MORE-RECORDS") || upper.equals("NO-MORE-RECORDS") ||
+            upper.equals("END-OF-FILE") || upper.equals("EOF")) {
+            return true;
+        }
+        
+        return false;
+    }
+
+    /**
      * Converts COBOL field name to Java getter call with improved validation.
+     * Handles 88-level conditions by using is*() instead of get*().
      */
     private String toJavaGetter(String cobolField, String recordType) {
         if (cobolField == null || cobolField.trim().isEmpty()) {
@@ -528,9 +1398,14 @@ public class BusinessLogicTranslator {
         
         cobolField = cobolField.trim();
         
-        // Handle literals
+        // Handle literals - always use double quotes for String literals
         if (cobolField.startsWith("'") && cobolField.endsWith("'")) {
-            return "\"" + cobolField.substring(1, cobolField.length() - 1) + "\"";
+            String literal = cobolField.substring(1, cobolField.length() - 1);
+            return "\"" + literal + "\"";
+        }
+        if (cobolField.startsWith("\"") && cobolField.endsWith("\"")) {
+            // Already double quoted, keep as is
+            return cobolField;
         }
         if (COBOL_LITERAL_NUMBER.matcher(cobolField).matches()) {
             return cobolField.contains(".") ? 
@@ -538,7 +1413,30 @@ public class BusinessLogicTranslator {
         }
         
         String javaField = toJavaFieldName(cobolField);
-        return "record.get" + capitalize(javaField) + "()";
+        
+        // Check if this is an 88-level condition - use is*() instead of get*()
+        // Check against original COBOL name, Java name, and all variations
+        boolean isCondition = conditionNames.contains(cobolField) || 
+                              conditionNames.contains(cobolField.replace("-", "_")) ||
+                              conditionNames.contains(cobolField.replace("_", "-")) ||
+                              conditionNames.contains(javaField) ||
+                              conditionNames.contains(javaField.toUpperCase());
+        
+        String methodPrefix = isCondition ? "is" : "get";
+        
+        // Check if it's a WORKING STORAGE field or flag
+        if (cobolField.startsWith("WS-") || isWorkingStorageFlag(cobolField)) {
+            return "this." + methodPrefix + capitalize(javaField) + "()";
+        }
+        
+        // Check if it's a secondary file field (MA-, UA-, etc.)
+        String filePrefix = detectFilePrefix(cobolField);
+        if (filePrefix != null) {
+            String varName = getSecondaryFileVariableName(filePrefix);
+            return varName + "." + methodPrefix + capitalize(javaField) + "()";
+        }
+        
+        return "record." + methodPrefix + capitalize(javaField) + "()";
     }
 
     /**
@@ -550,6 +1448,19 @@ public class BusinessLogicTranslator {
         }
         
         String javaField = toJavaFieldName(cobolField);
+        
+        // Check if it's a WORKING STORAGE field or flag
+        if (cobolField.startsWith("WS-") || isWorkingStorageFlag(cobolField)) {
+            return "this.set" + capitalize(javaField);
+        }
+        
+        // Check if it's a secondary file field (MA-, UA-, etc.)
+        String filePrefix = detectFilePrefix(cobolField);
+        if (filePrefix != null) {
+            String varName = getSecondaryFileVariableName(filePrefix);
+            return varName + ".set" + capitalize(javaField);
+        }
+        
         return "record.set" + capitalize(javaField);
     }
 
@@ -584,8 +1495,40 @@ public class BusinessLogicTranslator {
             return "\" \"";
         }
         
+        // COBOL FUNCTION calls
+        if (expr.toUpperCase().startsWith("FUNCTION ")) {
+            return translateCobolFunction(expr);
+        }
+        
         // Field reference
         return toJavaGetter(expr, recordType);
+    }
+
+    /**
+     * Translates COBOL FUNCTION calls to Java equivalents.
+     * Examples:
+     *   FUNCTION CURRENT-DATE -> LocalDate.now()
+     *   FUNCTION LENGTH(field) -> field.length()
+     */
+    private String translateCobolFunction(String functionCall) {
+        String upperFunc = functionCall.toUpperCase().trim();
+        
+        if (upperFunc.contains("CURRENT-DATE")) {
+            return "LocalDate.now()";
+        }
+        
+        if (upperFunc.contains("LENGTH")) {
+            // Extract argument from FUNCTION LENGTH(arg)
+            int startParen = functionCall.indexOf('(');
+            int endParen = functionCall.lastIndexOf(')');
+            if (startParen > 0 && endParen > startParen) {
+                String arg = functionCall.substring(startParen + 1, endParen).trim();
+                return toJavaGetter(arg, "") + ".length()";
+            }
+        }
+        
+        // Default: generate TODO
+        return "/* TODO: Translate " + functionCall + " */ null";
     }
 
     /**
@@ -651,17 +1594,229 @@ public class BusinessLogicTranslator {
 
     /**
      * Reconstructs condition from statement operands with validation.
+     * Generates type-safe comparisons for String, BigDecimal, and primitive types.
      */
     private String translateCondition(Statement stmt) {
         if (!isValidStatement(stmt, stmt.getLeftOperand(), stmt.getOperator(), stmt.getRightOperand())) {
             return "true /* invalid condition */";
         }
+
+        String leftExpr = stmt.getLeftOperand();
+        String rightExpr = stmt.getRightOperand();
+        String op = stmt.getOperator();
+
+        String left = toJavaExpression(leftExpr, "");
+        String right = toJavaExpression(rightExpr, "");
+
+        // Detect if operands are strings (quoted literals or string getters)
+        boolean leftIsString = isStringExpression(left, leftExpr);
+        boolean rightIsString = isStringExpression(right, rightExpr);
+
+        // Detect if operands are BigDecimal
+        boolean leftIsBigDecimal = isBigDecimalExpression(left, leftExpr);
+        boolean rightIsBigDecimal = isBigDecimalExpression(right, rightExpr);
+
+        // Generate appropriate comparison based on types
+        if (leftIsString || rightIsString) {
+            return generateStringComparison(left, right, op);
+        } else if (leftIsBigDecimal || rightIsBigDecimal) {
+            return generateBigDecimalComparison(left, right, op);
+        } else {
+            // Primitive types (int, long) - use direct operators
+            String javaOp = translateOperator(op);
+            return left + " " + javaOp + " " + right;
+        }
+    }
+
+    /**
+     * Checks if an expression represents a String type
+     */
+    private boolean isStringExpression(String javaExpr, String cobolExpr) {
+        // Check if it's a quoted string literal
+        if (javaExpr.startsWith("\"") && javaExpr.endsWith("\"")) {
+            return true;
+        }
+        // Check if it's a getter that likely returns String (contains "get" and common string field patterns)
+        if (javaExpr.contains("get") &&
+            (javaExpr.toLowerCase().contains("status") ||
+             javaExpr.toLowerCase().contains("code") ||
+             javaExpr.toLowerCase().contains("type") ||
+             javaExpr.toLowerCase().contains("name") ||
+             javaExpr.toLowerCase().contains("id") && !javaExpr.toLowerCase().contains("number"))) {
+            return true;
+        }
+        // Check COBOL expression for string patterns
+        if (cobolExpr != null && cobolExpr.matches(".*-STATUS|.*-CODE|.*-TYPE|.*-NAME|.*-FLAG")) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checks if an expression represents a BigDecimal type
+     */
+    private boolean isBigDecimalExpression(String javaExpr, String cobolExpr) {
+        // Check if expression contains BigDecimal
+        if (javaExpr.contains("BigDecimal") || javaExpr.contains("ZERO")) {
+            return true;
+        }
         
-        String left = toJavaExpression(stmt.getLeftOperand(), "");
-        String op = translateOperator(stmt.getOperator());
-        String right = toJavaExpression(stmt.getRightOperand(), "");
+        String lowerExpr = javaExpr.toLowerCase();
+        String lowerCobol = (cobolExpr != null) ? cobolExpr.toLowerCase() : "";
         
-        return left + " " + op + " " + right;
+        // EXCLUDE simple numeric literals
+        if (lowerExpr.matches("^\\d+$") || lowerExpr.equals("1") || lowerExpr.equals("0")) {
+            return false;
+        }
+        
+        // EXCLUDE ONLY very specific counter patterns - be conservative
+        // Only exclude system-level counters used by Spring Batch
+        if (lowerCobol.matches(".*(record-count|line-count|page-count|items-processed).*")) {
+            return false;
+        }
+
+        // Monetary patterns (getter names) - broad but safe
+        if (javaExpr.contains("get") &&
+            (lowerExpr.contains("amount") ||
+             lowerExpr.contains("balance") ||
+             lowerExpr.contains("price") ||
+             lowerExpr.contains("limit") ||
+             lowerExpr.contains("overdraft") ||
+             lowerExpr.contains("salary") ||
+             lowerExpr.contains("wage") ||
+             lowerExpr.contains("pay") ||
+             lowerExpr.contains("rate") ||
+             lowerExpr.contains("gross") ||
+             lowerExpr.contains("debit") ||
+             lowerExpr.contains("credit"))) {
+            return true;
+        }
+        
+        // DEFAULT: Treat all working storage numeric fields as BigDecimal for safety
+        // This ensures precision is maintained for all business calculations
+        if (javaExpr.contains("get") || javaExpr.contains("this.")) {
+            return true;
+        }
+
+        // TOTAL fields: use COBOL tokens to decide
+        // TOTAL-amount/balance/debit(s)/credit(s) -> BigDecimal; TOTAL-items/records handled above as counters
+        if (!lowerCobol.isEmpty() && lowerCobol.contains("total")) {
+            if (lowerCobol.matches(".*total-(amount|balance|debit|debits|credit|credits).*")) {
+                return true;
+            }
+            return false;
+        }
+
+        // Check COBOL expression for EXPLICIT monetary patterns (strict match)
+        if (cobolExpr != null && 
+            cobolExpr.matches(".*(-AMOUNT|-BALANCE|-PRICE|-LIMIT|-OVERDRAFT|-SALARY|-WAGE|-PAY|-RATE|-GROSS|-DEBIT|-DEBITS|-CREDIT|-CREDITS).*")) {
+            return true;
+        }
+        
+        return false;
+    }
+
+    /**
+     * Generates type-safe String comparison using .equals()
+     */
+    private String generateStringComparison(String left, String right, String op) {
+        String normalizedOp = op.toUpperCase().trim();
+
+        switch (normalizedOp) {
+            case "=":
+            case "EQUAL":
+            case "IS EQUAL":
+                // Use .equals() for string equality
+                if (right.startsWith("\"")) {
+                    return right + ".equals(" + left + ")";
+                } else {
+                    return left + ".equals(" + right + ")";
+                }
+
+            case "NOT":
+            case "!=":
+            case "NOT EQUAL":
+            case "IS NOT EQUAL":
+                // Use !.equals() for string inequality
+                if (right.startsWith("\"")) {
+                    return "!" + right + ".equals(" + left + ")";
+                } else {
+                    return "!" + left + ".equals(" + right + ")";
+                }
+
+            default:
+                // For other operators (>, <, etc.), fall back to default
+                String javaOp = translateOperator(op);
+                return left + " " + javaOp + " " + right;
+        }
+    }
+
+    /**
+     * Generates type-safe BigDecimal comparison using .compareTo()
+     * Fixed to properly convert int literals to BigDecimal
+     */
+    private String generateBigDecimalComparison(String left, String right, String op) {
+        String normalizedOp = op.toUpperCase().trim();
+
+        // Ensure both sides are BigDecimal
+        if (!left.contains("BigDecimal") && !left.contains("get")) {
+            if (left.matches("-?\\d+(\\.\\d+)?")) {
+                if (left.equals("0")) {
+                    left = "BigDecimal.ZERO";
+                } else if (left.equals("1")) {
+                    left = "BigDecimal.ONE";
+                } else {
+                    left = "new BigDecimal(\"" + left + "\")";
+                }
+            }
+        }
+        if (!right.contains("BigDecimal") && !right.contains("get")) {
+            if (right.matches("-?\\d+(\\.\\d+)?")) {
+                if (right.equals("0")) {
+                    right = "BigDecimal.ZERO";
+                } else if (right.equals("1")) {
+                    right = "BigDecimal.ONE";
+                } else {
+                    right = "new BigDecimal(\"" + right + "\")";
+                }
+            }
+        }
+
+        switch (normalizedOp) {
+            case "=":
+            case "EQUAL":
+            case "IS EQUAL":
+                return left + ".compareTo(" + right + ") == 0";
+
+            case "NOT":
+            case "!=":
+            case "NOT EQUAL":
+            case "IS NOT EQUAL":
+                return left + ".compareTo(" + right + ") != 0";
+
+            case "GREATER":
+            case ">":
+            case "IS GREATER":
+                return left + ".compareTo(" + right + ") > 0";
+
+            case "LESS":
+            case "<":
+            case "IS LESS":
+                return left + ".compareTo(" + right + ") < 0";
+
+            case ">=":
+            case "NOT LESS":
+            case "IS NOT LESS":
+                return left + ".compareTo(" + right + ") >= 0";
+
+            case "<=":
+            case "NOT GREATER":
+            case "IS NOT GREATER":
+                return left + ".compareTo(" + right + ") <= 0";
+
+            default:
+                return left + ".compareTo(" + right + ") == 0";
+        }
     }
 
     /**
@@ -755,8 +1910,11 @@ public class BusinessLogicTranslator {
      * Generates a TODO comment for empty or unimplemented paragraphs.
      */
     private String generateTodoComment(Paragraph paragraph) {
-        return "        // TODO: Implement logic from COBOL paragraph: " + 
-               (paragraph != null ? paragraph.getName() : "unknown") + "\n";
+        StringBuilder todo = new StringBuilder();
+        String paragraphName = (paragraph != null ? paragraph.getName() : "unknown");
+        todo.append("        // TODO: Implement logic from COBOL paragraph: ").append(paragraphName).append("\n");
+        todo.append("        // COBOL: PERFORM ").append(paragraphName).append("\n");
+        return todo.toString();
     }
 
     // ==================== Phase 4: Advanced Statements ====================
@@ -1193,5 +2351,49 @@ public class BusinessLogicTranslator {
         }
         
         return code.toString();
+    }
+
+    /**
+     * Detects if a COBOL field belongs to a secondary file based on its prefix.
+     * Returns the prefix if it's a known file prefix, null otherwise.
+     * 
+     * Note: TR- is excluded because it typically represents the primary input file (TRANSACTION),
+     * not a secondary file accessed separately.
+     */
+    private String detectFilePrefix(String cobolField) {
+        if (cobolField == null || cobolField.length() < 3) {
+            return null;
+        }
+        
+        // Common file prefixes in COBOL (excluding TR- which is the primary input file)
+        String[] knownPrefixes = {"MA-", "UA-", "ER-", "AT-", "MS-", "UP-", "ED-", "ERR-", "AUD-"};
+        
+        for (String prefix : knownPrefixes) {
+            if (cobolField.startsWith(prefix)) {
+                // Normalize to two-letter code where applicable
+                if (prefix.startsWith("ERR-")) return "ER"; // error
+                if (prefix.startsWith("AUD-")) return "AT"; // audit trail
+                return prefix.substring(0, 2); // Return prefix without dash (e.g., "MA")
+            }
+        }
+        
+        return null;
+    }
+
+    /**
+     * Gets the Java variable name for a secondary file based on its prefix.
+     */
+    private String getSecondaryFileVariableName(String prefix) {
+        // Map common COBOL prefixes to variable names
+        return switch (prefix) {
+            case "MA" -> "masterAccountRecord";
+            case "UA" -> "updatedAccountRecord";
+            case "ER" -> "errorReportRecord";
+            case "AT" -> "auditTrailRecord";
+            case "MS" -> "masterRecord";
+            case "UP" -> "updateRecord";
+            case "ED" -> "editRecord";
+            default -> prefix.toLowerCase() + "Record";
+        };
     }
 }

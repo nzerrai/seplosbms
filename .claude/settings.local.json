@@ -33,7 +33,21 @@
       "Bash(timeout 25 mvn spring-boot:run:*)",
       "Bash(wc:*)",
       "Bash(./generate-roadmap-pdf.sh:*)",
-      "Bash(./generate-roadmap-html.sh:*)"
+      "Bash(./generate-roadmap-html.sh:*)",
+      "Bash(./generate-test-data.sh:*)",
+      "Bash(bash -c 'tran_id=\"\"TRX0000000000001\"\"; account=\"\"000012340000\"\"; tran_type=\"\"DB\"\"; amount=\"\"0000000000100000\"\"; dest_account=\"\"000012341000\"\"; date=\"\"20260110\"\"; time=\"\"090000\"\"; branch=\"\"BR0001\"\"; teller=\"\"TELL0001\"\"; ref=$\\(printf \"\"REF-2026-001       \"\"\\); ref=\"\"${ref:0:20}\"\"; filler=\"\"         \"\"; transaction=\"\"${tran_id}${account}${tran_type}${amount}${dest_account}${date}${time}${branch}${teller}${ref}${filler}\"\"; echo \"\"Length: ${#transaction}\"\"; echo \"\"$transaction\"\" | od -c | head -5')",
+      "Bash(./generate-comp3-data.sh:*)",
+      "Bash(./test-comp3-decoder.sh:*)",
+      "Bash(git add:*)",
+      "Bash(mvn spring-boot:run:*)",
+      "Bash(curl:*)",
+      "Bash(wget:*)",
+      "Bash(javac:*)",
+      "Bash(bash:*)",
+      "Bash(for cob_file in examples/test-programs/*.cob)",
+      "Bash(done)",
+      "Bash(tee:*)",
+      "Bash(for cob in examples/test-programs/*.cob)"
     ]
   }
 }

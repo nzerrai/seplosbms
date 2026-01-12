@@ -179,7 +179,7 @@ public class BusinessRuleGenerator {
         code.append("    // ========================================\n\n");
 
         code.append("    /**\n");
-        code.append("     * Main validation method - corresponds to COBOL paragraph 210-VALIDATE-TRANSACTION\n");
+        code.append("     * Main validation method - validates record fields based on COBOL data structure\n");
         code.append("     * \n");
         code.append("     * @param record The record to validate\n");
         code.append("     * @return ValidationResult containing validation status and any errors\n");
@@ -188,35 +188,143 @@ public class BusinessRuleGenerator {
         code.append("        logger.debug(\"Validating record: {}\", record);\n");
         code.append("        ValidationResult result = new ValidationResult();\n\n");
 
-        // Generate validation calls from COBOL patterns
-        code.append("        // COBOL validation logic translated to Java\n");
-        code.append("        // Based on paragraph 210-VALIDATE-TRANSACTION\n\n");
+        // Get the fields from the specific file definition that matches this recordType
+        String fileName = extractFileName(recordType);
+        List<DataItem> fields = getRecordFields(program, fileName);
         
-        code.append("        // Validate account number (COBOL: IF TR-ACCOUNT-NUMBER = ZERO)\n");
-        code.append("        if (record.getTrAccountNumber() == null || record.getTrAccountNumber().equals(0L)) {\n");
-        code.append("            result.addError(ERR_INVALID_ACCOUNT, \"Invalid account number\");\n");
-        code.append("        }\n\n");
-        
-        code.append("        // Validate transaction type (COBOL: IF TR-TRANSACTION-TYPE NOT = 'DB' AND NOT = 'CR' AND NOT = 'TF')\n");
-        code.append("        String transType = record.getTrTransactionType();\n");
-        code.append("        if (transType == null || (!\"DB\".equals(transType) && !\"CR\".equals(transType) && !\"TF\".equals(transType))) {\n");
-        code.append("            result.addError(ERR_INVALID_TRANSACTION_TYPE, \"Invalid transaction type: \" + transType);\n");
-        code.append("        }\n\n");
-        
-        code.append("        // Validate amount (COBOL: IF TR-AMOUNT <= ZERO)\n");
-        code.append("        if (record.getTrAmount() == null || record.getTrAmount().compareTo(java.math.BigDecimal.ZERO) <= 0) {\n");
-        code.append("            result.addError(ERR_INVALID_AMOUNT, \"Invalid transaction amount\");\n");
-        code.append("        }\n\n");
-        
-        code.append("        // TODO: Add account status validation when master account data is available\n");
-        code.append("        // String accountStatus = masterAccount.getMaStatusCode();\n");
-        code.append("        // if (!validateAccountStatus(accountStatus, result)) {\n");
-        code.append("        //     logger.warn(\"Account status validation failed\");\n");
-        code.append("        // }\n\n");
+        if (fields.isEmpty()) {
+            code.append("        // No fields found for validation\n");
+            code.append("        // All records pass validation by default\n\n");
+        } else {
+            code.append("        // Auto-generated validation logic based on COBOL data items\n\n");
+            
+            for (DataItem field : fields) {
+                if (field.isFiller()) {
+                    continue; // Skip FILLER fields
+                }
+                
+                String javaFieldName = field.getJavaFieldName();
+                String getterName = "get" + capitalize(javaFieldName);
+                String javaType = field.getJavaType();
+                
+                // Generate validation based on field type
+                if ("String".equals(javaType)) {
+                    code.append("        // Validate ").append(field.getName()).append(" (").append(field.getPictureClause()).append(")\n");
+                    code.append("        if (record.").append(getterName).append("() == null || record.").append(getterName).append("().trim().isEmpty()) {\n");
+                    code.append("            result.addError(\"VAL_").append(field.getName().toUpperCase().replace("-", "_")).append("\", ");
+                    code.append("\"").append(field.getName()).append(" is required\");\n");
+                    code.append("        }\n\n");
+                } else if ("BigDecimal".equals(javaType)) {
+                    code.append("        // Validate ").append(field.getName()).append(" (").append(field.getPictureClause()).append(")\n");
+                    code.append("        if (record.").append(getterName).append("() == null || record.").append(getterName).append("().compareTo(BigDecimal.ZERO) < 0) {\n");
+                    code.append("            result.addError(\"VAL_").append(field.getName().toUpperCase().replace("-", "_")).append("\", ");
+                    code.append("\"").append(field.getName()).append(" must be a positive value\");\n");
+                    code.append("        }\n\n");
+                } else if ("Integer".equals(javaType) || "Long".equals(javaType)) {
+                    code.append("        // Validate ").append(field.getName()).append(" (").append(field.getPictureClause()).append(")\n");
+                    code.append("        if (record.").append(getterName).append("() == null || record.").append(getterName).append("() <= 0) {\n");
+                    code.append("            result.addError(\"VAL_").append(field.getName().toUpperCase().replace("-", "_")).append("\", ");
+                    code.append("\"").append(field.getName()).append(" must be a positive value\");\n");
+                    code.append("        }\n\n");
+                } else if ("LocalDate".equals(javaType)) {
+                    code.append("        // Validate ").append(field.getName()).append(" (").append(field.getPictureClause()).append(")\n");
+                    code.append("        if (record.").append(getterName).append("() == null) {\n");
+                    code.append("            result.addError(\"VAL_").append(field.getName().toUpperCase().replace("-", "_")).append("\", ");
+                    code.append("\"").append(field.getName()).append(" is required\");\n");
+                    code.append("        }\n\n");
+                }
+            }
+            
+            code.append("        // Additional custom validation rules can be added here\n\n");
+        }
 
         code.append("        logger.debug(\"Validation result: valid={}, errors={}\", result.isValid(), result.getErrors().size());\n");
         code.append("        return result;\n");
         code.append("    }\n\n");
+    }
+    
+    /**
+     * Gets the record fields from a specific file definition
+     * @param program The COBOL program
+     * @param fileName The name of the file (e.g., "TRANSACTION-FILE")
+     * @return List of fields belonging to that specific FD record
+     */
+    private List<DataItem> getRecordFields(CobolProgram program, String fileName) {
+        if (program.getFileDefinitions() == null || program.getFileDefinitions().isEmpty()) {
+            return List.of();
+        }
+        
+        // Find the specific file definition by name
+        var fileDefinition = program.getFileDefinitions().stream()
+            .filter(fd -> fd.getFileName().equalsIgnoreCase(fileName))
+            .findFirst();
+        
+        if (fileDefinition.isEmpty() || fileDefinition.get().getRecordLayout() == null) {
+            logger.warn("No file definition found for: {}", fileName);
+            return List.of();
+        }
+        
+        DataItem recordLayout = fileDefinition.get().getRecordLayout();
+        String recordName = recordLayout.getName();
+        
+        // Find elementary fields that belong to this specific record
+        // They must be direct children of the record (level > recordLayout.level)
+        // and have a parent hierarchy that includes the record
+        return program.getDataItems().stream()
+            .filter(item -> item.getLevel() > recordLayout.getLevel())
+            .filter(DataItem::isElementary)
+            .filter(item -> item.getJavaType() != null)
+            .filter(item -> isChildOfRecord(item, recordName, program))
+            .collect(Collectors.toList());
+    }
+    
+    /**
+     * Checks if a data item is a child of a specific record
+     */
+    private boolean isChildOfRecord(DataItem item, String recordName, CobolProgram program) {
+        // Check if this item's hierarchy includes the record name
+        // The item's full name or parent structure should reference the record
+        String itemName = item.getName();
+        if (itemName == null) {
+            return false;
+        }
+        
+        // Simple heuristic: check if the item name starts with the record prefix
+        // e.g., TR-* fields belong to TRANSACTION-RECORD
+        // This works for most COBOL naming conventions where record fields share a prefix
+        String recordPrefix = extractPrefix(recordName);
+        String itemPrefix = extractPrefix(itemName);
+        
+        return recordPrefix.equals(itemPrefix);
+    }
+    
+    /**
+     * Extracts the prefix from a COBOL name (e.g., "TR-ACCOUNT-NUMBER" -> "TR")
+     */
+    private String extractPrefix(String cobolName) {
+        if (cobolName == null || !cobolName.contains("-")) {
+            return cobolName;
+        }
+        return cobolName.substring(0, cobolName.indexOf("-"));
+    }
+    
+    /**
+     * Extracts the file name from a record type (e.g., "TransactionFileRecord" -> "TRANSACTION-FILE")
+     */
+    private String extractFileName(String recordType) {
+        // Remove "Record" suffix if present
+        String baseName = recordType.replaceAll("Record$", "");
+        
+        // Convert from PascalCase to COBOL naming (e.g., TransactionFile -> TRANSACTION-FILE)
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < baseName.length(); i++) {
+            char c = baseName.charAt(i);
+            if (Character.isUpperCase(c) && i > 0) {
+                result.append("-");
+            }
+            result.append(Character.toUpperCase(c));
+        }
+        return result.toString();
     }
 
     private void generateValidationMethods(CobolProgram program, StringBuilder code, String recordType) {
@@ -226,25 +334,23 @@ public class BusinessRuleGenerator {
         code.append("    // ========================================\n\n");
 
         code.append("    /**\n");
-        code.append("     * TODO: Implement validation methods based on your COBOL program logic\n");
+        code.append("     * TODO: Add validation helper methods as needed for your business rules\n");
         code.append("     * \n");
         code.append("     * Example pattern from COBOL validation:\n");
-        code.append("     * COBOL: IF TR-ACCOUNT-NUMBER = ZERO\n");
+        code.append("     * COBOL: IF FIELD-NAME = ZERO\n");
         code.append("     *        MOVE 'E001' TO WS-ERR-CODE\n");
         code.append("     * \n");
         code.append("     * Java equivalent:\n");
-        code.append("     * private boolean validateAccountNumber(").append(recordType).append(" record, ValidationResult result) {\n");
-        code.append("     *     if (record.getTrAccountNumber() == null || record.getTrAccountNumber().equals(0L)) {\n");
-        code.append("     *         result.addError(ERR_INVALID_ACCOUNT, \"Invalid account number\");\n");
+        code.append("     * private boolean validateFieldName(").append(recordType).append(" record, ValidationResult result) {\n");
+        code.append("     *     if (record.getFieldName() == null || record.getFieldName().equals(0)) {\n");
+        code.append("     *         result.addError(\"ERR001\", \"Field name is required\");\n");
         code.append("     *         return false;\n");
         code.append("     *     }\n");
         code.append("     *     return true;\n");
         code.append("     * }\n");
         code.append("     * \n");
-        code.append("     * Access record fields using getter methods from ").append(recordType).append(":\n");
-        code.append("     *   - Use record.getTrFieldName() for transaction file fields\n");
-        code.append("     *   - Use record.getMaFieldName() for master account fields\n");
-        code.append("     *   - etc.\n");
+        code.append("     * Access record fields using getter methods from ").append(recordType).append(".\n");
+        code.append("     * Check the entity class to see available getters.\n");
         code.append("     */\n\n");
 
         // Account status validation
@@ -354,6 +460,16 @@ public class BusinessRuleGenerator {
             return basePackage + ".model";
         }
         return null;
+    }
+    
+    /**
+     * Capitalizes the first letter of a string
+     */
+    private String capitalize(String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
+        return Character.toUpperCase(str.charAt(0)) + str.substring(1);
     }
 
     /**

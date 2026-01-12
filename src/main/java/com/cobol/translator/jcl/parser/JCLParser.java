@@ -41,6 +41,8 @@ public class JCLParser {
         logger.debug("Parsing JCL content ({} characters)", jclContent.length());
 
         try {
+            // Preprocess common JOB card variants (strip account parentheses to fit grammar)
+            jclContent = preProcessJCLContent(jclContent);
             // Create lexer and parser
             JCLLexer lexer = new JCLLexer(CharStreams.fromString(jclContent));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -67,6 +69,28 @@ public class JCLParser {
             logger.error("Error parsing JCL: {}", e.getMessage(), e);
             throw new JCLParseException("Failed to parse JCL: " + e.getMessage(), e);
         }
+    }
+
+    /**
+     * Preprocess JCL to normalize JOB cards and avoid grammar pitfalls like extraneous '('.
+     * Example: //JOBNAME JOB (ACCT),'DESC',CLASS=A -> //JOBNAME JOB 'DESC',CLASS=A
+     */
+    private String preProcessJCLContent(String content) {
+        String[] lines = content.split("\r?\n", -1);
+        for (int i = 0; i < lines.length; i++) {
+            String line = lines[i];
+            String upper = line.toUpperCase();
+            if (upper.startsWith("//") && upper.contains(" JOB ")) {
+                // Remove first parenthesized ACCOUNTING field right after JOB keyword
+                int jobIdx = upper.indexOf(" JOB ");
+                String before = line.substring(0, jobIdx + 5); // include space after JOB
+                String after = line.substring(jobIdx + 5);
+                // Strip leading accounting parentheses: ( ... ) optionally followed by comma
+                String sanitizedAfter = after.replaceFirst("^\\([^)]*\\)\\s*,?", "");
+                lines[i] = before + sanitizedAfter;
+            }
+        }
+        return String.join("\n", lines);
     }
 
     /**

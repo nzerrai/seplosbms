@@ -16,6 +16,14 @@
             <div class="header-content">
                 <h1><span class="logo">🔍</span> ANALYSE DE CONVERSION DÉTAILLÉE</h1>
                 <p class="subtitle">Visualisez le mapping entre votre code COBOL et le code Java généré</p>
+                <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                    <a href="/conversion" class="header-link" style="color: white; text-decoration: none; padding: 8px 16px; background: rgba(255,255,255,0.2); border-radius: 4px; display: inline-block; transition: all 0.3s;">
+                        🔄 Convertir
+                    </a>
+                    <a href="/diagrams" class="header-link" style="color: white; text-decoration: none; padding: 8px 16px; background: rgba(255,255,255,0.2); border-radius: 4px; display: inline-block; transition: all 0.3s;">
+                        📊 Diagrammes Algorithmiques
+                    </a>
+                </div>
             </div>
         </header>
 
@@ -41,6 +49,22 @@
                             </div>
                         </div>
                         <div id="fileInfo" class="file-info hidden"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="jclFile">Fichier JCL associé <small style="color: var(--sg-grey);">(optionnel)</small></label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="jclFile" name="jclFile" accept=".jcl">
+                            <div class="file-upload-area" id="jclUploadArea">
+                                <div class="upload-content">
+                                    <div class="upload-icon">📋</div>
+                                    <p class="upload-title">Déposez votre fichier JCL ici</p>
+                                    <p class="upload-desc">ou cliquez pour parcourir</p>
+                                    <small>Format: .jcl</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="jclInfo" class="file-info hidden"></div>
                     </div>
 
                     <button type="submit" class="btn-primary" id="analyzeBtn">
@@ -79,7 +103,7 @@
                         <div class="stat-icon">✅</div>
                         <div class="stat-content">
                             <div class="stat-value" id="conversionRate">0%</div>
-                            <div class="stat-label">Taux de conversion</div>
+                            <div class="stat-label">Qualité de conversion</div>
                         </div>
                     </div>
                     <div class="stat-card">
@@ -87,6 +111,13 @@
                         <div class="stat-content">
                             <div class="stat-value" id="confidenceScore">-</div>
                             <div class="stat-label">Niveau de confiance</div>
+                        </div>
+                    </div>
+                    <div class="stat-card" id="jclStatCard" style="display: none;">
+                        <div class="stat-icon">📋</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="jclFileName">-</div>
+                            <div class="stat-label">Fichier JCL</div>
                         </div>
                     </div>
                 </div>
@@ -102,6 +133,20 @@
                         <button class="filter-btn" data-filter="converted">Converties</button>
                         <button class="filter-btn" data-filter="partial">Partielles</button>
                         <button class="filter-btn" data-filter="failed">Non converties</button>
+                    </div>
+                </div>
+
+                <!-- Section JCL (si présent) -->
+                <div class="jcl-section hidden" id="jclSection">
+                    <div class="panel-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; border-radius: 8px 8px 0 0;">
+                        <h3 style="margin: 0; display: flex; align-items: center; gap: 10px;">
+                            <span>📋</span>
+                            <span>Fichier JCL associé</span>
+                            <span id="jclFileNameDisplay" style="font-size: 14px; opacity: 0.9;"></span>
+                        </h3>
+                    </div>
+                    <div class="code-content" id="jclContent" style="background: #f8f9fa; border: 2px solid #667eea; border-top: none; border-radius: 0 0 8px 8px; max-height: 300px; overflow-y: auto;">
+                        <!-- Le code JCL sera injecté ici -->
                     </div>
                 </div>
 

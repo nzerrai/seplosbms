@@ -46,8 +46,12 @@ public class JobConfigGenerator {
         code.append("import org.springframework.batch.item.ItemProcessor;\n");
         code.append("import org.springframework.batch.item.ItemReader;\n");
         code.append("import org.springframework.batch.item.ItemWriter;\n");
+        code.append("import org.springframework.batch.item.file.FlatFileItemReader;\n");
+        code.append("import org.springframework.batch.item.file.FlatFileItemWriter;\n");
         code.append("import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;\n");
         code.append("import org.springframework.batch.item.file.builder.FlatFileItemWriterBuilder;\n");
+        code.append("import org.springframework.batch.item.file.transform.Range;\n");
+        code.append("import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;\n");
         code.append("import org.springframework.context.annotation.Bean;\n");
         code.append("import org.springframework.context.annotation.Configuration;\n");
         code.append("import org.springframework.core.io.FileSystemResource;\n");
@@ -192,29 +196,15 @@ public class JobConfigGenerator {
         // Generate error report writer
         generateErrorReportWriter(code, program, config);
 
-        // Step bean with reader/processor/writer skeleton
-        code.append("    @Bean\n");
-        code.append("    public Step ").append(jobName).append("Step(\n");
-        code.append("            JobRepository jobRepository,\n");
-        code.append("            PlatformTransactionManager transactionManager,\n");
-        code.append("            ItemReader<").append(entityType).append("> ").append(jobName).append("Reader,\n");
-        code.append("            ").append(processorType).append(" processor,\n");
-        code.append("            ItemWriter<").append(entityType).append("> ").append(jobName).append("Writer) {\n");
-        code.append("        return new StepBuilder(\"").append(jobName).append("Step\", jobRepository)\n");
-        code.append("                .<").append(entityType).append(", ").append(entityType).append(">chunk(100, transactionManager)\n");
-        code.append("                .reader(").append(jobName).append("Reader)\n");
-        code.append("                .processor(processor)\n");
-        code.append("                .writer(").append(jobName).append("Writer)\n");
-        code.append("                .build();\n");
-        code.append("    }\n\n");
-
-        // Generate paragraph-based steps if we have major paragraphs
+        // Generate main step or paragraph-based steps
+        // This prevents duplicate method generation
         if (useMultiStep) {
+            // Generate paragraph-based tasklet steps
             for (Paragraph para : majorParagraphs) {
                 generateParagraphStep(code, para, jobName, entityType, processorType);
             }
         } else {
-            // Generate single default step
+            // Generate single default step with reader/processor/writer
             generateDefaultStep(code, jobName, entityType, processorType);
         }
 
@@ -385,9 +375,10 @@ public class JobConfigGenerator {
      * Generates audit trail item writer bean.
      */
     private void generateAuditTrailWriter(StringBuilder code, CobolProgram program, TranslationConfig config) {
-        String auditEntityType = findAuditEntityType(program);
+        String auditEntityType = findAuditEntityType(program, config);
         if (auditEntityType == null) {
-            auditEntityType = "AuditTrailFileRecord";
+            // No audit file defined in the COBOL program; skip generating the writer bean to avoid missing types
+            return;
         }
         
         code.append("    /**\n");
@@ -411,9 +402,10 @@ public class JobConfigGenerator {
      * Generates error report item writer bean.
      */
     private void generateErrorReportWriter(StringBuilder code, CobolProgram program, TranslationConfig config) {
-        String errorEntityType = findErrorEntityType(program);
+        String errorEntityType = findErrorEntityType(program, config);
         if (errorEntityType == null) {
-            errorEntityType = "ErrorReportFileRecord";
+            // No error report file defined in the COBOL program; skip generating the writer bean to avoid missing types
+            return;
         }
         
         code.append("    /**\n");
@@ -436,10 +428,10 @@ public class JobConfigGenerator {
     /**
      * Finds the audit entity type from file definitions.
      */
-    private String findAuditEntityType(CobolProgram program) {
+    private String findAuditEntityType(CobolProgram program, TranslationConfig config) {
         return program.getFileDefinitions().stream()
             .filter(f -> f.getFileName().toUpperCase().contains("AUDIT"))
-            .map(f -> toJavaClassName(f.getFileName()) + "Record")
+            .map(f -> toJavaClassName(f.getFileName()) + config.getNamingEntitySuffix())
             .findFirst()
             .orElse(null);
     }
@@ -447,10 +439,10 @@ public class JobConfigGenerator {
     /**
      * Finds the error entity type from file definitions.
      */
-    private String findErrorEntityType(CobolProgram program) {
+    private String findErrorEntityType(CobolProgram program, TranslationConfig config) {
         return program.getFileDefinitions().stream()
             .filter(f -> f.getFileName().toUpperCase().contains("ERROR"))
-            .map(f -> toJavaClassName(f.getFileName()) + "Record")
+            .map(f -> toJavaClassName(f.getFileName()) + config.getNamingEntitySuffix())
             .findFirst()
             .orElse(null);
     }

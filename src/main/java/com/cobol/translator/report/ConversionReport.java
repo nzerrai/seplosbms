@@ -20,6 +20,7 @@ public class ConversionReport {
 
     private String sourceFile;
     private String programName;
+    private String jclFile;
     private LocalDateTime conversionDate;
 
     // Statistiques de conversion
@@ -41,9 +42,18 @@ public class ConversionReport {
 
     // Avertissements
     private List<String> warnings = new ArrayList<>();
-    
+
+    // Avertissements détaillés avec code Java
+    private List<WarningDetail> warningDetails = new ArrayList<>();
+
     // Notes positives sur les patterns idiomatiques
     private List<String> positiveNotes = new ArrayList<>();
+
+    // Analyse JCL
+    private JCLAnalysis jclAnalysis;
+
+    // Classes Java générées/impactées
+    private List<GeneratedJavaClass> generatedClasses = new ArrayList<>();
 
     public ConversionReport(String sourceFile, String programName) {
         this.sourceFile = sourceFile;
@@ -67,6 +77,16 @@ public class ConversionReport {
      */
     public void addWarning(String warning) {
         warnings.add(warning);
+    }
+
+    /**
+     * Ajoute un avertissement détaillé avec contexte Java.
+     */
+    public void addWarningDetail(String message, String javaFile, int javaLine,
+                                 String javaCodeSnippet, String cobolLine) {
+        warningDetails.add(new WarningDetail(message, javaFile, javaLine, javaCodeSnippet, cobolLine));
+        // Ajouter aussi à la liste simple pour compatibilité
+        warnings.add(message);
     }
     
     /**
@@ -139,6 +159,9 @@ public class ConversionReport {
         report.append("═══════════════════════════════════════════════════════════════════════════\n");
         report.append(String.format("Programme COBOL  : %s\n", programName));
         report.append(String.format("Fichier source   : %s\n", sourceFile));
+        if (jclFile != null && !jclFile.isEmpty()) {
+            report.append(String.format("Fichier JCL      : %s\n", jclFile));
+        }
         report.append(String.format("Date conversion  : %s\n\n",
             conversionDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))));
 
@@ -345,6 +368,22 @@ public class ConversionReport {
         statementTypeCounts.merge(type, 1, Integer::sum);
     }
 
+    public void setJclFile(String jclFile) {
+        this.jclFile = jclFile;
+    }
+
+    public void setJclAnalysis(JCLAnalysis jclAnalysis) {
+        this.jclAnalysis = jclAnalysis;
+    }
+
+    public void setGeneratedClasses(List<GeneratedJavaClass> generatedClasses) {
+        this.generatedClasses = generatedClasses;
+    }
+
+    public void addGeneratedClass(GeneratedJavaClass javaClass) {
+        this.generatedClasses.add(javaClass);
+    }
+
     // Additional getters for accessing report data
     public String getSourceFile() { return sourceFile; }
     public String getProgramName() { return programName; }
@@ -358,6 +397,10 @@ public class ConversionReport {
     public int getUnconvertedDataItems() { return unconvertedDataItems; }
     public List<UnconvertedCase> getUnconvertedCases() { return unconvertedCases; }
     public List<String> getWarnings() { return warnings; }
+    public List<WarningDetail> getWarningDetails() { return warningDetails; }
+    public List<String> getPositiveNotes() { return positiveNotes; }
+    public JCLAnalysis getJclAnalysis() { return jclAnalysis; }
+    public List<GeneratedJavaClass> getGeneratedClasses() { return generatedClasses; }
 
     public ConfidenceLevel getOverallConfidence() { return overallConfidence; }
 
@@ -412,5 +455,249 @@ public class ConversionReport {
         public String getReason() { return reason; }
         public String getAlternative() { return alternative; }
         public String getExample() { return example; }
+    }
+
+    /**
+     * Traduction d'un élément JCL vers Java.
+     */
+    public static class JCLTranslation {
+        private String jclElement;          // Type d'élément JCL (STEP, DD, IF, PROC, etc.)
+        private String jclSourceCode;       // Code JCL source
+        private String javaTargetCode;      // Code Java généré
+        private String javaClassName;       // Nom de la classe Java impactée
+        private String explanation;         // Explication de la traduction
+        private TranslationType type;       // Type de traduction
+
+        public enum TranslationType {
+            STEP_EXECUTION("Step Execution", "Exécution d'un step JCL → Tasklet/Chunk Spring Batch"),
+            DD_STATEMENT("DD Statement", "DD statement → FlatFileItemReader/Writer"),
+            CONDITIONAL("Conditional", "IF/THEN/ELSE → JobExecutionDecider"),
+            PROC_INVOCATION("PROC Invocation", "PROC call → Method call avec paramètres"),
+            TEMP_DATASET("Temporary Dataset", "&&TEMP → ExecutionContext + File I/O"),
+            JOB_DEFINITION("Job Definition", "JOB card → @Configuration class"),
+            OTHER("Other", "Autre traduction");
+
+            private final String label;
+            private final String description;
+
+            TranslationType(String label, String description) {
+                this.label = label;
+                this.description = description;
+            }
+
+            public String getLabel() { return label; }
+            public String getDescription() { return description; }
+        }
+
+        public JCLTranslation() {}
+
+        public JCLTranslation(String jclElement, String jclSourceCode, String javaTargetCode,
+                             String javaClassName, TranslationType type) {
+            this.jclElement = jclElement;
+            this.jclSourceCode = jclSourceCode;
+            this.javaTargetCode = javaTargetCode;
+            this.javaClassName = javaClassName;
+            this.type = type;
+        }
+
+        // Getters and setters
+        public String getJclElement() { return jclElement; }
+        public void setJclElement(String jclElement) { this.jclElement = jclElement; }
+
+        public String getJclSourceCode() { return jclSourceCode; }
+        public void setJclSourceCode(String jclSourceCode) { this.jclSourceCode = jclSourceCode; }
+
+        public String getJavaTargetCode() { return javaTargetCode; }
+        public void setJavaTargetCode(String javaTargetCode) { this.javaTargetCode = javaTargetCode; }
+
+        public String getJavaClassName() { return javaClassName; }
+        public void setJavaClassName(String javaClassName) { this.javaClassName = javaClassName; }
+
+        public String getExplanation() { return explanation; }
+        public void setExplanation(String explanation) { this.explanation = explanation; }
+
+        public TranslationType getType() { return type; }
+        public void setType(TranslationType type) { this.type = type; }
+    }
+
+    /**
+     * Analyse du fichier JCL source.
+     */
+    public static class JCLAnalysis {
+        private String jclFileName;
+        private String jobName;
+        private int totalSteps;
+        private int conditionalSteps;
+        private int procInvocations;
+        private int temporaryDatasets;
+        private List<String> stepsDetected = new ArrayList<>();
+        private List<String> conditionsFound = new ArrayList<>();
+        private List<String> procsUsed = new ArrayList<>();
+        private List<String> tempDatasetsUsed = new ArrayList<>();
+        private Map<String, String> ddStatements = new HashMap<>();
+        private List<JCLTranslation> translations = new ArrayList<>();
+
+        public JCLAnalysis() {}
+
+        public JCLAnalysis(String jclFileName, String jobName) {
+            this.jclFileName = jclFileName;
+            this.jobName = jobName;
+        }
+
+        // Getters and setters
+        public String getJclFileName() { return jclFileName; }
+        public void setJclFileName(String jclFileName) { this.jclFileName = jclFileName; }
+
+        public String getJobName() { return jobName; }
+        public void setJobName(String jobName) { this.jobName = jobName; }
+
+        public int getTotalSteps() { return totalSteps; }
+        public void setTotalSteps(int totalSteps) { this.totalSteps = totalSteps; }
+
+        public int getConditionalSteps() { return conditionalSteps; }
+        public void setConditionalSteps(int conditionalSteps) { this.conditionalSteps = conditionalSteps; }
+
+        public int getProcInvocations() { return procInvocations; }
+        public void setProcInvocations(int procInvocations) { this.procInvocations = procInvocations; }
+
+        public int getTemporaryDatasets() { return temporaryDatasets; }
+        public void setTemporaryDatasets(int temporaryDatasets) { this.temporaryDatasets = temporaryDatasets; }
+
+        public List<String> getStepsDetected() { return stepsDetected; }
+        public void setStepsDetected(List<String> stepsDetected) { this.stepsDetected = stepsDetected; }
+        public void addStep(String stepName) { this.stepsDetected.add(stepName); }
+
+        public List<String> getConditionsFound() { return conditionsFound; }
+        public void setConditionsFound(List<String> conditionsFound) { this.conditionsFound = conditionsFound; }
+        public void addCondition(String condition) { this.conditionsFound.add(condition); }
+
+        public List<String> getProcsUsed() { return procsUsed; }
+        public void setProcsUsed(List<String> procsUsed) { this.procsUsed = procsUsed; }
+        public void addProc(String procName) { this.procsUsed.add(procName); }
+
+        public List<String> getTempDatasetsUsed() { return tempDatasetsUsed; }
+        public void setTempDatasetsUsed(List<String> tempDatasetsUsed) { this.tempDatasetsUsed = tempDatasetsUsed; }
+        public void addTempDataset(String datasetName) { this.tempDatasetsUsed.add(datasetName); }
+
+        public Map<String, String> getDdStatements() { return ddStatements; }
+        public void setDdStatements(Map<String, String> ddStatements) { this.ddStatements = ddStatements; }
+        public void addDdStatement(String ddName, String dataset) { this.ddStatements.put(ddName, dataset); }
+
+        public List<JCLTranslation> getTranslations() { return translations; }
+        public void setTranslations(List<JCLTranslation> translations) { this.translations = translations; }
+        public void addTranslation(JCLTranslation translation) { this.translations.add(translation); }
+    }
+
+    /**
+     * Classe Java générée ou impactée par la traduction.
+     */
+    public static class GeneratedJavaClass {
+        private String className;
+        private String packageName;
+        private String filePath;
+        private ClassType type;
+        private int linesOfCode;
+        private String purpose;
+        private boolean isNew;
+        private List<String> methods = new ArrayList<>();
+
+        public enum ClassType {
+            CONFIGURATION("Configuration", "Configuration Spring Batch"),
+            PROCESSOR("Processor", "ItemProcessor pour traitement"),
+            READER("Reader", "ItemReader pour lecture"),
+            WRITER("Writer", "ItemWriter pour écriture"),
+            ENTITY("Entity", "Classe entité JPA"),
+            REPOSITORY("Repository", "Repository JPA"),
+            VALIDATOR("Validator", "Validator de données"),
+            LISTENER("Listener", "JobExecutionListener ou StepExecutionListener"),
+            DECIDER("Decider", "JobExecutionDecider pour conditions"),
+            MAPPER("Mapper", "Mapper de données"),
+            UTILITY("Utility", "Classe utilitaire"),
+            OTHER("Other", "Autre type");
+
+            private final String label;
+            private final String description;
+
+            ClassType(String label, String description) {
+                this.label = label;
+                this.description = description;
+            }
+
+            public String getLabel() { return label; }
+            public String getDescription() { return description; }
+        }
+
+        public GeneratedJavaClass() {}
+
+        public GeneratedJavaClass(String className, String packageName, ClassType type) {
+            this.className = className;
+            this.packageName = packageName;
+            this.type = type;
+            this.isNew = true;
+        }
+
+        public String getFullClassName() {
+            return packageName + "." + className;
+        }
+
+        // Getters and setters
+        public String getClassName() { return className; }
+        public void setClassName(String className) { this.className = className; }
+
+        public String getPackageName() { return packageName; }
+        public void setPackageName(String packageName) { this.packageName = packageName; }
+
+        public String getFilePath() { return filePath; }
+        public void setFilePath(String filePath) { this.filePath = filePath; }
+
+        public ClassType getType() { return type; }
+        public void setType(ClassType type) { this.type = type; }
+
+        public int getLinesOfCode() { return linesOfCode; }
+        public void setLinesOfCode(int linesOfCode) { this.linesOfCode = linesOfCode; }
+
+        public String getPurpose() { return purpose; }
+        public void setPurpose(String purpose) { this.purpose = purpose; }
+
+        public boolean isNew() { return isNew; }
+        public void setNew(boolean isNew) { this.isNew = isNew; }
+
+        public List<String> getMethods() { return methods; }
+        public void setMethods(List<String> methods) { this.methods = methods; }
+        public void addMethod(String methodName) { this.methods.add(methodName); }
+    }
+
+    /**
+     * Détail d'un avertissement avec contexte Java.
+     */
+    public static class WarningDetail {
+        private String message;            // Message d'avertissement
+        private String javaFile;          // Nom du fichier Java (ex: "DataProcessor.java")
+        private int javaLine;             // Ligne dans le fichier Java
+        private String javaCodeSnippet;   // Extrait du code Java (5-10 lignes autour)
+        private String cobolLine;         // Ligne COBOL d'origine (optionnel)
+
+        public WarningDetail(String message, String javaFile, int javaLine,
+                            String javaCodeSnippet, String cobolLine) {
+            this.message = message;
+            this.javaFile = javaFile;
+            this.javaLine = javaLine;
+            this.javaCodeSnippet = javaCodeSnippet;
+            this.cobolLine = cobolLine;
+        }
+
+        // Getters
+        public String getMessage() { return message; }
+        public String getJavaFile() { return javaFile; }
+        public int getJavaLine() { return javaLine; }
+        public String getJavaCodeSnippet() { return javaCodeSnippet; }
+        public String getCobolLine() { return cobolLine; }
+
+        // Setters
+        public void setMessage(String message) { this.message = message; }
+        public void setJavaFile(String javaFile) { this.javaFile = javaFile; }
+        public void setJavaLine(int javaLine) { this.javaLine = javaLine; }
+        public void setJavaCodeSnippet(String javaCodeSnippet) { this.javaCodeSnippet = javaCodeSnippet; }
+        public void setCobolLine(String cobolLine) { this.cobolLine = cobolLine; }
     }
 }

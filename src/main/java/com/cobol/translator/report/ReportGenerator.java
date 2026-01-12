@@ -292,6 +292,7 @@ public class ReportGenerator {
             case OPEN:            // ✅ AJOUTÉ
             case CLOSE:           // ✅ AJOUTÉ
             case DISPLAY:
+            case ADD:             // ✅ AJOUTÉ - Counter patterns + basic arithmetic
             case STOP_RUN:
                 return ConversionStatus.CONVERTED;
             default:

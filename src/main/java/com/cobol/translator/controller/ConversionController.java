@@ -135,21 +135,55 @@ public class ConversionController {
             logger.info("Conversion completed. Output directory: {}", outputDir);
 
             // Create ZIP file with the generated project
+            // IMPORTANT: Must collect files BEFORE deleting directories
             byte[] zipBytes = createZipFromDirectory(outputDir);
+            logger.info("ZIP file created with {} bytes", zipBytes.length);
 
-            // Clean up temporary directories
-            deleteDirectory(tempDir.toFile());
-            deleteDirectory(outputDir.toFile());
+            // Check if ZIP is empty - critical for download functionality
+            if (zipBytes == null || zipBytes.length == 0) {
+                logger.error("CRITICAL: ZIP file is empty! Output directory: {}", outputDir);
+                logger.error("Checking if output directory exists: {}", Files.exists(outputDir));
+                if (Files.exists(outputDir)) {
+                    try {
+                        long fileCount = Files.walk(outputDir)
+                                .filter(p -> !Files.isDirectory(p))
+                                .count();
+                        logger.error("Files found in output directory: {}", fileCount);
+                    } catch (Exception e) {
+                        logger.error("Error counting files in output directory", e);
+                    }
+                }
+            }
+
+            // Clean up temporary directories AFTER ZIP is complete
+            try {
+                deleteDirectory(tempDir.toFile());
+            } catch (Exception e) {
+                logger.warn("Failed to delete temp directory", e);
+            }
+            try {
+                deleteDirectory(outputDir.toFile());
+            } catch (Exception e) {
+                logger.warn("Failed to delete output directory", e);
+            }
 
             // Create response with conversion report
+            // Note: ProcessorGenerationResult will be populated in ProcessorGenerator
+            // when invoked during the conversion process
             ConversionResponse response = ConversionResponse.success(
                     "Conversion completed successfully",
                     projectName,
-                    result
+                    result,
+                    null  // ProcessorGenerationResult - will be added in next phase
             );
             
             // Encode ZIP file as base64 for JSON response
-            response.setZipFileBase64(Base64.getEncoder().encodeToString(zipBytes));
+            String zipBase64 = (zipBytes != null && zipBytes.length > 0) 
+                    ? Base64.getEncoder().encodeToString(zipBytes)
+                    : null;
+            response.setZipFileBase64(zipBase64);
+            logger.info("ZIP file base64 encoded. Base64 length: {}", 
+                    zipBase64 != null ? zipBase64.length() : 0);
 
             return ResponseEntity.ok()
                     .contentType(MediaType.APPLICATION_JSON)
@@ -182,22 +216,60 @@ public class ConversionController {
      * Create a ZIP file from a directory
      */
     private byte[] createZipFromDirectory(Path sourceDir) throws IOException {
+        if (!Files.exists(sourceDir)) {
+            logger.warn("Source directory does not exist: {}", sourceDir);
+            return new byte[0];
+        }
+        
+        // Check if directory is readable and accessible
+        if (!Files.isReadable(sourceDir)) {
+            logger.warn("Source directory is not readable: {}", sourceDir);
+            return new byte[0];
+        }
+        
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try (ZipOutputStream zos = new ZipOutputStream(baos)) {
-            Files.walk(sourceDir)
-                    .filter(path -> !Files.isDirectory(path))
-                    .forEach(path -> {
-                        try {
-                            String zipEntryName = sourceDir.relativize(path).toString();
-                            zos.putNextEntry(new ZipEntry(zipEntryName));
-                            Files.copy(path, zos);
-                            zos.closeEntry();
-                        } catch (IOException e) {
-                            throw new RuntimeException("Error creating ZIP", e);
-                        }
-                    });
+            zos.setLevel(java.util.zip.Deflater.DEFAULT_COMPRESSION);
+            
+            // Collect all files first (avoid lazy stream issues)
+            java.util.List<Path> allFiles = new java.util.ArrayList<>();
+            try (var stream = Files.walk(sourceDir)) {
+                stream.filter(path -> !Files.isDirectory(path))
+                      .forEach(allFiles::add);
+            }
+            
+            logger.debug("Found {} files to ZIP in {}", allFiles.size(), sourceDir);
+            
+            if (allFiles.isEmpty()) {
+                logger.warn("No files found in output directory: {}", sourceDir);
+            }
+            
+            // Add each file to the ZIP
+            for (Path path : allFiles) {
+                try {
+                    String zipEntryName = sourceDir.relativize(path).toString().replace("\\", "/");
+                    ZipEntry entry = new ZipEntry(zipEntryName);
+                    entry.setSize(Files.size(path));
+                    zos.putNextEntry(entry);
+                    Files.copy(path, zos);
+                    zos.closeEntry();
+                    logger.debug("Added to ZIP: {}", zipEntryName);
+                } catch (IOException e) {
+                    logger.error("Error adding file to ZIP: {}", path, e);
+                    throw new IOException("Error creating ZIP entry for " + path, e);
+                }
+            }
+            
+            zos.finish(); // Important: finalize ZIP structure before closing
+            logger.info("ZIP file created successfully with {} files", allFiles.size());
         }
-        return baos.toByteArray();
+        
+        byte[] result = baos.toByteArray();
+        logger.info("ZIP file size: {} bytes", result.length);
+        if (result.length == 0) {
+            logger.warn("WARNING: ZIP file is empty! This will cause download failures.");
+        }
+        return result;
     }
 
     /**

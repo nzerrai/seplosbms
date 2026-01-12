@@ -76,6 +76,46 @@ public class ProjectGenerator {
     }
 
     /**
+     * Génère la structure complète du projet dans un chemin fourni (override du chemin par défaut).
+     * Utilise la configuration existante (nom/artifactId, packages), mais écrit dans projectPath.
+     */
+    public Path generateProject(Path projectPath) throws IOException {
+        logger.info("Creating target project (override path): {}", projectPath);
+
+        // Créer la structure de répertoires
+        createDirectoryStructure(projectPath);
+
+        // Générer le pom.xml
+        generatePomXml(projectPath);
+
+        // Générer les fichiers de configuration Spring
+        if (config.isGenerateSpringConfig()) {
+            generateSpringConfiguration(projectPath);
+        }
+
+        // Générer le README
+        if (config.isGenerateReadme()) {
+            generateReadme(projectPath);
+        }
+
+        // Générer le .gitignore
+        if (config.isGenerateGitignore()) {
+            generateGitignore(projectPath);
+        }
+
+        // Générer les scripts de build
+        if (config.isGenerateBuildScripts()) {
+            generateBuildScripts(projectPath);
+        }
+
+        // Générer la classe principale Spring Boot Application
+        generateMainApplicationClass(projectPath);
+
+        logger.info("Project structure created successfully at: {}", projectPath);
+        return projectPath;
+    }
+
+    /**
      * Cree la structure de repertoires Maven standard.
      */
     private void createDirectoryStructure(Path projectPath) throws IOException {

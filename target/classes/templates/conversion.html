@@ -16,9 +16,12 @@
             <div class="header-content">
                 <h1><span class="logo">🏦</span> Convertisseur COBOL to Java</h1>
                 <p class="subtitle">Solution professionnelle de modernisation d'applications legacy</p>
-                <div style="margin-top: 15px;">
+                <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
                     <a href="/mapping" class="header-link" style="color: white; text-decoration: none; padding: 8px 16px; background: rgba(255,255,255,0.2); border-radius: 4px; display: inline-block; transition: all 0.3s;">
                         🔍 Analyse de Mapping Détaillée
+                    </a>
+                    <a href="/diagrams" class="header-link" style="color: white; text-decoration: none; padding: 8px 16px; background: rgba(255,255,255,0.2); border-radius: 4px; display: inline-block; transition: all 0.3s;">
+                        📊 Diagrammes Algorithmiques
                     </a>
                 </div>
             </div>
@@ -167,6 +170,60 @@
                             <!-- Report cards will be dynamically added here by JavaScript -->
                         </div>
                         
+                        <!-- Rapport d'inférence algorithmique (si disponible) -->
+                        <div id="inferenceReportSection" class="inference-report-section hidden">
+                            <h3>🤖 Rapport d'inférence de champs</h3>
+                            <div class="inference-summary">
+                                <div class="summary-metric">
+                                    <span class="metric-label">Champs inférés</span>
+                                    <span class="metric-value" id="inferenceFieldsCount">0</span>
+                                </div>
+                                <div class="summary-metric">
+                                    <span class="metric-label">Qualité</span>
+                                    <span class="metric-value" id="inferenceQualityScore">0%</span>
+                                </div>
+                                <div class="summary-metric">
+                                    <span class="metric-label">Confiance moyenne</span>
+                                    <span class="metric-value" id="inferenceAvgConfidence">0%</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Champs inférés -->
+                            <div class="inference-section">
+                                <h4>📋 Champs inférés</h4>
+                                <table class="inference-table" id="inferenceFieldsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Champ</th>
+                                            <th>Type Java</th>
+                                            <th>Confiance</th>
+                                            <th>Contextes</th>
+                                            <th>Suggestions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="inferenceFieldsTbody">
+                                        <!-- Fields will be added dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <!-- Distribution de types -->
+                            <div class="inference-section">
+                                <h4>📊 Distribution des types Java</h4>
+                                <div id="typeDistributionChart" class="type-distribution-chart">
+                                    <!-- Chart will be rendered here -->
+                                </div>
+                            </div>
+                            
+                            <!-- Recommandations intelligentes -->
+                            <div class="inference-section">
+                                <h4>💡 Recommandations intelligentes</h4>
+                                <div id="recommendationsContainer" class="recommendations-container">
+                                    <!-- Recommendations will be added dynamically -->
+                                </div>
+                            </div>
+                        </div>
+                        
                         <p id="downloadMessage" class="download-info"></p>
                         <div class="result-actions">
                             <button class="btn-primary" id="downloadBtn">⬇️ Télécharger le projet</button>
@@ -246,6 +303,40 @@
                 </div>
             </div>
         </footer>
+    </div>
+
+    <!-- Modal pour afficher le code Java -->
+    <div id="codeModal" class="code-modal" style="display: none;">
+        <div class="code-modal-overlay" onclick="closeCodeModal()"></div>
+        <div class="code-modal-content">
+            <div class="code-modal-header">
+                <h3 id="codeModalTitle">Code Java Généré</h3>
+                <button class="code-modal-close" onclick="closeCodeModal()" title="Fermer">✕</button>
+            </div>
+            <div class="code-modal-body">
+                <div class="code-info">
+                    <div class="info-item">
+                        <span class="info-label">📄 Fichier:</span>
+                        <span class="info-value" id="codeModalFile"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">📍 Ligne:</span>
+                        <span class="info-value" id="codeModalLine"></span>
+                    </div>
+                    <div class="info-item" id="codeModalCobolContainer" style="display: none;">
+                        <span class="info-label">📝 COBOL:</span>
+                        <span class="info-value" id="codeModalCobol"></span>
+                    </div>
+                </div>
+                <div class="code-snippet-container">
+                    <div class="code-snippet-header">
+                        <span>Code Java</span>
+                        <button class="copy-code-btn" onclick="copyCodeToClipboard()" title="Copier">📋 Copier</button>
+                    </div>
+                    <pre id="codeModalSnippet"><code></code></pre>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="/js/conversion.js"></script>

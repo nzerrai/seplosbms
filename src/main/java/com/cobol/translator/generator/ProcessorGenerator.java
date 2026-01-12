@@ -165,6 +165,11 @@ public class ProcessorGenerator {
         // Extract 88-level condition names and pass to translator
         java.util.Set<String> conditionNames = extract88LevelConditions(program);
         logicTranslator.setConditionNames(conditionNames);
+        
+        // Generate inferred field types and pass to translator
+        // This allows the translator to make intelligent decisions about BigDecimal wrapping
+        Map<String, String> inferredFieldTypes = generateInferredFieldTypes(program);
+        logicTranslator.setInferredFieldTypes(inferredFieldTypes);
 
         // Translate ALL paragraphs from COBOL PROCEDURE DIVISION
         // This ensures complete coverage of business logic, not just specific patterns
@@ -793,6 +798,71 @@ public class ProcessorGenerator {
             }
         }
         return result.toString();
+    }
+    
+    /**
+     * Generates inferred field types from TypeInferenceEngine.
+     * Analyzes all WORKING STORAGE and FILE SECTION fields to determine their Java types.
+     * Uses multiple heuristics: field names, usage patterns, assigned values.
+     * 
+     * @param program COBOL program with fields to analyze
+     * @return Map of field name -> Java type (e.g., "wsAccountFound" -> "String")
+     */
+    private Map<String, String> generateInferredFieldTypes(CobolProgram program) {
+        logger.info("Generating inferred field types for BusinessLogicTranslator");
+        
+        Map<String, String> inferredTypes = new HashMap<>();
+        
+        // Collect all field references from the program
+        Map<String, FieldReferenceAnalyzer.FieldReference> fieldReferences = new HashMap<>();
+        
+        // Analyze WORKING STORAGE fields
+        if (program.getWorkingStorageItems() != null) {
+            for (DataItem item : program.getWorkingStorageItems()) {
+                // Skip group items, only process elementary items
+                if (!item.isGroup() && item.getName() != null && !item.getName().isEmpty()) {
+                    FieldReferenceAnalyzer.FieldReference ref = 
+                        new FieldReferenceAnalyzer.FieldReference(item.getName());
+                    
+                    // Add usage context based on COBOL field characteristics
+                    String lowerName = item.getName().toLowerCase();
+                    if (lowerName.contains("amount") || lowerName.contains("balance") || 
+                        lowerName.contains("price") || lowerName.contains("total")) {
+                        ref.addContext(FieldReferenceAnalyzer.UsageContext.BIGDECIMAL_OPS);
+                    }
+                    
+                    fieldReferences.put(item.getName(), ref);
+                }
+            }
+        }
+        
+        // Analyze FILE SECTION fields
+        if (program.getDataItems() != null) {
+            for (DataItem item : program.getDataItems()) {
+                if (!item.isGroup() && item.getName() != null && !item.getName().isEmpty()) {
+                    FieldReferenceAnalyzer.FieldReference ref = 
+                        new FieldReferenceAnalyzer.FieldReference(item.getName());
+                    
+                    fieldReferences.put(item.getName(), ref);
+                }
+            }
+        }
+        
+        // Use TypeInferenceEngine to infer types for all fields
+        Map<String, String> engineInferredTypes = typeInferenceEngine.inferTypes(fieldReferences);
+        
+        // Convert COBOL field names to Java field names for compatibility with BusinessLogicTranslator
+        for (Map.Entry<String, String> entry : engineInferredTypes.entrySet()) {
+            String cobolFieldName = entry.getKey();
+            String javaType = entry.getValue();
+            String javaFieldName = toJavaFieldName(cobolFieldName);
+            
+            inferredTypes.put(javaFieldName, javaType);
+            logger.debug("Inferred type: {} -> {} (from {})", javaFieldName, javaType, cobolFieldName);
+        }
+        
+        logger.info("Generated inferred types for {} fields", inferredTypes.size());
+        return inferredTypes;
     }
     
     /**

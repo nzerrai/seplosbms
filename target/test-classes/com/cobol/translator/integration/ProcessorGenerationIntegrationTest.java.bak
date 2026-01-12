@@ -1,0 +1,469 @@
+package com.cobol.translator.integration;
+
+import com.cobol.translator.parser.CobolASTParser;
+import com.cobol.translator.generator.ProcessorGenerator;
+import com.cobol.translator.generator.EntityGenerator;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * Tests d'intégration pour la génération de Processor Spring Batch
+ * Valide que le code COBOL PROCEDURE DIVISION est correctement converti
+ * en ItemProcessor Spring Batch
+ */
+@DisplayName("Processor Generation Integration Tests")
+public class ProcessorGenerationIntegrationTest {
+
+    private CobolASTParser parser;
+    private ProcessorGenerator processorGenerator;
+    private EntityGenerator entityGenerator;
+
+    @BeforeEach
+    public void setUp() {
+        parser = new CobolASTParser();
+        processorGenerator = new ProcessorGenerator();
+        entityGenerator = new EntityGenerator();
+    }
+
+    @Test
+    @DisplayName("Generate processor from simple PROCEDURE DIVISION")
+    public void testSimpleProcessorGeneration() throws Exception {
+        String cobolCode = """
+            IDENTIFICATION DIVISION.
+            PROGRAM-ID. SIMPLE-PROCESS.
+            
+            DATA DIVISION.
+            WORKING-STORAGE SECTION.
+            01  WS-INPUT    PIC X(30).
+            01  WS-OUTPUT   PIC X(30).
+            
+            PROCEDURE DIVISION.
+            0000-MAIN.
+                MOVE FUNCTION UPPER-CASE(WS-INPUT) TO WS-OUTPUT.
+                STOP RUN.
+            """;
+
+        var ast = parser.parseString(cobolCode, "SIMPLE-PROCESS");
+        var processor = processorGenerator.generate(ast);
+
+        assertNotNull(processor);
+        assertTrue(processor.contains("@Component"));
+        assertTrue(processor.contains("ItemProcessor"));
+        assertTrue(processor.contains("public Object process(Object item)"));
+        assertTrue(processor.contains("UPPER-CASE"));
+    }
+
+    @Test
+    @DisplayName("Generate processor with MOVE statements")
+    public void testProcessorWithMoveStatements() throws Exception {
+        String cobolCode = """
+            IDENTIFICATION DIVISION.
+            PROGRAM-ID. MOVE-PROCESSOR.
+            
+            DATA DIVISION.
+            WORKING-STORAGE SECTION.
+            01  WS-SOURCE      PIC X(50).
+            01  WS-TARGET      PIC X(50).
+            01  WS-NUMERIC     PIC 9(9).
+            01  WS-CALC        PIC 9(11)V99.
+            
+            PROCEDURE DIVISION.
+            0000-MAIN.
+                MOVE WS-SOURCE TO WS-TARGET.
+                MOVE 12345 TO WS-NUMERIC.
+                MOVE WS-NUMERIC TO WS-CALC.
+                STOP RUN.
+            """;
+
+        var ast = parser.parseString(cobolCode, "MOVE-PROCESSOR");
+        var processor = processorGenerator.generate(ast);
+
+        assertNotNull(processor);
+        assertTrue(processor.contains("process"));
+        // Verify MOVE statements are translated to Java assignments
+    }
+
+    @Test
+    @DisplayName("Generate processor with IF-ELSE statements")
+    public void testProcessorWithConditionals() throws Exception {
+        String cobolCode = """
+            IDENTIFICATION DIVISION.
+            PROGRAM-ID. CONDITIONAL-PROCESSOR.
+            
+            DATA DIVISION.
+            WORKING-STORAGE SECTION.
+            01  WS-AMOUNT      PIC 9(9)V99.
+            01  WS-STATUS      PIC X VALUE 'NORMAL'.
+            01  WS-THRESHOLD   PIC 9(9)V99 VALUE 5000.00.
+            
+            PROCEDURE DIVISION.
+            0000-MAIN.
+                IF WS-AMOUNT > WS-THRESHOLD
+                    MOVE 'HIGH' TO WS-STATUS
+                ELSE IF WS-AMOUNT < 1000.00
+                    MOVE 'LOW' TO WS-STATUS
+                ELSE
+                    MOVE 'NORMAL' TO WS-STATUS
+                END-IF
+                END-IF.
+                STOP RUN.
+            """;
+
+        var ast = parser.parseString(cobolCode, "CONDITIONAL-PROCESSOR");
+        var processor = processorGenerator.generate(ast);
+
+        assertNotNull(processor);
+        // IF-ELSE should translate to Java if-else
+        assertTrue(processor.contains("if ") || processor.contains("if("));
+    }
+
+    @Test
+    @DisplayName("Generate processor with COMPUTE statements")
+    public void testProcessorWithCompute() throws Exception {
+        String cobolCode = """
+            IDENTIFICATION DIVISION.
+            PROGRAM-ID. COMPUTE-PROCESSOR.
+            
+            DATA DIVISION.
+            WORKING-STORAGE SECTION.
+            01  WS-QUANTITY    PIC 9(9).
+            01  WS-PRICE       PIC 9(9)V99.
+            01  WS-TOTAL       PIC 9(11)V99.
+            01  WS-TAX-RATE    PIC 9V999 VALUE 0.100.
+            01  WS-TAX-AMOUNT  PIC 9(11)V99.
+            
+            PROCEDURE DIVISION.
+            0000-MAIN.
+                COMPUTE WS-TOTAL = WS-QUANTITY * WS-PRICE.
+                COMPUTE WS-TAX-AMOUNT = WS-TOTAL * WS-TAX-RATE.
+                COMPUTE WS-TOTAL = WS-TOTAL + WS-TAX-AMOUNT.
+                STOP RUN.
+            """;
+
+        var ast = parser.parseString(cobolCode, "COMPUTE-PROCESSOR");
+        var processor = processorGenerator.generate(ast);
+
+        assertNotNull(processor);
+        // COMPUTE should translate to Java calculations with proper type handling
+        assertTrue(processor.contains("multiply") || processor.contains("*"));
+    }
+
+    @Test
+    @DisplayName("Generate processor with EVALUATE (CASE) statement")
+    public void testProcessorWithEvaluate() throws Exception {
+        String cobolCode = """
+            IDENTIFICATION DIVISION.
+            PROGRAM-ID. EVAL-PROCESSOR.
+            
+            DATA DIVISION.
+            WORKING-STORAGE SECTION.
+            01  WS-GRADE       PIC X VALUE 'A'.
+            01  WS-POINTS      PIC 9(3).
+            
+            PROCEDURE DIVISION.
+            0000-MAIN.
+                EVALUATE WS-GRADE
+                    WHEN 'A'
+                        MOVE 90 TO WS-POINTS
+                    WHEN 'B'
+                        MOVE 80 TO WS-POINTS
+                    WHEN 'C'
+                        MOVE 70 TO WS-POINTS
+                    WHEN OTHER
+                        MOVE 0 TO WS-POINTS
+                END-EVALUATE.
+                STOP RUN.
+            """;
+
+        var ast = parser.parseString(cobolCode, "EVAL-PROCESSOR");
+        var processor = processorGenerator.generate(ast);
+
+        assertNotNull(processor);
+        // EVALUATE should translate to Java switch statement
+        assertTrue(processor.contains("switch") || processor.contains("case"));
+    }
+
+    @Test
+    @DisplayName("Generate processor with PERFORM TIMES")
+    public void testProcessorWithPerformTimes() throws Exception {
+        String cobolCode = """
+            IDENTIFICATION DIVISION.
+            PROGRAM-ID. LOOP-PROCESSOR.
+            
+            DATA DIVISION.
+            WORKING-STORAGE SECTION.
+            01  WS-COUNTER     PIC 9(5) VALUE 0.
+            01  WS-TOTAL       PIC 9(9)V99 VALUE 0.
+            01  WS-ITEM-AMOUNT PIC 9(9)V99.
+            
+            PROCEDURE DIVISION.
+            0000-MAIN.
+                PERFORM 10 TIMES
+                    ADD WS-ITEM-AMOUNT TO WS-TOTAL
+                    ADD 1 TO WS-COUNTER
+                END-PERFORM.
+                STOP RUN.
+            
+            1000-PROCESS.
+                DISPLAY 'Processing item ' WS-COUNTER.
+            """;
+
+        var ast = parser.parseString(cobolCode, "LOOP-PROCESSOR");
+        var processor = processorGenerator.generate(ast);
+
+        assertNotNull(processor);
+        // PERFORM TIMES should translate to Java for loop
+        assertTrue(processor.contains("for ") || processor.contains("for("));
+    }
+
+    @Test
+    @DisplayName("Generate processor with PERFORM UNTIL")
+    public void testProcessorWithPerformUntil() throws Exception {
+        String cobolCode = """
+            IDENTIFICATION DIVISION.
+            PROGRAM-ID. UNTIL-PROCESSOR.
+            
+            DATA DIVISION.
+            WORKING-STORAGE SECTION.
+            01  WS-EOF         PIC X VALUE 'N'.
+            01  WS-RECORDS     PIC 9(7) VALUE 0.
+            
+            PROCEDURE DIVISION.
+            0000-MAIN.
+                PERFORM UNTIL WS-EOF = 'Y'
+                    ADD 1 TO WS-RECORDS
+                    IF WS-RECORDS > 1000
+                        MOVE 'Y' TO WS-EOF
+                    END-IF
+                END-PERFORM.
+                STOP RUN.
+            """;
+
+        var ast = parser.parseString(cobolCode, "UNTIL-PROCESSOR");
+        var processor = processorGenerator.generate(ast);
+
+        assertNotNull(processor);
+        // PERFORM UNTIL should translate to Java while loop
+        assertTrue(processor.contains("while") || processor.contains("while("));
+    }
+
+    @Test
+    @DisplayName("Generate processor with nested conditions")
+    public void testProcessorWithNestedConditions() throws Exception {
+        String cobolCode = """
+            IDENTIFICATION DIVISION.
+            PROGRAM-ID. NESTED-PROCESSOR.
+            
+            DATA DIVISION.
+            WORKING-STORAGE SECTION.
+            01  WS-AGE          PIC 9(3).
+            01  WS-INCOME       PIC 9(9)V99.
+            01  WS-STATUS       PIC X(20).
+            
+            PROCEDURE DIVISION.
+            0000-MAIN.
+                IF WS-AGE >= 18
+                    IF WS-INCOME >= 50000
+                        MOVE 'QUALIFIED' TO WS-STATUS
+                    ELSE
+                        IF WS-INCOME >= 30000
+                            MOVE 'CONDITIONAL' TO WS-STATUS
+                        ELSE
+                            MOVE 'DENIED' TO WS-STATUS
+                        END-IF
+                    END-IF
+                ELSE
+                    MOVE 'TOO_YOUNG' TO WS-STATUS
+                END-IF.
+                STOP RUN.
+            """;
+
+        var ast = parser.parseString(cobolCode, "NESTED-PROCESSOR");
+        var processor = processorGenerator.generate(ast);
+
+        assertNotNull(processor);
+        // Nested IF should translate to properly indented Java code
+        assertTrue(processor.contains("if"));
+    }
+
+    @Test
+    @DisplayName("Generate processor that transforms data structure")
+    public void testProcessorWithDataTransformation() throws Exception {
+        String cobolCode = """
+            IDENTIFICATION DIVISION.
+            PROGRAM-ID. TRANSFORM-PROCESSOR.
+            
+            DATA DIVISION.
+            WORKING-STORAGE SECTION.
+            01  WS-INPUT-RECORD.
+                05  IN-ID       PIC 9(6).
+                05  IN-NAME     PIC X(30).
+                05  IN-AMOUNT   PIC 9(9)V99.
+            
+            01  WS-OUTPUT-RECORD.
+                05  OUT-ID      PIC 9(6).
+                05  OUT-NAME    PIC X(30).
+                05  OUT-AMOUNT  PIC 9(11)V99.
+                05  OUT-TAX     PIC 9(11)V99.
+                05  OUT-TOTAL   PIC 9(11)V99.
+            
+            PROCEDURE DIVISION.
+            0000-MAIN.
+                MOVE IN-ID TO OUT-ID.
+                MOVE FUNCTION UPPER-CASE(IN-NAME) TO OUT-NAME.
+                MOVE IN-AMOUNT TO OUT-AMOUNT.
+                COMPUTE OUT-TAX = OUT-AMOUNT * 0.08.
+                COMPUTE OUT-TOTAL = OUT-AMOUNT + OUT-TAX.
+                STOP RUN.
+            """;
+
+        var ast = parser.parseString(cobolCode, "TRANSFORM-PROCESSOR");
+        var processor = processorGenerator.generate(ast);
+
+        assertNotNull(processor);
+        assertTrue(processor.contains("OUT-ID") || processor.contains("outId"));
+        assertTrue(processor.contains("UPPER-CASE") || processor.contains("toUpperCase"));
+    }
+
+    @Test
+    @DisplayName("Generate processor with string functions")
+    public void testProcessorWithStringFunctions() throws Exception {
+        String cobolCode = """
+            IDENTIFICATION DIVISION.
+            PROGRAM-ID. STRING-FUNC-PROCESSOR.
+            
+            DATA DIVISION.
+            WORKING-STORAGE SECTION.
+            01  WS-ORIGINAL    PIC X(50).
+            01  WS-CONVERTED   PIC X(50).
+            01  WS-LENGTH      PIC 9(3).
+            
+            PROCEDURE DIVISION.
+            0000-MAIN.
+                MOVE FUNCTION UPPER-CASE(WS-ORIGINAL) TO WS-CONVERTED.
+                MOVE FUNCTION LENGTH(FUNCTION TRIM(WS-ORIGINAL)) 
+                    TO WS-LENGTH.
+                STRING WS-CONVERTED DELIMITED BY SPACE
+                        " [" DELIMITED BY SIZE
+                        WS-LENGTH DELIMITED BY SIZE
+                        "]" DELIMITED BY SIZE
+                    INTO WS-CONVERTED.
+                STOP RUN.
+            """;
+
+        var ast = parser.parseString(cobolCode, "STRING-FUNC-PROCESSOR");
+        var processor = processorGenerator.generate(ast);
+
+        assertNotNull(processor);
+        // String functions should translate to Java String methods
+        assertTrue(processor.contains("toUpperCase") || processor.contains("UPPER-CASE"));
+        assertTrue(processor.contains("trim") || processor.contains("TRIM"));
+    }
+
+    @Test
+    @DisplayName("Generate processor with error handling")
+    public void testProcessorWithErrorHandling() throws Exception {
+        String cobolCode = """
+            IDENTIFICATION DIVISION.
+            PROGRAM-ID. ERROR-PROCESSOR.
+            
+            DATA DIVISION.
+            WORKING-STORAGE SECTION.
+            01  WS-RESULT      PIC 9(9)V99.
+            01  WS-DIVISOR     PIC 9(5).
+            01  WS-ERROR-MSG   PIC X(50).
+            
+            PROCEDURE DIVISION.
+            0000-MAIN.
+                IF WS-DIVISOR = 0
+                    MOVE 'DIVISION BY ZERO ERROR' TO WS-ERROR-MSG
+                ELSE
+                    COMPUTE WS-RESULT = 1000 / WS-DIVISOR
+                END-IF.
+                STOP RUN.
+            """;
+
+        var ast = parser.parseString(cobolCode, "ERROR-PROCESSOR");
+        var processor = processorGenerator.generate(ast);
+
+        assertNotNull(processor);
+        // Error handling should translate to proper Java exception handling
+    }
+
+    @Test
+    @DisplayName("Generate processor from complex multi-paragraph program")
+    public void testProcessorWithMultipleParagraphs() throws Exception {
+        String cobolCode = """
+            IDENTIFICATION DIVISION.
+            PROGRAM-ID. MULTI-PARA-PROCESSOR.
+            
+            DATA DIVISION.
+            WORKING-STORAGE SECTION.
+            01  WS-INPUT       PIC X(100).
+            01  WS-VALIDATED   PIC X VALUE 'N'.
+            01  WS-RESULT      PIC X(100).
+            
+            PROCEDURE DIVISION.
+            0000-MAIN.
+                PERFORM 1000-VALIDATE-INPUT.
+                IF WS-VALIDATED = 'Y'
+                    PERFORM 2000-PROCESS-DATA
+                    PERFORM 3000-FORMAT-OUTPUT
+                END-IF.
+                STOP RUN.
+            
+            1000-VALIDATE-INPUT.
+                IF WS-INPUT NOT = SPACES
+                    MOVE 'Y' TO WS-VALIDATED
+                ELSE
+                    MOVE 'N' TO WS-VALIDATED
+                END-IF.
+            
+            2000-PROCESS-DATA.
+                MOVE FUNCTION UPPER-CASE(WS-INPUT) TO WS-RESULT.
+            
+            3000-FORMAT-OUTPUT.
+                STRING WS-RESULT DELIMITED BY SPACE
+                        " - OK" DELIMITED BY SIZE
+                    INTO WS-RESULT.
+            """;
+
+        var ast = parser.parseString(cobolCode, "MULTI-PARA-PROCESSOR");
+        var processor = processorGenerator.generate(ast);
+
+        assertNotNull(processor);
+        // Multiple paragraphs should translate to multiple methods
+        assertTrue(processor.contains("1000ValidateInput") || processor.contains("validate"));
+        assertTrue(processor.contains("2000ProcessData") || processor.contains("process"));
+        assertTrue(processor.contains("3000FormatOutput") || processor.contains("format"));
+    }
+
+    @Test
+    @DisplayName("Generate processor that produces ItemProcessor interface")
+    public void testGeneratedProcessorImplementsInterface() throws Exception {
+        String cobolCode = """
+            IDENTIFICATION DIVISION.
+            PROGRAM-ID. INTERFACE-PROCESSOR.
+            
+            DATA DIVISION.
+            WORKING-STORAGE SECTION.
+            01  WS-DATA    PIC X(50).
+            
+            PROCEDURE DIVISION.
+            0000-MAIN.
+                MOVE FUNCTION UPPER-CASE(WS-DATA) TO WS-DATA.
+                STOP RUN.
+            """;
+
+        var ast = parser.parseString(cobolCode, "INTERFACE-PROCESSOR");
+        var processor = processorGenerator.generate(ast);
+
+        assertNotNull(processor);
+        // Should implement ItemProcessor<Object, Object>
+        assertTrue(processor.contains("implements ItemProcessor"));
+        assertTrue(processor.contains("Object process(Object item)"));
+    }
+}

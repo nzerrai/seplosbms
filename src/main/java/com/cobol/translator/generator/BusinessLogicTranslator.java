@@ -32,6 +32,10 @@ public class BusinessLogicTranslator {
     
     // Set of 88-level condition names (populated by ProcessorGenerator)
     private java.util.Set<String> conditionNames = new java.util.HashSet<>();
+    
+    // Inferred field types (populated by ProcessorGenerator)
+    // Maps field name (e.g., "wsAccountFound") to Java type (e.g., "String", "BigDecimal")
+    private Map<String, String> inferredFieldTypes = new HashMap<>();
 
     /**
      * Sets the condition names (88-level) for proper is*() method generation.
@@ -39,6 +43,17 @@ public class BusinessLogicTranslator {
     public void setConditionNames(java.util.Set<String> conditionNames) {
         if (conditionNames != null) {
             this.conditionNames = new java.util.HashSet<>(conditionNames);
+        }
+    }
+    
+    /**
+     * Sets the inferred field types from TypeInferenceEngine.
+     * Maps field names to their Java types (e.g., "String", "BigDecimal", "Integer").
+     * This allows isBigDecimalExpression() to make decisions based on actual types.
+     */
+    public void setInferredFieldTypes(Map<String, String> inferredFieldTypes) {
+        if (inferredFieldTypes != null) {
+            this.inferredFieldTypes = new HashMap<>(inferredFieldTypes);
         }
     }
 
@@ -1664,6 +1679,11 @@ public class BusinessLogicTranslator {
         String lowerExpr = javaExpr.toLowerCase();
         String lowerCobol = (cobolExpr != null) ? cobolExpr.toLowerCase() : "";
         
+        // EXCLUDE string literals (start and end with quotes)
+        if (javaExpr.startsWith("\"") && javaExpr.endsWith("\"")) {
+            return false;
+        }
+        
         // EXCLUDE simple numeric literals
         if (lowerExpr.matches("^\\d+$") || lowerExpr.equals("1") || lowerExpr.equals("0")) {
             return false;
@@ -1673,6 +1693,24 @@ public class BusinessLogicTranslator {
         // Only exclude system-level counters used by Spring Batch
         if (lowerCobol.matches(".*(record-count|line-count|page-count|items-processed).*")) {
             return false;
+        }
+
+        // NEW (Priority 1): If inferred field types are available, use them for accurate decisions
+        if (!inferredFieldTypes.isEmpty()) {
+            String fieldName = extractFieldName(javaExpr);
+            if (fieldName != null && !fieldName.isEmpty()) {
+                String inferredType = inferredFieldTypes.get(fieldName);
+                if (inferredType != null) {
+                    // If type is explicitly inferred as String, don't use BigDecimal
+                    if ("String".equals(inferredType)) {
+                        return false;
+                    }
+                    // If type is explicitly inferred as BigDecimal or Long or Integer, use it
+                    if ("BigDecimal".equals(inferredType) || "Long".equals(inferredType) || "Integer".equals(inferredType)) {
+                        return true;
+                    }
+                }
+            }
         }
 
         // Monetary patterns (getter names) - broad but safe
@@ -1692,10 +1730,20 @@ public class BusinessLogicTranslator {
             return true;
         }
         
-        // DEFAULT: Treat all working storage numeric fields as BigDecimal for safety
-        // This ensures precision is maintained for all business calculations
-        if (javaExpr.contains("get") || javaExpr.contains("this.")) {
-            return true;
+        // FALLBACK (when no inferred types available): For backward compatibility with existing tests
+        // Use pattern matching on COBOL field names to detect numeric/monetary fields
+        // This ensures tests that don't set inferred types still work
+        if (inferredFieldTypes.isEmpty() && cobolExpr != null && !cobolExpr.isEmpty()) {
+            String cobolLower = cobolExpr.toLowerCase();
+            // Check COBOL field name for numeric/counter patterns
+            // Include "result" as a numeric field (used in DIVIDE/COMPUTE results)
+            if (cobolLower.contains("counter") || cobolLower.contains("count") ||
+                cobolLower.contains("total") || cobolLower.contains("amount") ||
+                cobolLower.contains("balance") || cobolLower.contains("price") ||
+                cobolLower.contains("result") || cobolLower.contains("value") ||
+                cobolLower.contains("sum") || cobolLower.contains("product")) {
+                return true;
+            }
         }
 
         // TOTAL fields: use COBOL tokens to decide
@@ -1714,6 +1762,59 @@ public class BusinessLogicTranslator {
         }
         
         return false;
+    }
+    
+    /**
+     * Extracts field name from Java expression.
+     * Examples:
+     * - "getWsAccountFound()" -> "wsAccountFound"
+     * - "this.wsErrTranId" -> "wsErrTranId"
+     * - "record.getWsAmount()" -> "wsAmount"
+     * - "this.setWsValue" -> "wsValue"
+     */
+    private String extractFieldName(String javaExpr) {
+        if (javaExpr == null || javaExpr.isEmpty()) {
+            return null;
+        }
+        
+        // Handle getter method calls: "getWsAccountFound()" -> "wsAccountFound"
+        if (javaExpr.contains("get") && javaExpr.contains("(")) {
+            // Extract between "get" and "("
+            int getIndex = javaExpr.indexOf("get");
+            int openParen = javaExpr.indexOf("(", getIndex);
+            if (getIndex >= 0 && openParen > getIndex) {
+                String methodName = javaExpr.substring(getIndex + 3, openParen);
+                // Convert first letter to lowercase: "WsAccountFound" -> "wsAccountFound"
+                if (!methodName.isEmpty()) {
+                    return methodName.substring(0, 1).toLowerCase() + methodName.substring(1);
+                }
+            }
+        }
+        
+        // Handle setter method calls: "setWsAccountFound(" -> "wsAccountFound"
+        if (javaExpr.contains("set") && javaExpr.contains("(")) {
+            int setIndex = javaExpr.indexOf("set");
+            int openParen = javaExpr.indexOf("(", setIndex);
+            if (setIndex >= 0 && openParen > setIndex) {
+                String methodName = javaExpr.substring(setIndex + 3, openParen);
+                if (!methodName.isEmpty()) {
+                    return methodName.substring(0, 1).toLowerCase() + methodName.substring(1);
+                }
+            }
+        }
+        
+        // Handle field references: "this.wsErrTranId" or "record.wsErrTranId" -> "wsErrTranId"
+        if (javaExpr.contains(".")) {
+            int lastDot = javaExpr.lastIndexOf(".");
+            String fieldRef = javaExpr.substring(lastDot + 1);
+            // Remove any trailing parentheses or brackets
+            fieldRef = fieldRef.replaceAll("[\\(\\)\\[\\]].*", "");
+            if (!fieldRef.isEmpty()) {
+                return fieldRef;
+            }
+        }
+        
+        return null;
     }
 
     /**

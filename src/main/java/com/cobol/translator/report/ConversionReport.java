@@ -55,10 +55,30 @@ public class ConversionReport {
     // Classes Java générées/impactées
     private List<GeneratedJavaClass> generatedClasses = new ArrayList<>();
 
+    // Table de correspondance COBOL/JCL → Java
+    private List<TypeMappingEntry> typeMappings = new ArrayList<>();
+
     public ConversionReport(String sourceFile, String programName) {
         this.sourceFile = sourceFile;
         this.programName = programName;
         this.conversionDate = LocalDateTime.now();
+    }
+
+    /**
+     * Ajoute une entrée dans la table de correspondance des types.
+     */
+    public void addTypeMapping(TypeMappingEntry mapping) {
+        typeMappings.add(mapping);
+    }
+
+    /**
+     * Ajoute une correspondance simple (nom, type COBOL, nom Java, type Java).
+     */
+    public TypeMappingEntry addTypeMapping(String cobolName, String cobolType,
+                                           String javaName, String javaType) {
+        TypeMappingEntry entry = new TypeMappingEntry(cobolName, cobolType, javaName, javaType);
+        typeMappings.add(entry);
+        return entry;
     }
 
     /**
@@ -118,6 +138,31 @@ public class ConversionReport {
     public double getFailurePercentage() {
         if (totalStatements == 0) return 0.0;
         return (unconvertedStatements * 100.0) / totalStatements;
+    }
+
+    /**
+     * Génère un fichier CSV avec la table de correspondance.
+     * @return Contenu CSV
+     */
+    public String generateTypeMappingCSV() {
+        StringBuilder csv = new StringBuilder();
+
+        // En-tête CSV
+        csv.append("COBOL_NAME,COBOL_TYPE,COBOL_SECTION,COBOL_LEVEL,JAVA_NAME,JAVA_TYPE,JAVA_CLASS,CONVERSION_COMMENT,IS_REDEFINES,IS_OCCURS\n");
+
+        // Lignes de données
+        for (TypeMappingEntry entry : typeMappings) {
+            csv.append(entry.toCsvLine()).append("\n");
+        }
+
+        return csv.toString();
+    }
+
+    /**
+     * Retourne la liste des correspondances de types.
+     */
+    public List<TypeMappingEntry> getTypeMappings() {
+        return typeMappings;
     }
 
     /**
@@ -234,6 +279,14 @@ public class ConversionReport {
             report.append("\n");
         }
 
+        // Table de correspondance des types
+        if (!typeMappings.isEmpty()) {
+            report.append("🔄 TABLE DE CORRESPONDANCE COBOL/JCL → JAVA\n");
+            report.append("═══════════════════════════════════════════════════════════════════════════\n");
+            report.append(generateTypeMappingTable());
+            report.append("\n");
+        }
+
         // Avertissements
         if (!warnings.isEmpty()) {
             report.append("⚠️  AVERTISSEMENTS\n");
@@ -256,6 +309,98 @@ public class ConversionReport {
         report.append(generateConclusion());
 
         return report.toString();
+    }
+
+    /**
+     * Génère la table de correspondance COBOL → Java.
+     */
+    private String generateTypeMappingTable() {
+        StringBuilder table = new StringBuilder();
+
+        // En-tête de table
+        table.append(String.format("%-35s %-20s → %-30s %-20s %-15s\n",
+            "NOM COBOL", "TYPE COBOL", "NOM JAVA", "TYPE JAVA", "SECTION"));
+        table.append("───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────\n");
+
+        // Trier par section puis par nom
+        typeMappings.stream()
+            .sorted((e1, e2) -> {
+                // Ordre: FILE, WORKING-STORAGE, LINKAGE, autres
+                int sectionCompare = compareSections(e1.getCobolSection(), e2.getCobolSection());
+                if (sectionCompare != 0) return sectionCompare;
+                return e1.getCobolName().compareTo(e2.getCobolName());
+            })
+            .forEach(entry -> {
+                String section = entry.getCobolSection() != null ? entry.getCobolSection() : "N/A";
+                table.append(String.format("%-35s %-20s → %-30s %-20s %-15s\n",
+                    truncate(entry.getCobolName(), 35),
+                    truncate(entry.getCobolType(), 20),
+                    truncate(entry.getJavaName(), 30),
+                    truncate(entry.getJavaType(), 20),
+                    section));
+
+                // Ajouter commentaire si présent
+                if (entry.getConversionComment() != null && !entry.getConversionComment().isEmpty()) {
+                    table.append(String.format("   💬 %s\n", entry.getConversionComment()));
+                }
+
+                // Ajouter info REDEFINES si applicable
+                if (entry.isRedefines()) {
+                    table.append("   ⚠️  REDEFINES - Union type généré\n");
+                }
+
+                // Ajouter info OCCURS si applicable
+                if (entry.isOccurs()) {
+                    String occursInfo = entry.getOccursInfo() != null ? entry.getOccursInfo() : "Array";
+                    table.append(String.format("   📊 %s - Converti en List/Array\n", occursInfo));
+                }
+            });
+
+        table.append("\n");
+        table.append(String.format("Total: %d correspondances enregistrées\n", typeMappings.size()));
+
+        // Stats par section
+        Map<String, Long> sectionCounts = typeMappings.stream()
+            .collect(java.util.stream.Collectors.groupingBy(
+                e -> e.getCobolSection() != null ? e.getCobolSection() : "N/A",
+                java.util.stream.Collectors.counting()
+            ));
+
+        if (!sectionCounts.isEmpty()) {
+            table.append("\nRépartition par section:\n");
+            sectionCounts.forEach((section, count) ->
+                table.append(String.format("  • %-20s : %d champs\n", section, count))
+            );
+        }
+
+        return table.toString();
+    }
+
+    /**
+     * Compare les sections pour le tri (FILE < WORKING-STORAGE < LINKAGE < autres).
+     */
+    private int compareSections(String s1, String s2) {
+        if (s1 == null) s1 = "ZZZ";
+        if (s2 == null) s2 = "ZZZ";
+
+        int rank1 = getSectionRank(s1);
+        int rank2 = getSectionRank(s2);
+
+        return Integer.compare(rank1, rank2);
+    }
+
+    private int getSectionRank(String section) {
+        switch (section) {
+            case "FILE": return 1;
+            case "WORKING-STORAGE": return 2;
+            case "LINKAGE": return 3;
+            default: return 99;
+        }
+    }
+
+    private String truncate(String str, int maxLen) {
+        if (str == null) return "";
+        return str.length() > maxLen ? str.substring(0, maxLen - 3) + "..." : str;
     }
 
     /**

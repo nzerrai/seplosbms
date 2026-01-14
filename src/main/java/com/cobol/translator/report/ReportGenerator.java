@@ -5,7 +5,9 @@ import com.cobol.translator.model.CobolProgram;
 import com.cobol.translator.model.DataItem;
 import com.cobol.translator.model.Statement;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -190,6 +192,9 @@ public class ReportGenerator {
         int unconverted = 0;
 
         for (DataItem item : program.getDataItems()) {
+            // Ajouter à la table de correspondance
+            addDataItemToMappingTable(item);
+
             if (isDataItemConvertible(item)) {
                 converted++;
             } else {
@@ -201,6 +206,96 @@ public class ReportGenerator {
         report.setTotalDataItems(total);
         report.setConvertedDataItems(converted);
         report.setUnconvertedDataItems(unconverted);
+    }
+
+    /**
+     * Ajoute un DataItem à la table de correspondance COBOL → Java.
+     */
+    private void addDataItemToMappingTable(DataItem item) {
+        // Ne pas ajouter les items de groupe (sans PICTURE)
+        if (!item.isElementary()) {
+            return;
+        }
+
+        String cobolName = item.getName();
+        String cobolType = formatCobolType(item);
+        String javaName = item.getJavaFieldName();
+        String javaType = item.getJavaType() != null ? item.getJavaType() : "String";
+
+        TypeMappingEntry entry = report.addTypeMapping(cobolName, cobolType, javaName, javaType);
+
+        // Enrichir avec les métadonnées
+        entry.setCobolSection(item.getSection());
+        entry.setCobolLevel(item.getLevel());
+
+        // Ajouter commentaire de conversion
+        String comment = generateConversionComment(item);
+        if (comment != null) {
+            entry.setConversionComment(comment);
+        }
+
+        // Marquer les REDEFINES
+        if (item.getRedefines() != null && !item.getRedefines().isEmpty()) {
+            entry.setRedefines(true);
+        }
+
+        // Marquer les OCCURS
+        if (item.getOccursCount() != null && item.getOccursCount() > 0) {
+            entry.setOccurs(true);
+            entry.setOccursInfo(String.format("OCCURS %d", item.getOccursCount()));
+        }
+    }
+
+    /**
+     * Formate le type COBOL (PICTURE + USAGE).
+     */
+    private String formatCobolType(DataItem item) {
+        StringBuilder type = new StringBuilder();
+
+        if (item.getPictureClause() != null) {
+            type.append("PIC ").append(item.getPictureClause());
+        }
+
+        if (item.getUsage() != null && !item.getUsage().isEmpty()) {
+            if (type.length() > 0) type.append(" ");
+            type.append(item.getUsage());
+        }
+
+        return type.length() > 0 ? type.toString() : "N/A";
+    }
+
+    /**
+     * Génère un commentaire sur la conversion d'un DataItem.
+     */
+    private String generateConversionComment(DataItem item) {
+        List<String> comments = new ArrayList<>();
+
+        // Décimaux
+        if (item.hasDecimals()) {
+            comments.add("Décimaux préservés avec BigDecimal");
+        }
+
+        // COMP-3
+        if (item.isComp3()) {
+            comments.add("COMP-3 → BigDecimal (packed decimal)");
+        }
+
+        // Date potentielle
+        if (item.isPotentialDateField()) {
+            comments.add("Champ date potentiel → LocalDate");
+        }
+
+        // FILLER
+        if (item.isFiller()) {
+            comments.add("FILLER - Champ de remplissage");
+        }
+
+        // 88-level
+        if (item.isConditionName()) {
+            comments.add("Condition 88-level → méthode boolean");
+        }
+
+        return comments.isEmpty() ? null : String.join("; ", comments);
     }
 
     /**

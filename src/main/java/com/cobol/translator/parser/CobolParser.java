@@ -132,6 +132,13 @@ public class CobolParser {
                 item.setConditionParent(lastDataItem);
                 item.setJavaFieldName(toJavaFieldName(conditionName));
 
+                // Set section metadata
+                if (inWorkingStorage) {
+                    item.setSection("WORKING-STORAGE");
+                } else if (inFileSection) {
+                    item.setSection("FILE");
+                }
+
                 program.addDataItem(item);
 
                 if (inWorkingStorage) {
@@ -163,6 +170,13 @@ public class CobolParser {
                 item.setUsage(usage);
                 item.setGroup(picture == null);
                 item.setFiller(isFiller);
+
+                // Set section metadata
+                if (inWorkingStorage) {
+                    item.setSection("WORKING-STORAGE");
+                } else if (inFileSection) {
+                    item.setSection("FILE");
+                }
 
                 // Compute Java type
                 item.setJavaType(computeJavaType(item));

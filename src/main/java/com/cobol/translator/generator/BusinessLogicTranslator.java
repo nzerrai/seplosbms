@@ -375,6 +375,12 @@ public class BusinessLogicTranslator {
                 } else {
                     javaSource = "BigDecimal.valueOf(" + javaSource + ")";
                 }
+            } else if (javaSource.startsWith("\"") && javaSource.endsWith("\"")) {
+                // String literal moving to BigDecimal - this is a type mismatch
+                logger.warn("Type mismatch: attempting to assign string literal {} to BigDecimal field {}", javaSource, target);
+                code.append(indent).append("// TODO: Type mismatch - String literal '").append(javaSource).append("' to BigDecimal field\n");
+                code.append(indent).append("// this.").append(javaSetter).append("(").append(javaSource).append("); // SKIPPED - invalid type\n");
+                return code.toString();
             } else if (!isBigDecimalExpression(javaSource, source)) {
                 // Non-BigDecimal expression (including getters): wrap safely
                 javaSource = "BigDecimal.valueOf(" + javaSource + ")";
@@ -614,6 +620,10 @@ public class BusinessLogicTranslator {
                     } else {
                         source = "BigDecimal.valueOf(" + source + ")";
                     }
+                } else if (source.startsWith("\"") && source.endsWith("\"")) {
+                    // String literal moving to BigDecimal - just set to ZERO with comment
+                    logger.warn("Type mismatch in ADD/COMPUTE: string literal {} to BigDecimal {}", source, target);
+                    source = "BigDecimal.ZERO // TODO: was string literal " + source;
                 } else {
                     // Wrap any non-BigDecimal expression (including getters) safely
                     source = "BigDecimal.valueOf(" + source + ")";
@@ -922,9 +932,16 @@ public class BusinessLogicTranslator {
 
             // Check if this is a BigDecimal comparison
             if (isBigDecimalOperand(left) || isBigDecimalOperand(processedRight)) {
-                // If right operand is a simple literal
-                if (processedRight.matches("-?\\d+")) {
-                    processedRight = "0".equals(processedRight) ? "BigDecimal.ZERO" : "new BigDecimal(" + processedRight + ")";
+                // If right operand is a numeric literal (integer or decimal)
+                if (processedRight.matches("-?\\d+(\\.\\d+)?")) {
+                    if ("0".equals(processedRight)) {
+                        processedRight = "BigDecimal.ZERO";
+                    } else if ("1".equals(processedRight)) {
+                        processedRight = "BigDecimal.ONE";
+                    } else {
+                        // Use String constructor to preserve decimal precision
+                        processedRight = "new BigDecimal(\"" + processedRight + "\")";
+                    }
                 }
                 finalResult.append(left).append(".compareTo(").append(processedRight).append(") ").append(operator).append(" 0");
             }
@@ -1147,8 +1164,16 @@ public class BusinessLogicTranslator {
             }
 
             if (isBigDecimalOperand(left) || isBigDecimalOperand(right)) {
-                if (right.matches("-?\\d+")) {
-                    right = "0".equals(right) ? "BigDecimal.ZERO" : "new BigDecimal(" + right + ")";
+                // Convert numeric literals (integers and decimals) to BigDecimal
+                if (right.matches("-?\\d+(\\.\\d+)?")) {
+                    if ("0".equals(right)) {
+                        right = "BigDecimal.ZERO";
+                    } else if ("1".equals(right)) {
+                        right = "BigDecimal.ONE";
+                    } else {
+                        // Use String constructor to preserve decimal precision
+                        right = "new BigDecimal(\"" + right + "\")";
+                    }
                 }
                 String comparison = left + ".compareTo(" + right + ") " + operator + " 0";
                 matcher.appendReplacement(finalResult, java.util.regex.Matcher.quoteReplacement(comparison));
@@ -1681,11 +1706,13 @@ public class BusinessLogicTranslator {
         
         // EXCLUDE string literals (start and end with quotes)
         if (javaExpr.startsWith("\"") && javaExpr.endsWith("\"")) {
+            logger.debug("[isBigDecimalExpression] String literal {} -> FALSE", javaExpr);
             return false;
         }
         
         // EXCLUDE simple numeric literals
         if (lowerExpr.matches("^\\d+$") || lowerExpr.equals("1") || lowerExpr.equals("0")) {
+            logger.debug("[isBigDecimalExpression] Numeric literal {} -> FALSE", javaExpr);
             return false;
         }
         
@@ -1698,19 +1725,25 @@ public class BusinessLogicTranslator {
         // NEW (Priority 1): If inferred field types are available, use them for accurate decisions
         if (!inferredFieldTypes.isEmpty()) {
             String fieldName = extractFieldName(javaExpr);
+            logger.debug("[isBigDecimalExpression] Extracted field name from {} -> {}", javaExpr, fieldName);
             if (fieldName != null && !fieldName.isEmpty()) {
                 String inferredType = inferredFieldTypes.get(fieldName);
+                logger.debug("[isBigDecimalExpression] Lookup {} in inferred types -> {}", fieldName, inferredType);
                 if (inferredType != null) {
                     // If type is explicitly inferred as String, don't use BigDecimal
                     if ("String".equals(inferredType)) {
+                        logger.debug("[isBigDecimalExpression] String type inferred for {} -> FALSE", fieldName);
                         return false;
                     }
                     // If type is explicitly inferred as BigDecimal or Long or Integer, use it
                     if ("BigDecimal".equals(inferredType) || "Long".equals(inferredType) || "Integer".equals(inferredType)) {
+                        logger.debug("[isBigDecimalExpression] {} type inferred for {} -> TRUE", inferredType, fieldName);
                         return true;
                     }
                 }
             }
+        } else {
+            logger.debug("[isBigDecimalExpression] No inferred field types available");
         }
 
         // Monetary patterns (getter names) - broad but safe
@@ -1727,6 +1760,7 @@ public class BusinessLogicTranslator {
              lowerExpr.contains("gross") ||
              lowerExpr.contains("debit") ||
              lowerExpr.contains("credit"))) {
+            logger.debug("[isBigDecimalExpression] Monetary pattern matched for {} -> TRUE", javaExpr);
             return true;
         }
         
@@ -1742,6 +1776,7 @@ public class BusinessLogicTranslator {
                 cobolLower.contains("balance") || cobolLower.contains("price") ||
                 cobolLower.contains("result") || cobolLower.contains("value") ||
                 cobolLower.contains("sum") || cobolLower.contains("product")) {
+                logger.debug("[isBigDecimalExpression] Fallback pattern matched for {} ({}) -> TRUE", javaExpr, cobolExpr);
                 return true;
             }
         }
@@ -1758,9 +1793,11 @@ public class BusinessLogicTranslator {
         // Check COBOL expression for EXPLICIT monetary patterns (strict match)
         if (cobolExpr != null && 
             cobolExpr.matches(".*(-AMOUNT|-BALANCE|-PRICE|-LIMIT|-OVERDRAFT|-SALARY|-WAGE|-PAY|-RATE|-GROSS|-DEBIT|-DEBITS|-CREDIT|-CREDITS).*")) {
+            logger.debug("[isBigDecimalExpression] COBOL monetary pattern matched for {} -> TRUE", cobolExpr);
             return true;
         }
         
+        logger.debug("[isBigDecimalExpression] No pattern matched for {} ({}) -> FALSE", javaExpr, cobolExpr);
         return false;
     }
     
@@ -1768,6 +1805,7 @@ public class BusinessLogicTranslator {
      * Extracts field name from Java expression.
      * Examples:
      * - "getWsAccountFound()" -> "wsAccountFound"
+     * - "this.getWsAccountFound()" -> "wsAccountFound"  
      * - "this.wsErrTranId" -> "wsErrTranId"
      * - "record.getWsAmount()" -> "wsAmount"
      * - "this.setWsValue" -> "wsValue"
@@ -1777,7 +1815,47 @@ public class BusinessLogicTranslator {
             return null;
         }
         
-        // Handle getter method calls: "getWsAccountFound()" -> "wsAccountFound"
+        // First, handle field references: "this.wsErrTranId" or "record.wsErrTranId" -> "wsErrTranId"
+        if (javaExpr.contains(".")) {
+            int lastDot = javaExpr.lastIndexOf(".");
+            String afterDot = javaExpr.substring(lastDot + 1);
+            
+            // If it's a getter or setter call like "getWsAccountFound()" or "setWsValue("
+            if ((afterDot.startsWith("get") || afterDot.startsWith("set") || afterDot.startsWith("is")) && 
+                afterDot.contains("(")) {
+                // Extract the method name and convert to field name
+                int openParen = afterDot.indexOf("(");
+                String methodName = afterDot.substring(0, openParen);
+                
+                // Remove prefix: "getWsAccountFound" -> "WsAccountFound"
+                if (methodName.startsWith("get") && methodName.length() > 3) {
+                    String fieldName = methodName.substring(3);
+                    // Convert first letter to lowercase: "WsAccountFound" -> "wsAccountFound"
+                    if (!fieldName.isEmpty()) {
+                        return fieldName.substring(0, 1).toLowerCase() + fieldName.substring(1);
+                    }
+                } else if (methodName.startsWith("is") && methodName.length() > 2) {
+                    String fieldName = methodName.substring(2);
+                    if (!fieldName.isEmpty()) {
+                        return fieldName.substring(0, 1).toLowerCase() + fieldName.substring(1);
+                    }
+                } else if (methodName.startsWith("set") && methodName.length() > 3) {
+                    String fieldName = methodName.substring(3);
+                    if (!fieldName.isEmpty()) {
+                        return fieldName.substring(0, 1).toLowerCase() + fieldName.substring(1);
+                    }
+                }
+            }
+            
+            // Otherwise, it's a direct field reference
+            // Remove any trailing parentheses or brackets
+            String fieldRef = afterDot.replaceAll("[\\(\\)\\[\\]].*", "");
+            if (!fieldRef.isEmpty()) {
+                return fieldRef;
+            }
+        }
+        
+        // Handle standalone getter method calls: "getWsAccountFound()" -> "wsAccountFound"
         if (javaExpr.contains("get") && javaExpr.contains("(")) {
             // Extract between "get" and "("
             int getIndex = javaExpr.indexOf("get");
@@ -1803,14 +1881,15 @@ public class BusinessLogicTranslator {
             }
         }
         
-        // Handle field references: "this.wsErrTranId" or "record.wsErrTranId" -> "wsErrTranId"
-        if (javaExpr.contains(".")) {
-            int lastDot = javaExpr.lastIndexOf(".");
-            String fieldRef = javaExpr.substring(lastDot + 1);
-            // Remove any trailing parentheses or brackets
-            fieldRef = fieldRef.replaceAll("[\\(\\)\\[\\]].*", "");
-            if (!fieldRef.isEmpty()) {
-                return fieldRef;
+        // Handle is* condition calls: "isWsAccountFound(" -> "wsAccountFound"  
+        if (javaExpr.contains("is") && javaExpr.contains("(")) {
+            int isIndex = javaExpr.indexOf("is");
+            int openParen = javaExpr.indexOf("(", isIndex);
+            if (isIndex >= 0 && openParen > isIndex) {
+                String methodName = javaExpr.substring(isIndex + 2, openParen);
+                if (!methodName.isEmpty()) {
+                    return methodName.substring(0, 1).toLowerCase() + methodName.substring(1);
+                }
             }
         }
         

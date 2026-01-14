@@ -489,11 +489,21 @@ public class CobolTranslator {
 
         // Save report to docs/ directory
         String reportFileName = program.getProgramName() + "_CONVERSION_REPORT.txt";
+        String csvFileName = program.getProgramName() + "_TYPE_MAPPING.csv";
         Path docsDir = projectPath.resolve("docs");
         Files.createDirectories(docsDir);
+
+        // Save text report
         Path reportPath = docsDir.resolve(reportFileName);
         Files.writeString(reportPath, report.generateTextReport());
         logger.info("Conversion report saved to: {}", reportPath);
+
+        // Save CSV type mapping if there are mappings
+        if (!report.getTypeMappings().isEmpty()) {
+            Path csvPath = docsDir.resolve(csvFileName);
+            Files.writeString(csvPath, report.generateTypeMappingCSV());
+            logger.info("Type mapping CSV saved to: {}", csvPath);
+        }
 
         return report;
     }

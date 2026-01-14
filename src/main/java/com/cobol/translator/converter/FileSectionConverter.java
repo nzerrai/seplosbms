@@ -176,11 +176,14 @@ public class FileSectionConverter {
     private DataItem convertDataItemNode(DataItemNode node) {
         DataItem item = new DataItem(node.getLevel(), node.getName());
         item.setPictureClause(node.getPicture());
-        
+
+        // Set section metadata - these are from FILE SECTION
+        item.setSection("FILE");
+
         // Group if no PICTURE clause
         boolean hasChildren = !node.getChildren().isEmpty();
         item.setGroup(hasChildren || node.getPicture() == null);
-        
+
         // Check if FILLER
         boolean isFiller = "FILLER".equalsIgnoreCase(node.getName());
         item.setFiller(isFiller);

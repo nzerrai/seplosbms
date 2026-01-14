@@ -1,0 +1,827 @@
+#!/bin/bash
+
+# Script pour générer un guide utilisateur HTML complet
+# Ce fichier peut être ouvert dans un navigateur et imprimé en PDF
+
+OUTPUT_FILE="GUIDE_UTILISATEUR_COMPLET.html"
+
+echo "🔄 Génération du Guide Utilisateur HTML..."
+
+cat > "$OUTPUT_FILE" << 'EOF'
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide Utilisateur - COBOL to Java Translator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+        h2 {
+            color: #34495e;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+            margin-top: 40px;
+        }
+        h3 {
+            color: #555;
+            margin-top: 25px;
+        }
+        .toc {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 30px 0;
+        }
+        .toc h2 {
+            margin-top: 0;
+            border: none;
+            padding: 0;
+        }
+        .toc ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .toc li {
+            margin: 8px 0;
+        }
+        .toc a {
+            color: #2980b9;
+            text-decoration: none;
+        }
+        .toc a:hover {
+            text-decoration: underline;
+        }
+        code {
+            background-color: #f8f8f8;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #c7254e;
+        }
+        pre {
+            background-color: #282c34;
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+        }
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+        .success {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        .warning {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        .info {
+            background-color: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+        .badge-success {
+            background-color: #28a745;
+            color: white;
+        }
+        .badge-warning {
+            background-color: #ffc107;
+            color: #333;
+        }
+        .badge-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        .badge-info {
+            background-color: #17a2b8;
+            color: white;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .feature-card {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        .feature-card h4 {
+            margin-top: 0;
+            color: #3498db;
+        }
+        .page-break {
+            page-break-after: always;
+        }
+        @media print {
+            body {
+                background-color: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+            .page-break {
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 COBOL to Java Spring Batch Translator</h1>
+        <h2 style="text-align: center; color: #7f8c8d; border: none; margin-top: 10px;">
+            Guide Utilisateur Complet - Version 1.0.0
+        </h2>
+        <p style="text-align: center; color: #95a5a6;">
+            Date: 4 Janvier 2026 | Build: SUCCESS ✅
+        </p>
+
+        <!-- Table des Matières -->
+        <div class="toc">
+            <h2>📋 Table des Matières</h2>
+            <ul>
+                <li><a href="#introduction">1. Introduction</a></li>
+                <li><a href="#installation">2. Installation et Configuration</a></li>
+                <li><a href="#cli">3. Utilisation en Ligne de Commande (CLI)</a></li>
+                <li><a href="#web">4. Interface Web Spring Boot</a></li>
+                <li><a href="#corrections">5. Corrections Récentes</a></li>
+                <li><a href="#features">6. Fonctionnalités Principales</a></li>
+                <li><a href="#project-structure">7. Structure du Projet Généré</a></li>
+                <li><a href="#configuration">8. Configuration Avancée</a></li>
+                <li><a href="#troubleshooting">9. Dépannage</a></li>
+                <li><a href="#examples">10. Exemples Complets</a></li>
+            </ul>
+        </div>
+
+        <!-- 1. Introduction -->
+        <h2 id="introduction">1. Introduction</h2>
+
+        <p>Le <strong>COBOL to Java Spring Batch Translator</strong> est un outil de migration automatisé qui convertit des programmes COBOL et JCL mainframe en applications Java modernes basées sur Spring Boot et Spring Batch.</p>
+
+        <div class="info">
+            <strong>🎯 Objectif:</strong> Moderniser des applications mainframe legacy en applications cloud-native Java tout en préservant la logique métier.
+        </div>
+
+        <h3>1.1 Caractéristiques Principales</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>✅ Parsing COBOL Complet</h4>
+                <p>Support complet des 4 divisions COBOL avec analyse syntaxique et sémantique avancée.</p>
+            </div>
+            <div class="feature-card">
+                <h4>✅ Génération Spring Batch</h4>
+                <p>Création de projets Spring Boot 3.2.0 avec Spring Batch 5.1.0 prêts à l'emploi.</p>
+            </div>
+            <div class="feature-card">
+                <h4>✅ Analyse Contextuelle</h4>
+                <p>Détection des dépendances, variables non utilisées et complexité cyclomatique.</p>
+            </div>
+            <div class="feature-card">
+                <h4>✅ Rapports Détaillés</h4>
+                <p>Rapports de conversion avec taux de confiance et métriques de qualité.</p>
+            </div>
+            <div class="feature-card">
+                <h4>✅ Support JCL</h4>
+                <p>Parsing et conversion des fichiers JCL en configurations Spring Batch.</p>
+            </div>
+            <div class="feature-card">
+                <h4>✅ Interface Web</h4>
+                <p>Interface utilisateur moderne pour upload et conversion via navigateur.</p>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- 2. Installation -->
+        <h2 id="installation">2. Installation et Configuration</h2>
+
+        <h3>2.1 Prérequis</h3>
+        <table>
+            <tr>
+                <th>Composant</th>
+                <th>Version Requise</th>
+                <th>Vérification</th>
+            </tr>
+            <tr>
+                <td>Java JDK</td>
+                <td>17 ou supérieur</td>
+                <td><code>java -version</code></td>
+            </tr>
+            <tr>
+                <td>Apache Maven</td>
+                <td>3.8+</td>
+                <td><code>mvn -version</code></td>
+            </tr>
+            <tr>
+                <td>Git</td>
+                <td>2.0+</td>
+                <td><code>git --version</code></td>
+            </tr>
+        </table>
+
+        <h3>2.2 Installation</h3>
+        <pre><code># 1. Cloner le dépôt
+git clone https://github.com/votre-org/cobol-to-java-translator.git
+cd cobol-to-java-translator
+
+# 2. Compiler le projet
+mvn clean package -DskipTests
+
+# 3. Vérifier la génération du JAR
+ls -lh target/cobol-translator.jar
+</code></pre>
+
+        <div class="success">
+            <strong>✅ Résultat attendu:</strong> Le fichier <code>target/cobol-translator.jar</code> doit être généré avec succès (BUILD SUCCESS).
+        </div>
+
+        <h3>2.3 Configuration Initiale</h3>
+        <p>Le fichier <code>translator.properties</code> contient toute la configuration du traducteur:</p>
+        <pre><code># Configuration du projet cible
+target.project.name=customer-batch-processing
+target.projects.directory=../generated-projects
+target.package.base=com.nz.batch
+
+# Versions
+spring.boot.version=3.2.0
+spring.batch.version=5.1.0
+java.version=17
+
+# Options de génération
+generate.tests=true
+generate.docs=true
+generate.report=true
+generate.readme=true
+</code></pre>
+
+        <div class="page-break"></div>
+
+        <!-- 3. CLI -->
+        <h2 id="cli">3. Utilisation en Ligne de Commande (CLI)</h2>
+
+        <h3>3.1 Commandes Disponibles</h3>
+        <pre><code># Afficher l'aide
+java -jar target/cobol-translator.jar --help
+
+# Convertir un fichier COBOL
+java -jar target/cobol-translator.jar translate FICHIER.cob
+
+# Convertir avec options personnalisées
+java -jar target/cobol-translator.jar translate FICHIER.cob \
+    -o mon-projet \
+    -p com.monentreprise.batch
+
+# Convertir tous les fichiers d'un répertoire
+java -jar target/cobol-translator.jar translate-all exemples/
+</code></pre>
+
+        <h3>3.2 Exemple Complet</h3>
+        <pre><code># Conversion du fichier banking-transaction.cob
+java -jar target/cobol-translator.jar translate \
+    exemples2/banking-transaction.cob \
+    -p com.banking.batch
+
+# Résultat:
+✅ Translation completed successfully!
+
+📊 Metrics:
+   COBOL lines: 426
+   Java lines: 4785
+   Data items: 133
+   Statements: 113
+   Files: 7
+
+📋 Conversion Report:
+   Conversion rate    : 92.9%
+   Confidence level   : HAUTE
+</code></pre>
+
+        <div class="page-break"></div>
+
+        <!-- 4. Interface Web -->
+        <h2 id="web">4. Interface Web Spring Boot</h2>
+
+        <h3>4.1 Démarrage du Serveur Web</h3>
+        <pre><code># Méthode 1: Avec Maven
+mvn spring-boot:run
+
+# Méthode 2: Avec le JAR
+java -jar target/cobol-translator.jar
+
+# Le serveur démarre sur le port 9090
+# Interface disponible à: http://localhost:9090/conversion
+</code></pre>
+
+        <h3>4.2 Configuration Web</h3>
+        <p>Fichier <code>src/main/resources/application.properties</code>:</p>
+        <pre><code># Port du serveur
+server.port=9090
+
+# Répertoires temporaires
+cobol.translator.temp.upload-dir=/home/debian/tmp/cobol-upload
+cobol.translator.temp.output-dir=/home/debian/tmp/cobol-output
+
+# Taille max des fichiers
+spring.servlet.multipart.max-file-size=50MB
+spring.servlet.multipart.max-request-size=100MB
+</code></pre>
+
+        <h3>4.3 Utilisation de l'Interface Web</h3>
+        <ol>
+            <li>Ouvrir le navigateur: <code>http://localhost:9090/conversion</code></li>
+            <li>Remplir le formulaire:
+                <ul>
+                    <li><strong>Project Name:</strong> nom-du-projet</li>
+                    <li><strong>Base Package:</strong> com.exemple.batch</li>
+                    <li><strong>Files:</strong> Sélectionner fichiers .cob ou .cbl</li>
+                </ul>
+            </li>
+            <li>Cliquer sur "Convertir"</li>
+            <li>Télécharger le ZIP généré</li>
+        </ol>
+
+        <div class="success">
+            <strong>✅ Parité Web/CLI:</strong> L'interface Web produit maintenant exactement les mêmes résultats que la CLI!
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- 5. Corrections Récentes -->
+        <h2 id="corrections">5. Corrections Récentes (Janvier 2026)</h2>
+
+        <h3>5.1 Problème #1: Web vs CLI - Résultats Différents</h3>
+        <table>
+            <tr>
+                <th>Aspect</th>
+                <th>Avant</th>
+                <th>Après</th>
+            </tr>
+            <tr>
+                <td>Fichiers générés</td>
+                <td>3-5 fichiers</td>
+                <td>10-15 fichiers <span class="badge badge-success">✅</span></td>
+            </tr>
+            <tr>
+                <td>Rapports de conversion</td>
+                <td><span class="badge badge-danger">❌ Non</span></td>
+                <td><span class="badge badge-success">✅ Oui</span></td>
+            </tr>
+            <tr>
+                <td>Tests unitaires</td>
+                <td><span class="badge badge-danger">❌ Non</span></td>
+                <td><span class="badge badge-success">✅ Oui</span></td>
+            </tr>
+            <tr>
+                <td>Documentation</td>
+                <td><span class="badge badge-danger">❌ Non</span></td>
+                <td><span class="badge badge-success">✅ Oui</span></td>
+            </tr>
+        </table>
+
+        <p><strong>Solution:</strong> Refactoring de <code>CobolConversionService</code> pour utiliser le moteur <code>CobolTranslator</code> complet.</p>
+
+        <h3>5.2 Problème #2: ZIP Vide Téléchargé</h3>
+        <div class="warning">
+            <strong>⚠️ Symptôme:</strong> Le ZIP téléchargé contenait uniquement l'arborescence sans les fichiers.
+        </div>
+
+        <p><strong>Cause:</strong> Conflit entre deux répertoires créés avec et sans timestamp.</p>
+        <p><strong>Solution:</strong> Suppression du timestamp et configuration cohérente.</p>
+
+        <h3>5.3 Problème #3: Classe Application Manquante</h3>
+        <div class="warning">
+            <strong>⚠️ Erreur:</strong> <code>Unable to find a suitable main class</code>
+        </div>
+
+        <p><strong>Solution:</strong> Ajout de la méthode <code>generateMainApplicationClass()</code> dans <code>ProjectGenerator</code>.</p>
+
+        <p>Classe générée automatiquement:</p>
+        <pre><code>package com.nz.batch;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class CustomerBatchProcessingApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(CustomerBatchProcessingApplication.class, args);
+    }
+}
+</code></pre>
+
+        <div class="success">
+            <strong>✅ Tous les problèmes corrigés!</strong> Les projets générés sont maintenant immédiatement fonctionnels.
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- 6. Fonctionnalités -->
+        <h2 id="features">6. Fonctionnalités Principales</h2>
+
+        <h3>6.1 Analyse COBOL</h3>
+        <ul>
+            <li>✅ Parser ANTLR 4 complet pour syntaxe COBOL</li>
+            <li>✅ Support des 4 divisions (IDENTIFICATION, ENVIRONMENT, DATA, PROCEDURE)</li>
+            <li>✅ Gestion de 34 types de nœuds AST</li>
+            <li>✅ Détection des structures complexes (PERFORM, EVALUATE, etc.)</li>
+        </ul>
+
+        <h3>6.2 Analyse Contextuelle</h3>
+        <ul>
+            <li>✅ Détection des dépendances circulaires</li>
+            <li>✅ Identification des variables non utilisées</li>
+            <li>✅ Calcul de la complexité cyclomatique</li>
+            <li>✅ Analyse de profondeur d'imbrication</li>
+            <li>✅ Warnings avec niveaux de priorité (HIGH, MEDIUM, LOW)</li>
+        </ul>
+
+        <h3>6.3 Génération de Code Java</h3>
+        <table>
+            <tr>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Pattern</th>
+            </tr>
+            <tr>
+                <td>Entités</td>
+                <td>Classes de modèle pour les records COBOL</td>
+                <td>*Record.java</td>
+            </tr>
+            <tr>
+                <td>Processors</td>
+                <td>Logique métier Spring Batch</td>
+                <td>*Processor.java</td>
+            </tr>
+            <tr>
+                <td>Validators</td>
+                <td>Règles de validation métier</td>
+                <td>*Validator.java</td>
+            </tr>
+            <tr>
+                <td>Configurations</td>
+                <td>Jobs Spring Batch</td>
+                <td>*JobConfiguration.java</td>
+            </tr>
+        </table>
+
+        <h3>6.4 Support JCL</h3>
+        <ul>
+            <li>✅ Parsing des statements JOB, EXEC, DD</li>
+            <li>✅ Extraction des paramètres (DISP, DSN, SPACE, etc.)</li>
+            <li>✅ Génération de configurations Spring Batch équivalentes</li>
+            <li>✅ Détection automatique des fichiers JCL associés</li>
+        </ul>
+
+        <div class="page-break"></div>
+
+        <!-- 7. Structure du Projet -->
+        <h2 id="project-structure">7. Structure du Projet Généré</h2>
+
+        <pre><code>mon-projet/
+├── pom.xml                          # Maven avec Spring Boot 3.2.0
+├── README.md                        # Documentation du projet
+├── .gitignore                       # Exclusions Git
+├── build.sh                         # Script de build Linux/Mac
+├── build.bat                        # Script de build Windows
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/exemple/batch/
+│   │   │       ├── MonProjetApplication.java  # ✅ Classe principale
+│   │   │       ├── model/
+│   │   │       │   ├── AccountRecord.java
+│   │   │       │   └── TransactionRecord.java
+│   │   │       ├── processor/
+│   │   │       │   ├── AccountProcessor.java
+│   │   │       │   └── AccountValidator.java
+│   │   │       └── config/
+│   │   │           └── AccountJobConfiguration.java
+│   │   └── resources/
+│   │       ├── application.properties
+│   │       └── cobol-original/              # ✅ Sources COBOL
+│   │           └── ACCOUNT.cob
+│   └── test/
+│       └── java/                            # ✅ Tests générés
+│           └── com/exemple/batch/
+│               └── AccountProcessorTest.java
+└── docs/
+    └── ACCOUNT_CONVERSION_REPORT.txt        # ✅ Rapport détaillé
+</code></pre>
+
+        <div class="info">
+            <strong>📝 Note:</strong> Tous les fichiers marqués ✅ sont nouvellement générés grâce aux corrections de janvier 2026.
+        </div>
+
+        <h3>7.1 Utilisation du Projet Généré</h3>
+        <pre><code># 1. Extraire le ZIP
+unzip mon-projet.zip
+cd mon-projet
+
+# 2. Compiler le projet
+mvn clean package
+
+# 3. Lancer les tests
+mvn test
+
+# 4. Démarrer l'application
+mvn spring-boot:run
+
+# ✅ L'application démarre immédiatement!
+</code></pre>
+
+        <div class="page-break"></div>
+
+        <!-- 8. Configuration Avancée -->
+        <h2 id="configuration">8. Configuration Avancée</h2>
+
+        <h3>8.1 Options de Génération</h3>
+        <pre><code># translator.properties
+
+# Activer/désactiver les fonctionnalités
+generate.tests=true              # Tests unitaires
+generate.docs=true               # Javadoc
+generate.report=true             # Rapport de conversion
+generate.readme=true             # README.md
+generate.gitignore=true          # .gitignore
+generate.spring.config=true      # application.properties
+generate.dockerfile=false        # Dockerfile
+generate.build.scripts=true      # build.sh/bat
+
+# Copier les sources COBOL
+copy.cobol.sources=true
+cobol.sources.directory=src/main/resources/cobol-original
+</code></pre>
+
+        <h3>8.2 Base de Données</h3>
+        <pre><code># Type de base de données cible
+database.type=POSTGRESQL
+
+# Configuration JDBC
+database.url=jdbc:postgresql://localhost:5432/batch_db
+database.username=batch_user
+database.password=changeme
+
+# Alternatives supportées: H2, MYSQL, ORACLE, DB2
+</code></pre>
+
+        <h3>8.3 Spring Batch</h3>
+        <pre><code># Taille des chunks
+batch.chunk.size=100
+
+# Threads parallèles
+batch.thread.pool.size=4
+
+# Limite d'erreurs
+batch.skip.limit=10
+</code></pre>
+
+        <div class="page-break"></div>
+
+        <!-- 9. Dépannage -->
+        <h2 id="troubleshooting">9. Dépannage</h2>
+
+        <h3>9.1 Problèmes de Compilation</h3>
+        <div class="warning">
+            <strong>⚠️ Erreur:</strong> <code>BUILD FAILURE</code>
+        </div>
+        <pre><code># Nettoyer et recompiler
+mvn clean install -U
+
+# Vérifier la version Java
+java -version  # Doit être 17+
+
+# Vérifier Maven
+mvn -version  # Doit être 3.8+
+</code></pre>
+
+        <h3>9.2 Interface Web Inaccessible</h3>
+        <div class="warning">
+            <strong>⚠️ Erreur:</strong> Impossible d'accéder à <code>http://localhost:9090</code>
+        </div>
+        <pre><code># Vérifier que le port 9090 est libre
+lsof -i :9090
+
+# Changer le port si nécessaire
+# Dans application.properties:
+server.port=8080
+</code></pre>
+
+        <h3>9.3 ZIP Vide (Problème Corrigé)</h3>
+        <div class="success">
+            <strong>✅ Ce problème est maintenant corrigé!</strong> Si vous rencontrez toujours ce problème:
+        </div>
+        <pre><code># 1. Vérifier les répertoires temporaires
+ls -la /home/debian/tmp/cobol-output/
+
+# 2. Vérifier les permissions
+sudo chown $USER:$USER /home/debian/tmp/cobol-*
+
+# 3. Recompiler le traducteur
+mvn clean package -DskipTests
+</code></pre>
+
+        <h3>9.4 Projet Généré Ne Démarre Pas (Problème Corrigé)</h3>
+        <div class="success">
+            <strong>✅ Ce problème est maintenant corrigé!</strong> Tous les projets générés contiennent maintenant la classe Application.
+        </div>
+        <pre><code># Vérifier la présence de la classe Application
+find . -name "*Application.java"
+
+# Résultat attendu:
+# ./src/main/java/com/exemple/batch/MonProjetApplication.java
+</code></pre>
+
+        <div class="page-break"></div>
+
+        <!-- 10. Exemples -->
+        <h2 id="examples">10. Exemples Complets</h2>
+
+        <h3>10.1 Conversion Simple</h3>
+        <pre><code># Fichier: exemples/CUSTOMER.cob
+java -jar target/cobol-translator.jar translate exemples/CUSTOMER.cob
+
+# Résultat:
+# ../generated-projects/customer-batch-processing/
+#   ├── src/main/java/com/nz/batch/
+#   │   ├── CustomerBatchProcessingApplication.java
+#   │   ├── model/CustomerRecord.java
+#   │   └── processor/CustomerProcessor.java
+#   └── docs/CUSTOMER_CONVERSION_REPORT.txt
+</code></pre>
+
+        <h3>10.2 Conversion avec JCL</h3>
+        <pre><code># Fichiers:
+#   exemples2/banking-transaction.cob
+#   exemples2/banking-transaction.jcl
+
+java -jar target/cobol-translator.jar translate \
+    exemples2/banking-transaction.cob
+
+# Le fichier JCL est détecté automatiquement
+# et utilisé pour configurer le job Spring Batch
+</code></pre>
+
+        <h3>10.3 Conversion Via Interface Web</h3>
+        <ol>
+            <li>Démarrer: <code>mvn spring-boot:run</code></li>
+            <li>Navigateur: <code>http://localhost:9090/conversion</code></li>
+            <li>Formulaire:
+                <ul>
+                    <li>Project Name: <code>banking-app</code></li>
+                    <li>Base Package: <code>com.bank.batch</code></li>
+                    <li>Files: Sélectionner <code>banking-transaction.cob</code></li>
+                </ul>
+            </li>
+            <li>Cliquer sur "Convertir"</li>
+            <li>Télécharger <code>banking-app.zip</code></li>
+        </ol>
+
+        <h3>10.4 Vérification du Projet Généré</h3>
+        <pre><code># 1. Extraire
+unzip banking-app.zip
+cd banking-app
+
+# 2. Vérifier la structure
+tree -L 3
+
+# 3. Compiler
+mvn clean package
+
+# 4. Vérifier les logs
+tail -f target/maven-status/maven-compiler-plugin/compile/*/createdFiles.lst
+
+# 5. Lancer l'application
+mvn spring-boot:run
+
+# Résultat attendu:
+# Started BankingAppApplication in 2.5 seconds
+</code></pre>
+
+        <div class="page-break"></div>
+
+        <!-- Conclusion -->
+        <h2>✨ Conclusion</h2>
+
+        <p>Le traducteur COBOL to Java est maintenant <strong>production-ready</strong> avec toutes les fonctionnalités essentielles:</p>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>✅ Parité Web/CLI</h4>
+                <p>Résultats identiques quel que soit le mode d'utilisation</p>
+            </div>
+            <div class="feature-card">
+                <h4>✅ Projets Complets</h4>
+                <p>ZIP avec tous les fichiers et classe Application</p>
+            </div>
+            <div class="feature-card">
+                <h4>✅ Démarrage Immédiat</h4>
+                <p>mvn spring-boot:run fonctionne directement</p>
+            </div>
+            <div class="feature-card">
+                <h4>✅ Documentation Complète</h4>
+                <p>Rapports, tests et sources COBOL inclus</p>
+            </div>
+        </div>
+
+        <div class="success" style="margin-top: 30px;">
+            <h3>🎉 Statut Final</h3>
+            <table>
+                <tr>
+                    <td><strong>Version:</strong></td>
+                    <td>1.0.0-SNAPSHOT</td>
+                </tr>
+                <tr>
+                    <td><strong>Build:</strong></td>
+                    <td><span class="badge badge-success">SUCCESS</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Tests:</strong></td>
+                    <td><span class="badge badge-success">VALIDÉS</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Production:</strong></td>
+                    <td><span class="badge badge-success">READY</span></td>
+                </tr>
+            </table>
+        </div>
+
+        <hr style="margin: 40px 0;">
+
+        <p style="text-align: center; color: #7f8c8d;">
+            <strong>Documentation générée le 4 Janvier 2026</strong><br>
+            COBOL to Java Spring Batch Translator v1.0.0<br>
+            © 2026 - Tous droits réservés
+        </p>
+    </div>
+</body>
+</html>
+EOF
+
+echo "✅ Guide HTML généré: $OUTPUT_FILE"
+echo ""
+echo "📖 Pour convertir en PDF:"
+echo "   1. Ouvrez $OUTPUT_FILE dans votre navigateur"
+echo "   2. Ctrl+P (ou Cmd+P sur Mac)"
+echo "   3. Sélectionnez 'Enregistrer au format PDF'"
+echo "   4. Sauvegardez comme 'GUIDE_UTILISATEUR.pdf'"
+echo ""
+echo "🌐 Ou installez pandoc pour génération automatique:"
+echo "   sudo apt install pandoc texlive-latex-base texlive-fonts-recommended"

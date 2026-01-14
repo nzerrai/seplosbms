@@ -3,6 +3,7 @@ package com.cobol.translator.parser;
 import com.cobol.translator.model.CobolProgram;
 import com.cobol.translator.model.DataItem;
 import com.cobol.translator.model.FileDefinition;
+import com.cobol.translator.model.Paragraph;
 import com.cobol.translator.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,6 +59,7 @@ public class CobolParser {
         boolean inFileSection = false;
         boolean inWorkingStorage = false;
         FileDefinition currentFile = null;
+        Paragraph currentParagraph = null;
         int fillerCounter = 1;  // Counter for generating unique FILLER names
         DataItem lastDataItem = null;  // Track last data item for Level-88 parent linking
 
@@ -130,6 +132,13 @@ public class CobolParser {
                 item.setConditionParent(lastDataItem);
                 item.setJavaFieldName(toJavaFieldName(conditionName));
 
+                // Set section metadata
+                if (inWorkingStorage) {
+                    item.setSection("WORKING-STORAGE");
+                } else if (inFileSection) {
+                    item.setSection("FILE");
+                }
+
                 program.addDataItem(item);
 
                 if (inWorkingStorage) {
@@ -162,6 +171,13 @@ public class CobolParser {
                 item.setGroup(picture == null);
                 item.setFiller(isFiller);
 
+                // Set section metadata
+                if (inWorkingStorage) {
+                    item.setSection("WORKING-STORAGE");
+                } else if (inFileSection) {
+                    item.setSection("FILE");
+                }
+
                 // Compute Java type
                 item.setJavaType(computeJavaType(item));
                 item.setJavaFieldName(toJavaFieldName(actualName));
@@ -185,16 +201,84 @@ public class CobolParser {
 
             // Parse procedure division statements (simplified)
             if (inProcedureDivision) {
-                Statement statement = parseStatement(line, i + 1);
+                // Check if this is a paragraph name (ends with . and no statement keyword)
+                String trimmed = line.trim();
+                if (!trimmed.isEmpty() && trimmed.endsWith(".") &&
+                    !trimmed.toUpperCase().startsWith("MOVE") &&
+                    !trimmed.toUpperCase().startsWith("IF") &&
+                    !trimmed.toUpperCase().startsWith("PERFORM") &&
+                    !trimmed.toUpperCase().contains("DIVISION")) {
+
+                    // This is likely a paragraph name
+                    String paragraphName = trimmed.substring(0, trimmed.length() - 1).trim();
+                    if (paragraphName.matches("[A-Z0-9-]+")) {
+                        // Save previous paragraph if exists
+                        if (currentParagraph != null) {
+                            currentParagraph.setEndLine(i);
+                            program.addParagraph(currentParagraph);
+                        }
+
+                        // Start new paragraph
+                        currentParagraph = new Paragraph(paragraphName);
+                        currentParagraph.setStartLine(i + 1);
+                        logger.debug("Found paragraph: {}", paragraphName);
+                    }
+                }
+
+                // For IF statements, check if condition spans multiple lines
+                String statementLine = line;
+                int currentLineIndex = i;
+                if (trimmed.toUpperCase().startsWith("IF ")) {
+                    // Collect multi-line IF condition
+                    StringBuilder multiLineCondition = new StringBuilder(line.trim());
+
+                    // Check if condition continues on next lines
+                    while (currentLineIndex + 1 < lines.length &&
+                           isConditionContinuation(multiLineCondition.toString())) {
+                        currentLineIndex++;
+                        String nextLine = lines[currentLineIndex].trim();
+
+                        // Stop if we hit a statement keyword or END-IF
+                        String nextUpper = nextLine.toUpperCase();
+                        if (nextUpper.startsWith("MOVE ") ||
+                            nextUpper.startsWith("DISPLAY ") ||
+                            nextUpper.startsWith("END-IF") ||
+                            nextUpper.startsWith("ELSE") ||
+                            nextUpper.startsWith("PERFORM ") ||
+                            nextUpper.startsWith("ADD ") ||
+                            nextUpper.startsWith("COMPUTE ") ||
+                            nextLine.isEmpty()) {
+                            break;
+                        }
+
+                        // Append continuation line
+                        multiLineCondition.append(" ").append(nextLine);
+                    }
+
+                    statementLine = multiLineCondition.toString();
+                    i = currentLineIndex; // Skip processed continuation lines
+                }
+
+                Statement statement = parseStatement(statementLine, i + 1);
                 if (statement != null) {
                     program.addStatement(statement);
+                    if (currentParagraph != null) {
+                        currentParagraph.addStatement(statement);
+                    }
                 }
             }
         }
 
-        logger.info("Parsed {} data items and {} statements",
+        // Save last paragraph
+        if (currentParagraph != null) {
+            currentParagraph.setEndLine(lines.length);
+            program.addParagraph(currentParagraph);
+        }
+
+        logger.info("Parsed {} data items, {} statements, and {} paragraphs",
                    program.getDataItems().size(),
-                   program.getStatements().size());
+                   program.getStatements().size(),
+                   program.getParagraphs().size());
 
         return program;
     }
@@ -221,6 +305,8 @@ public class CobolParser {
             stmt.setType(Statement.StatementType.COMPUTE);
         } else if (trimmed.startsWith("IF ")) {
             stmt.setType(Statement.StatementType.IF);
+            // Parse IF statement: "IF condition"
+            parseIfStatement(trimmed, stmt);
         } else if (trimmed.startsWith("READ ")) {
             stmt.setType(Statement.StatementType.READ);
         } else if (trimmed.startsWith("WRITE ")) {
@@ -235,14 +321,124 @@ public class CobolParser {
             }
         } else if (trimmed.startsWith("ADD ")) {
             stmt.setType(Statement.StatementType.ADD);
+            // Parse ADD statement: "ADD value TO variable"
+            parseAddStatement(trimmed, stmt);
         } else if (trimmed.startsWith("DISPLAY ")) {
             stmt.setType(Statement.StatementType.DISPLAY);
+            // Parse DISPLAY statement: "DISPLAY 'text' variable"
+            parseDisplayStatement(trimmed, stmt);
         } else {
             // Unknown or unsupported statement
             return null;
         }
 
         return stmt;
+    }
+
+    /**
+     * Parses ADD statement to extract source and target.
+     * Format: "ADD value TO variable" or "ADD value1 value2 TO variable"
+     */
+    private void parseAddStatement(String trimmed, Statement stmt) {
+        // Pattern: ADD <source> TO <target>
+        int toIndex = trimmed.indexOf(" TO ");
+        if (toIndex > 0) {
+            String sourcePart = trimmed.substring(4, toIndex).trim(); // After "ADD "
+            String targetPart = trimmed.substring(toIndex + 4).trim(); // After " TO "
+
+            stmt.setSource(sourcePart);
+            stmt.setTarget(targetPart);
+        }
+    }
+
+    /**
+     * Parses IF statement to extract condition.
+     * Format: "IF condition" or "IF variable = value" etc.
+     */
+    private void parseIfStatement(String trimmed, Statement stmt) {
+        // Extract condition (everything after "IF ")
+        String condition = trimmed.substring(3).trim(); // After "IF "
+
+        // Remove trailing "THEN" if present
+        if (condition.endsWith(" THEN")) {
+            condition = condition.substring(0, condition.length() - 5).trim();
+        }
+
+        stmt.setCondition(condition);
+
+        // Parse comparison operators: =, >, <, >=, <=, NOT
+        parseCondition(condition, stmt);
+    }
+
+    /**
+     * Parses a condition to extract left operand, operator, and right operand.
+     * Format: "variable operator value" (e.g., "CUST-AMOUNT > 1000")
+     */
+    private void parseCondition(String condition, Statement stmt) {
+        // Try to find comparison operators
+        String[] operators = {" >= ", " <= ", " = ", " > ", " < ", " NOT "};
+
+        for (String op : operators) {
+            int index = condition.indexOf(op);
+            if (index > 0) {
+                String left = condition.substring(0, index).trim();
+                String right = condition.substring(index + op.length()).trim();
+
+                stmt.setLeftOperand(left);
+                stmt.setOperator(op.trim());
+                stmt.setRightOperand(right);
+                break;
+            }
+        }
+    }
+
+    /**
+     * Checks if an IF condition continues on the next line.
+     * A condition continues if it ends with a logical operator (OR, AND)
+     * or a comparison operator without a closing END-IF.
+     */
+    private boolean isConditionContinuation(String currentCondition) {
+        String trimmed = currentCondition.trim().toUpperCase();
+
+        // Remove comments (starting with *)
+        int commentIndex = trimmed.indexOf('*');
+        if (commentIndex >= 0) {
+            trimmed = trimmed.substring(0, commentIndex).trim();
+        }
+
+        // Condition continues if it ends with logical operators
+        if (trimmed.endsWith(" OR") || trimmed.endsWith(" AND")) {
+            return true;
+        }
+
+        // Condition continues if it ends with NOT (as in "NOT =")
+        if (trimmed.endsWith(" NOT")) {
+            return true;
+        }
+
+        // Check if we have an unbalanced parenthesis
+        int openParens = 0;
+        for (char c : trimmed.toCharArray()) {
+            if (c == '(') openParens++;
+            if (c == ')') openParens--;
+        }
+        if (openParens > 0) {
+            return true; // Unclosed parenthesis means continuation
+        }
+
+        return false;
+    }
+
+    /**
+     * Parses DISPLAY statement to extract what is being displayed.
+     * Format: "DISPLAY 'text' variable" or "DISPLAY variable"
+     */
+    private void parseDisplayStatement(String trimmed, Statement stmt) {
+        // Extract everything after "DISPLAY "
+        String displayContent = trimmed.substring(8).trim(); // After "DISPLAY "
+
+        // For now, store in source field
+        stmt.setSource(displayContent);
     }
 
     /**
@@ -259,8 +455,22 @@ public class CobolParser {
         }
 
         pic = pic.toUpperCase();
+        String name = item.getName() != null ? item.getName().toUpperCase() : "";
 
-        // Numeric with decimals or COMP-3 -> BigDecimal
+        // EXCLUDE counter/accumulator fields from BigDecimal
+        // Even if COMP-3, counters are fundamentally numeric (Integer/Long)
+        if (isCounterFieldName(name)) {
+            int size = extractNumericSize(pic);
+            return size <= 9 ? "Integer" : "Long";
+        }
+
+        // Edit patterns (Z, comma, period) -> BigDecimal
+        // These are used for output formatting and must support numeric operations
+        if (pic.contains("Z") || (pic.contains(",") && pic.contains("9"))) {
+            return "BigDecimal";
+        }
+
+        // Numeric with decimals or COMP-3 -> BigDecimal (unless already handled as counter)
         if (item.hasDecimals() || item.isComp3()) {
             return "BigDecimal";
         }
@@ -279,6 +489,39 @@ public class CobolParser {
 
         // Alphanumeric
         return "String";
+    }
+
+    /**
+     * Identifies counter/accumulator field names.
+     * Conservative: matches fields that are clearly accumulators or counts, not totals of monetary amounts.
+     */
+    private boolean isCounterFieldName(String fieldName) {
+        if (fieldName == null || fieldName.isEmpty()) {
+            return false;
+        }
+
+        // Explicit counter/accumulator patterns
+        if (fieldName.endsWith("-COUNT") || fieldName.endsWith("-READ") || 
+            fieldName.endsWith("-PROCESSED") || fieldName.endsWith("-INDEX") || 
+            fieldName.endsWith("-COUNTER") || fieldName.endsWith("-WRITTEN") || 
+            fieldName.endsWith("-SKIPPED") || fieldName.endsWith("-UPDATED")) {
+            return true;
+        }
+        
+        // WS- fields with counter suffixes (more permissive for working storage)
+        if (fieldName.startsWith("WS-")) {
+            if (fieldName.contains("-ERROR") || fieldName.contains("-READ") || 
+                fieldName.contains("-PROCESSED") || fieldName.contains("-COUNT") ||
+                fieldName.contains("-NUM-") || fieldName.contains("-TOTAL-ITEMS") ||
+                fieldName.contains("-TOTAL-RECORDS")) {
+                // But exclude if it's clearly a message or description field
+                if (!fieldName.contains("MESSAGE") && !fieldName.contains("DESC")) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
     }
 
     /**

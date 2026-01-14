@@ -33,6 +33,9 @@ public class DataItem {
     // Detected pattern (for analysis)
     private String pattern;
 
+    // COBOL section this item belongs to
+    private String section;  // "FILE", "WORKING-STORAGE", "LINKAGE", or null
+
     public DataItem() {
     }
 
@@ -134,6 +137,9 @@ public class DataItem {
 
     public DataItem getConditionParent() { return conditionParent; }
     public void setConditionParent(DataItem conditionParent) { this.conditionParent = conditionParent; }
+
+    public String getSection() { return section; }
+    public void setSection(String section) { this.section = section; }
 
     @Override
     public String toString() {

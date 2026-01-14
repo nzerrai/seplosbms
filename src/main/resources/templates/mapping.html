@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapping COBOL to Java - Analyse détaillée</title>
+    <link rel="stylesheet" href="/css/mapping.css">
+</head>
+<body>
+    <div class="theme-toggle">
+        <button id="themeBtn" class="theme-btn" title="Basculer le mode sombre">🌙</button>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1><span class="logo">🔍</span> ANALYSE DE CONVERSION DÉTAILLÉE</h1>
+                <p class="subtitle">Visualisez le mapping entre votre code COBOL et le code Java généré</p>
+                <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                    <a href="/conversion" class="header-link" style="color: white; text-decoration: none; padding: 8px 16px; background: rgba(255,255,255,0.2); border-radius: 4px; display: inline-block; transition: all 0.3s;">
+                        🔄 Convertir
+                    </a>
+                    <a href="/diagrams" class="header-link" style="color: white; text-decoration: none; padding: 8px 16px; background: rgba(255,255,255,0.2); border-radius: 4px; display: inline-block; transition: all 0.3s;">
+                        📊 Diagrammes Algorithmiques
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <!-- Section de chargement -->
+            <div class="upload-section" id="uploadSection">
+                <div class="section-header">
+                    <h2>📂 Charger un fichier COBOL converti</h2>
+                </div>
+
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="cobolFile">Fichier COBOL source</label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="cobolFile" name="cobolFile" accept=".cob,.cbl" required>
+                            <div class="file-upload-area" id="fileUploadArea">
+                                <div class="upload-content">
+                                    <div class="upload-icon">📄</div>
+                                    <p class="upload-title">Déposez votre fichier COBOL ici</p>
+                                    <p class="upload-desc">ou cliquez pour parcourir</p>
+                                    <small>Formats: .cob, .cbl</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="fileInfo" class="file-info hidden"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="jclFile">Fichier JCL associé <small style="color: var(--sg-grey);">(optionnel)</small></label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="jclFile" name="jclFile" accept=".jcl">
+                            <div class="file-upload-area" id="jclUploadArea">
+                                <div class="upload-content">
+                                    <div class="upload-icon">📋</div>
+                                    <p class="upload-title">Déposez votre fichier JCL ici</p>
+                                    <p class="upload-desc">ou cliquez pour parcourir</p>
+                                    <small>Format: .jcl</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="jclInfo" class="file-info hidden"></div>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="analyzeBtn">
+                        🔍 Analyser le mapping
+                    </button>
+                </form>
+            </div>
+
+            <!-- Section de visualisation du mapping -->
+            <div class="mapping-viewer hidden" id="mappingViewer">
+                <div class="viewer-header">
+                    <h2>📊 Résultats de l'analyse</h2>
+                    <div class="viewer-actions">
+                        <button class="btn-secondary" id="exportBtn">💾 Exporter</button>
+                        <button class="btn-secondary" id="backBtn">← Retour</button>
+                    </div>
+                </div>
+
+                <!-- Statistiques globales -->
+                <div class="global-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">📝</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="totalLines">0</div>
+                            <div class="stat-label">Lignes COBOL</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">☕</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="totalJavaFiles">0</div>
+                            <div class="stat-label">Fichiers Java</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="conversionRate">0%</div>
+                            <div class="stat-label">Qualité de conversion</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="confidenceScore">-</div>
+                            <div class="stat-label">Niveau de confiance</div>
+                        </div>
+                    </div>
+                    <div class="stat-card" id="jclStatCard" style="display: none;">
+                        <div class="stat-icon">📋</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="jclFileName">-</div>
+                            <div class="stat-label">Fichier JCL</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filtres et recherche -->
+                <div class="filters-section">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="🔎 Rechercher une instruction COBOL...">
+                    </div>
+                    <div class="filter-group">
+                        <label>Afficher:</label>
+                        <button class="filter-btn active" data-filter="all">Tout</button>
+                        <button class="filter-btn" data-filter="converted">Converties</button>
+                        <button class="filter-btn" data-filter="partial">Partielles</button>
+                        <button class="filter-btn" data-filter="failed">Non converties</button>
+                    </div>
+                </div>
+
+                <!-- Section JCL (si présent) -->
+                <div class="jcl-section hidden" id="jclSection">
+                    <div class="panel-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; border-radius: 8px 8px 0 0;">
+                        <h3 style="margin: 0; display: flex; align-items: center; gap: 10px;">
+                            <span>📋</span>
+                            <span>Fichier JCL associé</span>
+                            <span id="jclFileNameDisplay" style="font-size: 14px; opacity: 0.9;"></span>
+                        </h3>
+                    </div>
+                    <div class="code-content" id="jclContent" style="background: #f8f9fa; border: 2px solid #667eea; border-top: none; border-radius: 0 0 8px 8px; max-height: 300px; overflow-y: auto;">
+                        <!-- Le code JCL sera injecté ici -->
+                    </div>
+                </div>
+
+                <!-- Vue du mapping -->
+                <div class="mapping-container">
+                    <div class="cobol-panel">
+                        <div class="panel-header">
+                            <h3>📄 Code COBOL</h3>
+                            <span class="file-name" id="cobolFileName"></span>
+                        </div>
+                        <div class="code-content" id="cobolContent">
+                            <!-- Le code COBOL sera injecté ici -->
+                        </div>
+                    </div>
+
+                    <div class="mapping-links" id="mappingLinks">
+                        <!-- Les liens de mapping seront injectés ici -->
+                    </div>
+
+                    <div class="java-panel">
+                        <div class="panel-header">
+                            <h3>☕ Code Java généré</h3>
+                            <div class="java-file-selector" id="javaFileSelector">
+                                <!-- Le sélecteur de fichiers Java sera injecté ici -->
+                            </div>
+                        </div>
+                        <div class="code-content" id="javaContent">
+                            <!-- Le code Java sera injecté ici -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Détails de la sélection -->
+                <div class="detail-panel hidden" id="detailPanel">
+                    <div class="detail-header">
+                        <h4>🔍 Détails du mapping</h4>
+                        <button class="close-btn" id="closeDetailBtn">✕</button>
+                    </div>
+                    <div class="detail-content" id="detailContent">
+                        <!-- Les détails seront injectés ici -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/mapping.js"></script>
+</body>
+</html>

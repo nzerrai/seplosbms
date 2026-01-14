@@ -1,10 +1,14 @@
 package com.cobol.translator.report;
 
+import com.cobol.translator.analyzer.CobolPatternDetector;
 import com.cobol.translator.model.CobolProgram;
 import com.cobol.translator.model.DataItem;
 import com.cobol.translator.model.Statement;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -15,6 +19,8 @@ public class ReportGenerator {
 
     private final CobolProgram program;
     private final ConversionReport report;
+    private final CobolPatternDetector patternDetector;
+    private Map<String, Object> detectedPatterns;
 
     // Constructions COBOL non supportées
     private static final Set<String> UNSUPPORTED_KEYWORDS = new HashSet<>();
@@ -42,16 +48,139 @@ public class ReportGenerator {
             program.getSourceFile() != null ? program.getSourceFile() : "unknown",
             program.getProgramName()
         );
+        this.patternDetector = new CobolPatternDetector();
     }
 
     /**
      * Analyse le programme COBOL et génère le rapport complet.
      */
     public ConversionReport generate() {
+        // Détecter les patterns idiomatiques en premier
+        detectedPatterns = patternDetector.detectPatterns(program);
+        
         analyzeDataItems();
         analyzeStatements();
         report.calculateConfidence();
+        
+        // Ajouter des notes positives pour les patterns détectés
+        addPatternNotes();
+        
         return report;
+    }
+    
+    /**
+     * Ajoute des notes positives pour les patterns idiomatiques détectés.
+     */
+    private void addPatternNotes() {
+        if (detectedPatterns == null) return;
+        
+        Integer score = (Integer) detectedPatterns.get("IDIOMATIC_SCORE");
+        if (score != null && score >= 80) {
+            report.addPositiveNote(String.format(
+                "✅ Code COBOL idiomatique détecté (Score: %d/100)", score
+            ));
+            
+            if (detectedPatterns.containsKey("FILE_PROCESSING_PATTERN")) {
+                report.addPositiveNote(
+                    "✅ Pattern standard de traitement de fichier COBOL reconnu " +
+                    "(OPEN-READ-PERFORM-CLOSE)"
+                );
+            }
+            
+            if (detectedPatterns.containsKey("BATCH_STRUCTURE_PATTERN")) {
+                report.addPositiveNote(
+                    "✅ Structure batch bien organisée " +
+                    "(paragraphes INIT-PROCESS-FINALIZE)"
+                );
+            }
+        }
+    }
+    
+    /**
+     * Vérifie si un statement est une section déclarative (non-exécutable).
+     * Ces sections ne doivent pas générer de warnings.
+     */
+    private boolean isDeclarativeSection(Statement stmt) {
+        if (stmt == null || stmt.getOriginalCobol() == null) return false;
+        
+        String cobol = stmt.getOriginalCobol().toUpperCase().trim();
+        
+        // Sections déclaratives de DATA DIVISION
+        return cobol.equals("WORKING-STORAGE SECTION") ||
+               cobol.equals("WORKING-STORAGE SECTION.") ||
+               cobol.equals("FILE SECTION") ||
+               cobol.equals("FILE SECTION.") ||
+               cobol.equals("LINKAGE SECTION") ||
+               cobol.equals("LINKAGE SECTION.") ||
+               cobol.equals("LOCAL-STORAGE SECTION") ||
+               cobol.equals("LOCAL-STORAGE SECTION.") ||
+               cobol.equals("SCREEN SECTION") ||
+               cobol.equals("SCREEN SECTION.") ||
+               cobol.equals("REPORT SECTION") ||
+               cobol.equals("REPORT SECTION.") ||
+               // En-têtes de divisions
+               cobol.equals("IDENTIFICATION DIVISION") ||
+               cobol.equals("IDENTIFICATION DIVISION.") ||
+               cobol.equals("ENVIRONMENT DIVISION") ||
+               cobol.equals("ENVIRONMENT DIVISION.") ||
+               cobol.equals("DATA DIVISION") ||
+               cobol.equals("DATA DIVISION.") ||
+               cobol.equals("PROCEDURE DIVISION") ||
+               cobol.equals("PROCEDURE DIVISION.") ||
+               // Sous-sections ENVIRONMENT
+               cobol.equals("CONFIGURATION SECTION") ||
+               cobol.equals("CONFIGURATION SECTION.") ||
+               cobol.equals("INPUT-OUTPUT SECTION") ||
+               cobol.equals("INPUT-OUTPUT SECTION.");
+    }
+    
+    /**
+     * Vérifie si une instruction fait partie d'un pattern idiomatique.
+     */
+    private boolean isPartOfIdiomaticPattern(Statement stmt) {
+        if (detectedPatterns == null) return false;
+        
+        Integer score = (Integer) detectedPatterns.get("IDIOMATIC_SCORE");
+        if (score == null || score < 80) return false;
+        
+        // Vérifier si c'est un pattern de traitement de fichier
+        Object patternObj = detectedPatterns.get("FILE_PROCESSING");
+        if (patternObj instanceof CobolPatternDetector.FileProcessingPattern) {
+            CobolPatternDetector.FileProcessingPattern pattern = 
+                (CobolPatternDetector.FileProcessingPattern) patternObj;
+            
+            // Les instructions du pattern idiomatique de traitement fichier
+            Statement.StatementType type = stmt.getType();
+            if (type == Statement.StatementType.OPEN ||
+                type == Statement.StatementType.READ ||
+                type == Statement.StatementType.PERFORM ||
+                type == Statement.StatementType.PERFORM_UNTIL ||
+                type == Statement.StatementType.CLOSE ||
+                type == Statement.StatementType.DISPLAY ||
+                type == Statement.StatementType.STOP_RUN ||
+                type == Statement.StatementType.ADD ||
+                type == Statement.StatementType.MOVE ||
+                type == Statement.StatementType.IF) {
+                return true;
+            }
+        }
+        
+        // Vérifier si c'est un pattern de structure batch
+        Object batchObj = detectedPatterns.get("BATCH_STRUCTURE");
+        if (batchObj instanceof CobolPatternDetector.BatchStructurePattern) {
+            Statement.StatementType type = stmt.getType();
+            // Instructions typiques des patterns batch
+            if (type == Statement.StatementType.PERFORM ||
+                type == Statement.StatementType.PERFORM_UNTIL ||
+                type == Statement.StatementType.DISPLAY ||
+                type == Statement.StatementType.STOP_RUN ||
+                type == Statement.StatementType.ADD ||
+                type == Statement.StatementType.MOVE) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     /**
@@ -63,6 +192,9 @@ public class ReportGenerator {
         int unconverted = 0;
 
         for (DataItem item : program.getDataItems()) {
+            // Ajouter à la table de correspondance
+            addDataItemToMappingTable(item);
+
             if (isDataItemConvertible(item)) {
                 converted++;
             } else {
@@ -74,6 +206,96 @@ public class ReportGenerator {
         report.setTotalDataItems(total);
         report.setConvertedDataItems(converted);
         report.setUnconvertedDataItems(unconverted);
+    }
+
+    /**
+     * Ajoute un DataItem à la table de correspondance COBOL → Java.
+     */
+    private void addDataItemToMappingTable(DataItem item) {
+        // Ne pas ajouter les items de groupe (sans PICTURE)
+        if (!item.isElementary()) {
+            return;
+        }
+
+        String cobolName = item.getName();
+        String cobolType = formatCobolType(item);
+        String javaName = item.getJavaFieldName();
+        String javaType = item.getJavaType() != null ? item.getJavaType() : "String";
+
+        TypeMappingEntry entry = report.addTypeMapping(cobolName, cobolType, javaName, javaType);
+
+        // Enrichir avec les métadonnées
+        entry.setCobolSection(item.getSection());
+        entry.setCobolLevel(item.getLevel());
+
+        // Ajouter commentaire de conversion
+        String comment = generateConversionComment(item);
+        if (comment != null) {
+            entry.setConversionComment(comment);
+        }
+
+        // Marquer les REDEFINES
+        if (item.getRedefines() != null && !item.getRedefines().isEmpty()) {
+            entry.setRedefines(true);
+        }
+
+        // Marquer les OCCURS
+        if (item.getOccursCount() != null && item.getOccursCount() > 0) {
+            entry.setOccurs(true);
+            entry.setOccursInfo(String.format("OCCURS %d", item.getOccursCount()));
+        }
+    }
+
+    /**
+     * Formate le type COBOL (PICTURE + USAGE).
+     */
+    private String formatCobolType(DataItem item) {
+        StringBuilder type = new StringBuilder();
+
+        if (item.getPictureClause() != null) {
+            type.append("PIC ").append(item.getPictureClause());
+        }
+
+        if (item.getUsage() != null && !item.getUsage().isEmpty()) {
+            if (type.length() > 0) type.append(" ");
+            type.append(item.getUsage());
+        }
+
+        return type.length() > 0 ? type.toString() : "N/A";
+    }
+
+    /**
+     * Génère un commentaire sur la conversion d'un DataItem.
+     */
+    private String generateConversionComment(DataItem item) {
+        List<String> comments = new ArrayList<>();
+
+        // Décimaux
+        if (item.hasDecimals()) {
+            comments.add("Décimaux préservés avec BigDecimal");
+        }
+
+        // COMP-3
+        if (item.isComp3()) {
+            comments.add("COMP-3 → BigDecimal (packed decimal)");
+        }
+
+        // Date potentielle
+        if (item.isPotentialDateField()) {
+            comments.add("Champ date potentiel → LocalDate");
+        }
+
+        // FILLER
+        if (item.isFiller()) {
+            comments.add("FILLER - Champ de remplissage");
+        }
+
+        // 88-level
+        if (item.isConditionName()) {
+            comments.add("Condition 88-level → méthode boolean");
+        }
+
+        return comments.isEmpty() ? null : String.join("; ", comments);
     }
 
     /**
@@ -159,9 +381,13 @@ public class ReportGenerator {
             case COMPUTE:
             case IF:
             case PERFORM:
+            case PERFORM_UNTIL:   // ✅ AJOUTÉ
             case READ:
             case WRITE:
+            case OPEN:            // ✅ AJOUTÉ
+            case CLOSE:           // ✅ AJOUTÉ
             case DISPLAY:
+            case ADD:             // ✅ AJOUTÉ - Counter patterns + basic arithmetic
             case STOP_RUN:
                 return ConversionStatus.CONVERTED;
             default:
@@ -173,6 +399,16 @@ public class ReportGenerator {
      * Ajoute un cas de conversion partielle au rapport.
      */
     private void addPartialConversionCase(Statement stmt) {
+        // Ignorer les sections déclaratives (non-exécutables)
+        if (isDeclarativeSection(stmt)) {
+            return;
+        }
+        
+        // Ne pas ajouter de warning si fait partie d'un pattern idiomatique
+        if (isPartOfIdiomaticPattern(stmt)) {
+            return;
+        }
+        
         String code = stmt.getOriginalCobol() != null ? stmt.getOriginalCobol().toUpperCase() : "";
 
         if (code.contains("EVALUATE")) {
@@ -218,6 +454,16 @@ public class ReportGenerator {
      * Ajoute un cas non converti au rapport.
      */
     private void addUnconvertedCase(Statement stmt) {
+        // Ignorer les sections déclaratives (non-exécutables)
+        if (isDeclarativeSection(stmt)) {
+            return;
+        }
+        
+        // Ne pas ajouter de warning si fait partie d'un pattern idiomatique
+        if (isPartOfIdiomaticPattern(stmt)) {
+            return;
+        }
+        
         String code = stmt.getOriginalCobol() != null ? stmt.getOriginalCobol().toUpperCase() : "";
 
         if (code.contains("EXEC CICS")) {

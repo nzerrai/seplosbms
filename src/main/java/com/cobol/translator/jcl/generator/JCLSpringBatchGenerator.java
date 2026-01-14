@@ -330,14 +330,21 @@ public class JCLSpringBatchGenerator {
             return input;
         }
 
-        String[] parts = input.split("[-_\\s]+");
+        // Remove leading digits to create valid Java identifier
+        String cleaned = input.replaceFirst("^[0-9]+", "");
+        
+        String[] parts = cleaned.split("[-_\\s]+");
         StringBuilder result = new StringBuilder();
 
         for (String part : parts) {
             if (!part.isEmpty()) {
-                result.append(part.substring(0, 1).toUpperCase());
-                if (part.length() > 1) {
-                    result.append(part.substring(1).toLowerCase());
+                // Remove any remaining leading digits from each part
+                String cleanPart = part.replaceFirst("^[0-9]+", "");
+                if (!cleanPart.isEmpty()) {
+                    result.append(cleanPart.substring(0, 1).toUpperCase());
+                    if (cleanPart.length() > 1) {
+                        result.append(cleanPart.substring(1).toLowerCase());
+                    }
                 }
             }
         }

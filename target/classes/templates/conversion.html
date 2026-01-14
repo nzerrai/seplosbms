@@ -7,117 +7,336 @@
     <link rel="stylesheet" href="/css/conversion.css">
 </head>
 <body>
+    <div class="theme-toggle">
+        <button id="themeBtn" class="theme-btn" title="Basculer le mode sombre">🌙</button>
+    </div>
+
     <div class="container">
         <header>
-            <h1>🔄 COBOL to Java Spring Batch Converter</h1>
-            <p class="subtitle">Convertissez vos programmes COBOL en projets Spring Batch modernes</p>
+            <div class="header-content">
+                <h1><span class="logo">🏦</span> Convertisseur COBOL to Java</h1>
+                <p class="subtitle">Solution professionnelle de modernisation d'applications legacy</p>
+                <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                    <a href="/mapping" class="header-link" style="color: white; text-decoration: none; padding: 8px 16px; background: rgba(255,255,255,0.2); border-radius: 4px; display: inline-block; transition: all 0.3s;">
+                        🔍 Analyse de Mapping Détaillée
+                    </a>
+                    <a href="/diagrams" class="header-link" style="color: white; text-decoration: none; padding: 8px 16px; background: rgba(255,255,255,0.2); border-radius: 4px; display: inline-block; transition: all 0.3s;">
+                        📊 Diagrammes Algorithmiques
+                    </a>
+                </div>
+            </div>
         </header>
 
         <div class="main-content">
             <div class="upload-section">
-                <h2>📁 Upload de fichiers COBOL</h2>
+                <div class="section-header">
+                    <h2>📁 Configuration du projet</h2>
+                    <button class="help-btn" id="helpBtn" title="Afficher l'aide">❓</button>
+                </div>
 
                 <form id="conversionForm" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label for="projectName">Nom du projet *</label>
-                        <input type="text" id="projectName" name="projectName"
-                               placeholder="my-batch-project" required>
-                        <small>Le nom du projet Spring Batch généré</small>
+                    <!-- Configuration basique -->
+                    <div class="form-section">
+                        <h3>Configuration basique</h3>
+                        
+                        <div class="form-group">
+                            <label for="projectName">Nom du projet <span class="required">*</span></label>
+                            <input type="text" id="projectName" name="projectName"
+                                   placeholder="mon-projet-batch" required
+                                   pattern="[a-z0-9\-]+" title="Lettres minuscules, chiffres et tirets uniquement">
+                            <small>Le nom du projet Spring Batch généré</small>
+                            <div class="validation-hint">ℹ️ Format: lettres minuscules, chiffres, tirets</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="basePackage">Package de base</label>
+                            <input type="text" id="basePackage" name="basePackage"
+                                   placeholder="com.example.batch" value="com.example.batch"
+                                   pattern="^([a-z]+\.)*[a-z]+$" title="Format de package Java valide">
+                            <small>Le package Java de base pour les classes générées</small>
+                            <div class="validation-hint">ℹ️ Format: com.company.project</div>
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="basePackage">Package de base</label>
-                        <input type="text" id="basePackage" name="basePackage"
-                               placeholder="com.example.batch" value="com.example.batch">
-                        <small>Le package Java de base pour les classes générées</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="cobolFiles">Fichiers COBOL et JCL *</label>
-                        <div class="file-upload-wrapper">
-                            <input type="file" id="cobolFiles" name="files"
-                                   accept=".cob,.cbl,.jcl" multiple required>
-                            <div class="file-upload-area" id="fileUploadArea">
-                                <div class="upload-icon">📤</div>
-                                <p>Cliquez ou glissez-déposez vos fichiers COBOL ici</p>
-                                <small>Formats acceptés: .cob, .cbl, .jcl (optionnel)</small>
-                                <small class="jcl-note">💡 Ajoutez un fichier JCL pour une génération automatique complète!</small>
+                    <!-- Options avancées -->
+                    <div class="form-section">
+                        <button type="button" class="section-toggle" id="advancedToggle">
+                            ⚡ Options avancées <span class="toggle-icon">▼</span>
+                        </button>
+                        <div class="advanced-options" id="advancedOptions" style="display: none;">
+                            <div class="form-group checkbox-group">
+                                <label>
+                                    <input type="checkbox" id="generateTests" checked>
+                                    <span>Générer les tests unitaires</span>
+                                </label>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <label>
+                                    <input type="checkbox" id="generateDocs" checked>
+                                    <span>Générer la documentation</span>
+                                </label>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <label>
+                                    <input type="checkbox" id="useGradle">
+                                    <span>Utiliser Gradle au lieu de Maven</span>
+                                </label>
                             </div>
                         </div>
-                        <div id="fileList" class="file-list"></div>
                     </div>
 
-                    <button type="submit" class="btn-primary" id="convertBtn">
-                        <span class="btn-text">🚀 Convertir en Spring Batch</span>
-                        <span class="spinner" id="spinner"></span>
-                    </button>
+                    <!-- Upload de fichiers -->
+                    <div class="form-section">
+                        <h3>Fichiers source</h3>
+                        
+                        <!-- Upload COBOL -->
+                        <div class="form-group">
+                            <label for="cobolFiles">Fichiers COBOL <span class="required">*</span></label>
+                            <div class="file-upload-wrapper">
+                                <input type="file" id="cobolFiles" name="cobolFiles"
+                                       accept=".cob,.cbl" multiple required>
+                                <div class="file-upload-area" id="cobolUploadArea">
+                                    <div class="upload-content">
+                                        <div class="upload-icon">📄</div>
+                                        <p class="upload-title">Déposez vos fichiers COBOL ici</p>
+                                        <p class="upload-desc">ou cliquez pour parcourir</p>
+                                        <small>Formats: .cob, .cbl</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="cobolFileList" class="file-list"></div>
+                        </div>
+                        
+                        <!-- Upload JCL (optionnel) -->
+                        <div class="form-group">
+                            <label for="jclFiles">Fichiers JCL <span class="optional">(optionnel)</span></label>
+                            <div class="file-upload-wrapper">
+                                <input type="file" id="jclFiles" name="jclFiles"
+                                       accept=".jcl" multiple>
+                                <div class="file-upload-area jcl-optional" id="jclUploadArea">
+                                    <div class="upload-content">
+                                        <div class="upload-icon">📋</div>
+                                        <p class="upload-title">Déposez vos fichiers JCL ici</p>
+                                        <p class="upload-desc">ou cliquez pour parcourir</p>
+                                        <small>Format: .jcl</small>
+                                        <small class="jcl-note">💡 Pour génération complète</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="jclFileList" class="file-list"></div>
+                        </div>
+                    </div>
+
+                    <!-- Boutons d'action -->
+                    <div class="action-buttons">
+                        <button type="submit" class="btn-primary" id="convertBtn">
+                            <span class="btn-text">🚀 Convertir</span>
+                            <span class="spinner" id="spinner"></span>
+                        </button>
+                        <button type="reset" class="btn-secondary">↺ Réinitialiser</button>
+                    </div>
                 </form>
 
+                <!-- Progression -->
                 <div id="progressSection" class="progress-section hidden">
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progressFill"></div>
+                    <div class="progress-header">
+                        <h3>Conversion en cours</h3>
+                        <span class="progress-percent" id="progressPercent">0%</span>
                     </div>
-                    <p class="progress-text" id="progressText">Conversion en cours...</p>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                    </div>
+                    <div class="progress-steps">
+                        <div class="progress-step" id="step-parsing"><span class="step-icon">⏳</span> Parsing COBOL</div>
+                        <div class="progress-step" id="step-ast"><span class="step-icon">⏳</span> Construction AST</div>
+                        <div class="progress-step" id="step-generation"><span class="step-icon">⏳</span> Génération Java</div>
+                        <div class="progress-step" id="step-maven"><span class="step-icon">⏳</span> Configuration Maven</div>
+                    </div>
                 </div>
 
+                <!-- Résultats -->
                 <div id="resultSection" class="result-section hidden">
                     <div class="success-message">
-                        <h3>✅ Conversion réussie!</h3>
+                        <div class="success-header">
+                            <h3>✅ Conversion réussie!</h3>
+                            <span class="time-elapsed" id="timeElapsed"></span>
+                        </div>
                         <p>Votre projet Spring Batch a été généré avec succès.</p>
-                        <p id="downloadMessage"></p>
+                        
+                        <!-- Rapports de conversion (un par fichier) -->
+                        <div id="reportCardsContainer" class="report-cards-container">
+                            <!-- Report cards will be dynamically added here by JavaScript -->
+                        </div>
+                        
+                        <!-- Rapport d'inférence algorithmique (si disponible) -->
+                        <div id="inferenceReportSection" class="inference-report-section hidden">
+                            <h3>🤖 Rapport d'inférence de champs</h3>
+                            <div class="inference-summary">
+                                <div class="summary-metric">
+                                    <span class="metric-label">Champs inférés</span>
+                                    <span class="metric-value" id="inferenceFieldsCount">0</span>
+                                </div>
+                                <div class="summary-metric">
+                                    <span class="metric-label">Qualité</span>
+                                    <span class="metric-value" id="inferenceQualityScore">0%</span>
+                                </div>
+                                <div class="summary-metric">
+                                    <span class="metric-label">Confiance moyenne</span>
+                                    <span class="metric-value" id="inferenceAvgConfidence">0%</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Champs inférés -->
+                            <div class="inference-section">
+                                <h4>📋 Champs inférés</h4>
+                                <table class="inference-table" id="inferenceFieldsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Champ</th>
+                                            <th>Type Java</th>
+                                            <th>Confiance</th>
+                                            <th>Contextes</th>
+                                            <th>Suggestions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="inferenceFieldsTbody">
+                                        <!-- Fields will be added dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <!-- Distribution de types -->
+                            <div class="inference-section">
+                                <h4>📊 Distribution des types Java</h4>
+                                <div id="typeDistributionChart" class="type-distribution-chart">
+                                    <!-- Chart will be rendered here -->
+                                </div>
+                            </div>
+                            
+                            <!-- Recommandations intelligentes -->
+                            <div class="inference-section">
+                                <h4>💡 Recommandations intelligentes</h4>
+                                <div id="recommendationsContainer" class="recommendations-container">
+                                    <!-- Recommendations will be added dynamically -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <p id="downloadMessage" class="download-info"></p>
+                        <div class="result-actions">
+                            <button class="btn-primary" id="downloadBtn">⬇️ Télécharger le projet</button>
+                            <button class="btn-secondary" id="resetBtn">🔄 Nouvelle conversion</button>
+                        </div>
                     </div>
                 </div>
 
+                <!-- Erreurs -->
                 <div id="errorSection" class="error-section hidden">
                     <div class="error-message">
-                        <h3>❌ Erreur</h3>
+                        <h3>❌ Erreur de conversion</h3>
                         <p id="errorMessage"></p>
+                        <button class="btn-secondary" id="closeErrorBtn">Fermer</button>
                     </div>
                 </div>
             </div>
 
-            <div class="info-section">
-                <h2>ℹ️ Informations</h2>
-
-                <div class="info-card">
-                    <h3>📦 Contenu du projet généré</h3>
-                    <ul>
-                        <li><strong>Jobs Spring Batch</strong> - Configuration complète des jobs</li>
-                        <li><strong>Entités</strong> - Modèles de données Java</li>
-                        <li><strong>Processors</strong> - Logique métier</li>
-                        <li><strong>Configuration</strong> - Application Spring Boot</li>
-                        <li><strong>pom.xml</strong> - Dépendances Maven</li>
-                        <li><strong>README.md</strong> - Documentation</li>
-                    </ul>
+            <!-- Panneau d'information -->
+            <aside class="info-section">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="output">📦 Résultat</button>
+                    <button class="tab-btn" data-tab="steps">🎯 Étapes</button>
+                    <button class="tab-btn" data-tab="tips">💡 Conseils</button>
                 </div>
 
-                <div class="info-card">
-                    <h3>🎯 Étapes de conversion</h3>
-                    <ol>
-                        <li>Parsing des fichiers COBOL avec ANTLR4</li>
-                        <li>Construction de l'AST (Abstract Syntax Tree)</li>
-                        <li>Génération des classes Java</li>
-                        <li>Création de la structure Maven</li>
-                        <li>Téléchargement du projet ZIP</li>
-                    </ol>
-                </div>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab-output">
+                        <h3>📦 Contenu du projet généré</h3>
+                        <ul class="feature-list">
+                            <li><strong>Jobs Spring Batch</strong><br><small>Configuration complète des jobs</small></li>
+                            <li><strong>Entités JPA</strong><br><small>Modèles de données Java mappés</small></li>
+                            <li><strong>Processors</strong><br><small>Logique métier et transformations</small></li>
+                            <li><strong>Configuration Spring</strong><br><small>Application.properties prédéfini</small></li>
+                            <li><strong>pom.xml</strong><br><small>Dépendances Maven optimisées</small></li>
+                            <li><strong>Tests unitaires</strong><br><small>Suite de tests JUnit 5</small></li>
+                            <li><strong>README.md</strong><br><small>Documentation complète</small></li>
+                        </ul>
+                    </div>
 
-                <div class="info-card">
-                    <h3>💡 Conseils</h3>
-                    <ul>
-                        <li>Assurez-vous que vos fichiers COBOL sont syntaxiquement corrects</li>
-                        <li>Utilisez un nom de projet valide (lettres, chiffres, tirets)</li>
-                        <li>Le package doit suivre la convention Java (ex: com.company.project)</li>
-                        <li>Vous pouvez uploader plusieurs fichiers COBOL en une seule fois</li>
-                    </ul>
+                    <div class="tab-pane" id="tab-steps">
+                        <h3>🎯 Processus de conversion</h3>
+                        <ol class="steps-list">
+                            <li><strong>Parsing COBOL</strong><br><small>Analyse syntaxique avec ANTLR4</small></li>
+                            <li><strong>Construction AST</strong><br><small>Arbre de syntaxe abstraite</small></li>
+                            <li><strong>Analyse sémantique</strong><br><small>Vérification de types et symboles</small></li>
+                            <li><strong>Génération Java</strong><br><small>Conversion en classes Java</small></li>
+                            <li><strong>Configuration Maven</strong><br><small>Structure de projet Spring Batch</small></li>
+                            <li><strong>Packaging</strong><br><small>Création du fichier ZIP</small></li>
+                        </ol>
+                    </div>
+
+                    <div class="tab-pane" id="tab-tips">
+                        <h3>💡 Conseils pratiques</h3>
+                        <ul class="tips-list">
+                            <li>✓ Vérifiez la syntaxe COBOL avant upload</li>
+                            <li>✓ Utilisez des noms de projet valides (lettres, chiffres, tirets)</li>
+                            <li>✓ Suivez la convention Java pour les packages</li>
+                            <li>✓ Uploadez plusieurs fichiers pour un projet complet</li>
+                            <li>✓ Ajoutez un JCL pour génération automatisée</li>
+                            <li>✓ Testez le projet généré localement</li>
+                            <li>✓ Consultez le README pour documentation détaillée</li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
+            </aside>
         </div>
 
         <footer>
-            <p>Développé avec ❤️ | COBOL to Java Spring Batch Translator</p>
-            <p><small>Powered by ANTLR4 + AST Parser</small></p>
+            <div class="footer-content">
+                <p>Développé avec ❤️ | COBOL to Java Spring Batch Translator</p>
+                <p><small>Powered by ANTLR4 + AST Parser + Spring Boot 3.2</small></p>
+                <div class="footer-links">
+                    <a href="#" id="docsLink">Documentation</a>
+                    <a href="#" id="feedbackLink">Feedback</a>
+                    <a href="#" id="aboutLink">À propos</a>
+                </div>
+            </div>
         </footer>
+    </div>
+
+    <!-- Modal pour afficher le code Java -->
+    <div id="codeModal" class="code-modal" style="display: none;">
+        <div class="code-modal-overlay" onclick="closeCodeModal()"></div>
+        <div class="code-modal-content">
+            <div class="code-modal-header">
+                <h3 id="codeModalTitle">Code Java Généré</h3>
+                <button class="code-modal-close" onclick="closeCodeModal()" title="Fermer">✕</button>
+            </div>
+            <div class="code-modal-body">
+                <div class="code-info">
+                    <div class="info-item">
+                        <span class="info-label">📄 Fichier:</span>
+                        <span class="info-value" id="codeModalFile"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">📍 Ligne:</span>
+                        <span class="info-value" id="codeModalLine"></span>
+                    </div>
+                    <div class="info-item" id="codeModalCobolContainer" style="display: none;">
+                        <span class="info-label">📝 COBOL:</span>
+                        <span class="info-value" id="codeModalCobol"></span>
+                    </div>
+                </div>
+                <div class="code-snippet-container">
+                    <div class="code-snippet-header">
+                        <span>Code Java</span>
+                        <button class="copy-code-btn" onclick="copyCodeToClipboard()" title="Copier">📋 Copier</button>
+                    </div>
+                    <pre id="codeModalSnippet"><code></code></pre>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="/js/conversion.js"></script>

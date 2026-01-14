@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagrammes Algorithmiques - COBOL to Java</title>
+    <link rel="stylesheet" href="/css/diagrams.css">
+    <!-- Mermaid.js pour le rendu des diagrammes -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+    <div class="theme-toggle">
+        <button id="themeBtn" class="theme-btn" title="Basculer le mode sombre">🌙</button>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1><span class="logo">📊</span> DIAGRAMMES ALGORITHMIQUES</h1>
+                <p class="subtitle">Visualisation COBOL → Java Spring Batch</p>
+            </div>
+            <nav class="header-nav">
+                <a href="/conversion" class="nav-link">🔄 Convertir</a>
+                <a href="/mapping" class="nav-link">🔍 Mapping</a>
+                <a href="/diagrams" class="nav-link active">📊 Diagrammes</a>
+            </nav>
+        </header>
+
+        <div class="main-content">
+            <!-- Sélecteur de programme -->
+            <div class="program-selector">
+                <div class="section-header">
+                    <h2>📂 Choisir un programme</h2>
+                </div>
+                <div class="program-cards">
+                    <div class="program-card" data-program="order-processor">
+                        <div class="card-icon">📦</div>
+                        <h3>ORDER-PROCESSOR</h3>
+                        <p>Traitement de commandes</p>
+                        <span class="badge success">100% converti</span>
+                    </div>
+                    <div class="program-card" data-program="employee-payroll">
+                        <div class="card-icon">💰</div>
+                        <h3>EMPLOYEE-PAYROLL</h3>
+                        <p>Calcul de paie</p>
+                        <span class="badge success">100% converti</span>
+                    </div>
+                    <div class="program-card" data-program="data-transformer">
+                        <div class="card-icon">🔄</div>
+                        <h3>DATA-TRANSFORMER</h3>
+                        <p>Transformation données</p>
+                        <span class="badge warning">84% converti</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation des diagrammes -->
+            <div class="diagram-navigation" id="diagramNav" style="display: none;">
+                <div class="section-header">
+                    <h2>📊 Type de diagramme</h2>
+                </div>
+                <div class="diagram-tabs">
+                    <button class="tab-btn active" data-tab="architecture">
+                        <span class="tab-icon">🏗️</span>
+                        Architecture
+                    </button>
+                    <button class="tab-btn" data-tab="flowchart">
+                        <span class="tab-icon">🔀</span>
+                        Flux d'exécution
+                    </button>
+                    <button class="tab-btn" data-tab="dataflow">
+                        <span class="tab-icon">💾</span>
+                        Flux de données
+                    </button>
+                    <button class="tab-btn" data-tab="sequence">
+                        <span class="tab-icon">📝</span>
+                        Séquence
+                    </button>
+                    <button class="tab-btn" data-tab="state">
+                        <span class="tab-icon">⚡</span>
+                        États
+                    </button>
+                </div>
+            </div>
+
+            <!-- Zone de rendu du diagramme -->
+            <div class="diagram-container" id="diagramContainer" style="display: none;">
+                <div class="diagram-header">
+                    <h3 id="diagramTitle">Diagramme</h3>
+                    <div class="diagram-actions">
+                        <button class="action-btn" id="zoomInBtn" title="Zoom avant">
+                            <span>🔍</span> Zoom +
+                        </button>
+                        <button class="action-btn" id="zoomOutBtn" title="Zoom arrière">
+                            <span>🔍</span> Zoom -
+                        </button>
+                        <button class="action-btn" id="resetZoomBtn" title="Réinitialiser le zoom">
+                            <span>↺</span> Réinitialiser
+                        </button>
+                        <button class="action-btn" id="downloadBtn" title="Télécharger en PNG">
+                            <span>💾</span> Télécharger
+                        </button>
+                    </div>
+                </div>
+
+                <div class="diagram-viewport" id="diagramViewport">
+                    <div class="diagram-canvas" id="diagramCanvas">
+                        <!-- Le diagramme Mermaid sera inséré ici -->
+                    </div>
+                </div>
+
+                <div class="diagram-info">
+                    <div class="info-item">
+                        <span class="info-label">Programme:</span>
+                        <span class="info-value" id="infoProgramme">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Type:</span>
+                        <span class="info-value" id="infoType">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Nœuds:</span>
+                        <span class="info-value" id="infoNodes">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Complexité:</span>
+                        <span class="info-value" id="infoComplexity">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Légende -->
+            <div class="legend-container" id="legendContainer" style="display: none;">
+                <div class="section-header">
+                    <h3>🎨 Légende des couleurs</h3>
+                </div>
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #e1f5ff;"></span>
+                        <span class="legend-label">Point d'entrée principal</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #fff9e1;"></span>
+                        <span class="legend-label">Initialisation</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #e8f5e9;"></span>
+                        <span class="legend-label">Traitement principal</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #fce4ec;"></span>
+                        <span class="legend-label">Finalisation</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #fff3e0;"></span>
+                        <span class="legend-label">Décision/Switch</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #ef5350;"></span>
+                        <span class="legend-label">Erreur/Invalid</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section de comparaison -->
+            <div class="comparison-section" id="comparisonSection" style="display: none;">
+                <div class="section-header">
+                    <h3>⚖️ Comparaison COBOL vs Java</h3>
+                </div>
+                <div class="comparison-grid">
+                    <div class="comparison-card">
+                        <h4>COBOL</h4>
+                        <div id="cobolComparison" class="comparison-content"></div>
+                    </div>
+                    <div class="comparison-card">
+                        <h4>Java Spring Batch</h4>
+                        <div id="javaComparison" class="comparison-content"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>COBOL to Java Spring Batch Translator v1.0.0</p>
+            <p>© 2026 - Généré automatiquement</p>
+        </footer>
+    </div>
+
+    <script src="/js/diagrams.js"></script>
+</body>
+</html>

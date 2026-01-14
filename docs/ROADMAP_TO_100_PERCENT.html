@@ -1,0 +1,2447 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roadmap vers 100% - COBOL → Java Spring Batch</title>
+    <style>
+        @page { size: A4; margin: 2cm; }
+        @media print {
+            body { font-size: 10pt; }
+            h1 { page-break-before: always; }
+            h1:first-of-type { page-break-before: avoid; }
+            pre, table { page-break-inside: avoid; }
+            .no-print { display: none; }
+        }
+        @media screen {
+            body { max-width: 1200px; margin: 0 auto; padding: 20px; background: #f5f5f5; }
+            .container { background: white; padding: 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; }
+        h1 { color: #d32f2f; border-bottom: 3px solid #d32f2f; padding-bottom: 10px; margin-top: 30px; }
+        h2 { color: #1976d2; border-bottom: 2px solid #1976d2; padding-bottom: 8px; margin-top: 25px; }
+        h3 { color: #388e3c; margin-top: 20px; }
+        h4 { color: #f57c00; margin-top: 15px; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-family: monospace; color: #c7254e; }
+        pre { background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; }
+        pre code { background: transparent; color: inherit; padding: 0; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th { background: #1976d2; color: white; padding: 12px; text-align: left; }
+        td { border: 1px solid #ddd; padding: 10px; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        ul, ol { margin: 15px 0; padding-left: 30px; }
+        li { margin: 8px 0; }
+        .print-button { position: fixed; top: 20px; right: 20px; background: #d32f2f; color: white; padding: 12px 24px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .print-button:hover { background: #b71c1c; }
+        .cover-page { text-align: center; padding: 100px 0; page-break-after: always; }
+        .cover-title { font-size: 3em; color: #d32f2f; margin-bottom: 20px; }
+        .cover-subtitle { font-size: 1.5em; color: #1976d2; margin-bottom: 40px; }
+    </style>
+</head>
+<body>
+    <button class="print-button no-print" onclick="window.print()">🖨️ Imprimer / PDF</button>
+    <div class="container">
+        <div class="cover-page">
+            <h1 class="cover-title">🎯 ROADMAP VERS 100%</h1>
+            <p class="cover-subtitle">COBOL → Java Spring Batch</p>
+            <p class="cover-subtitle">Plan d'Implémentation Technique Détaillé</p>
+            <div style="margin-top: 60px;">
+                <p><strong>Version:</strong> 1.0</p>
+                <p><strong>Date:</strong> 08 Janvier 2026</p>
+                <p><strong>Équipe:</strong> Développement COBOL→Java Translator</p>
+            </div>
+        </div>
+        <div id="content">
+<h1>🎯 ROADMAP VERS 100% DE CONVERSION COBOL → JAVA</h1>
+
+<p><strong>Document de Planification Stratégique</strong>
+<strong>Version:</strong> 1.0
+<strong>Date:</strong> 08 janvier 2026
+<strong>Objectif:</strong> Atteindre 99%+ de taux de conversion automatique</p>
+
+<p>---</p>
+
+<h2>📊 ÉTAT DES LIEUX</h2>
+
+<h3>Métriques Actuelles</h3>
+
+<p>| Indicateur | Valeur Actuelle | Cible |
+|------------|----------------|-------|
+| <strong>Taux de conversion moyen</strong> | 76-82% | 99%+ |
+| <strong>Constructions COBOL supportées</strong> | 82% (80/98) | 99% (97/98) |
+| <strong>TODOs non résolus</strong> | 105 | 0 |
+| <strong>Couverture de tests</strong> | ~80% | 95%+ |
+| <strong>Support EXEC SQL</strong> | 0% | 95% |
+| <strong>Support EXEC CICS</strong> | 0% | 90% |
+| <strong>REDEFINES complexes</strong> | 70% | 95% |</p>
+
+<h3>Gaps Principaux Identifiés</h3>
+
+<ol>
+<li><strong>EXEC SQL/CICS</strong> non supportés (impact: -15 à -20%)</li>
+<li><strong>105 TODOs</strong> non implémentés (impact: -5 à -8%)</li>
+<li><strong>REDEFINES complexes</strong> incomplets (impact: -3 à -5%)</li>
+<li><strong>Tests E2E</strong> absents (impact qualité)</li>
+<li><strong>OCCURS DEPENDING ON</strong> partiellement supporté (impact: -2 à -3%)</li>
+</ol>
+
+<p>---</p>
+
+<h2>🎯 PLAN D'ACTION GLOBAL</h2>
+
+<h3>Vue d'Ensemble des Phases</h3>
+
+<p><pre><code class="language-">┌────────────────────────────────────────────────────────────────┐
+│ PHASE 1: FONDATIONS CRITIQUES (3 mois)                        │
+│ Objectif: 82% → 92-95%                                         │
+│ • Support EXEC SQL → JPA                                       │
+│ • Support EXEC CICS → REST API                                 │
+│ • Résolution de tous les TODOs                                 │
+│ • REDEFINES complexes                                          │
+└────────────────────────────────────────────────────────────────┘
+                              ↓
+┌────────────────────────────────────────────────────────────────┐
+│ PHASE 2: ROBUSTESSE & QUALITÉ (2 mois)                        │
+│ Objectif: 92-95% → 97-98%                                      │
+│ • OCCURS DEPENDING ON dynamique                                │
+│ • EVALUATE ALSO avancé                                         │
+│ • INSPECT combiné (TALLYING + REPLACING)                       │
+│ • SORT gros volumes (external sort)                            │
+│ • Suite de tests complète (E2E, performance)                   │
+└────────────────────────────────────────────────────────────────┘
+                              ↓
+┌────────────────────────────────────────────────────────────────┐
+│ PHASE 3: EXCELLENCE & OPTIMISATION (1.5 mois)                 │
+│ Objectif: 97-98% → 99-100%                                     │
+│ • Refactorisation automatique GO TO                            │
+│ • Génération améliorée (validation JPA, relations, etc.)       │
+│ • Support CI/CD (GitHub Actions, GitLab CI, Jenkins)           │
+│ • UI Web améliorée (drag & drop, temps réel, comparaison)     │
+└────────────────────────────────────────────────────────────────┘
+</code></pre></p>
+
+<h3>Effort Total Estimé</h3>
+
+<p>| Phase | Effort (jours-homme) | Durée (avec 2-3 devs) | Gain Conversion |
+|-------|---------------------|----------------------|-----------------|
+| <strong>Phase 1</strong> | 130 jours | 3 mois | +10 à +13% |
+| <strong>Phase 2</strong> | 61 jours | 2 mois | +5 à +6% |
+| <strong>Phase 3</strong> | 65 jours | 1.5 mois | +2 à +3% |
+| <strong>TOTAL</strong> | <strong>256 jours</strong> | <strong>6.5 mois</strong> | <strong>+17 à +22%</strong> |</p>
+
+<p><strong>Note:</strong> Avec équipe de 3 développeurs seniors: <strong>~8-9 mois</strong></p>
+
+<p>---</p>
+
+<h1>🔴 PHASE 1: FONDATIONS CRITIQUES</h1>
+
+<p><strong>Durée:</strong> 3 mois
+<strong>Équipe:</strong> 2-3 développeurs
+<strong>Objectif:</strong> Passer de 82% à 92-95% de conversion</p>
+
+<p>---</p>
+
+<h2>EPIC 1.1: Support EXEC SQL → Spring Data JPA</h2>
+
+<p><strong>Priorité:</strong> 🔴 CRITIQUE
+<strong>Impact:</strong> +10 à +12% conversion
+<strong>Effort:</strong> 40 jours
+<strong>Complexité:</strong> Élevée</p>
+
+<h3>Contexte</h3>
+
+<p>30-40% des programmes COBOL mainframe utilisent EXEC SQL pour accéder aux bases DB2/Oracle/IMS. Cette fonctionnalité est <strong>critique</strong> pour la migration d'applications d'entreprise.</p>
+
+<h3>Objectifs</h3>
+
+<ul>
+<li>Parser les statements EXEC SQL embarqués dans COBOL</li>
+<li>Extraire les requêtes SQL et les mapper vers Spring Data JPA</li>
+<li>Générer des repositories JPA avec méthodes typées</li>
+<li>Gérer les curseurs, transactions, et gestion d'erreurs</li>
+</ul>
+
+<h3>User Stories</h3>
+
+<h4>US-1.1.1: Parser EXEC SQL dans COBOL</h4>
+
+<p><strong>En tant que</strong> développeur du convertisseur
+<strong>Je veux</strong> parser les blocs EXEC SQL dans les programmes COBOL
+<strong>Afin de</strong> extraire les requêtes SQL et leurs paramètres host variables</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> Extension de la grammaire ANTLR pour EXEC SQL</li>
+<li><input type="checkbox" disabled> Détection des blocs EXEC SQL ... END-EXEC</li>
+<li><input type="checkbox" disabled> Extraction des host variables (variables COBOL utilisées en SQL)</li>
+<li><input type="checkbox" disabled> Support des statements: SELECT, INSERT, UPDATE, DELETE</li>
+<li><input type="checkbox" disabled> Gestion des curseurs (DECLARE CURSOR, OPEN, FETCH, CLOSE)</li>
+<li><input type="checkbox" disabled> Gestion des transactions (COMMIT, ROLLBACK)</li>
+</ul></p>
+
+<p><strong>Tests:</strong>
+<pre><code class="language-cobol">EXEC SQL
+  SELECT CUST_ID, CUST_NAME, CUST_BALANCE
+  INTO :WS-CUST-ID, :WS-CUST-NAME, :WS-CUST-BALANCE
+  FROM CUSTOMER
+  WHERE CUST_STATUS = :WS-STATUS
+END-EXEC.
+</code></pre></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Créer <code>ExecSqlLexer.g4</code> et <code>ExecSqlParser.g4</code> (4 jours)</li>
+<li>Implémenter <code>ExecSqlASTBuilder</code> (3 jours)</li>
+<li>Créer modèle AST pour statements SQL (2 jours)</li>
+<li>Tests unitaires (parser SQL simple, complexe, curseurs) (3 jours)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 12 jours</p>
+
+<p>---</p>
+
+<h4>US-1.1.2: Mapper EXEC SQL SELECT vers JPA Repository</h4>
+
+<p><strong>En tant que</strong> développeur du convertisseur
+<strong>Je veux</strong> convertir les SELECT EXEC SQL en méthodes de repository JPA
+<strong>Afin de</strong> générer du code Java idiomatique et type-safe</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> SELECT simple → findBy...()</li>
+<li><input type="checkbox" disabled> SELECT avec WHERE → méthode query dynamique</li>
+<li><input type="checkbox" disabled> SELECT avec JOIN → @Query avec JPQL</li>
+<li><input type="checkbox" disabled> SELECT INTO host variables → mapping vers entité</li>
+<li><input type="checkbox" disabled> Gestion des résultats multiples (curseurs) → List<Entity></li>
+<li><input type="checkbox" disabled> Gestion des résultats uniques → Optional<Entity></li>
+</ul></p>
+
+<p><strong>Exemple:</strong></p>
+
+<p><pre><code class="language-cobol">EXEC SQL
+  SELECT CUST_ID, CUST_NAME
+  INTO :WS-CUST-ID, :WS-CUST-NAME
+  FROM CUSTOMER
+  WHERE CUST_STATUS = :WS-STATUS
+END-EXEC.
+</code></pre></p>
+
+<p>→</p>
+
+<p><pre><code class="language-java">@Repository
+public interface CustomerRepository extends JpaRepository&lt;Customer, String&gt; {
+
+    @Query("SELECT c FROM Customer c WHERE c.status = :status")
+    Optional&lt;Customer&gt; findByStatus(@Param("status") String status);
+}
+
+// Dans le processor:
+Optional&lt;Customer&gt; customer = customerRepository.findByStatus(record.getWsStatus());
+if (customer.isPresent()) {
+    record.setWsCustId(customer.get().getCustId());
+    record.setWsCustName(customer.get().getCustName());
+}
+</code></pre></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Créer <code>ExecSqlToJpaTranslator</code> (5 jours)</li>
+<li>Créer <code>RepositoryMethodGenerator</code> (4 jours)</li>
+<li>Mapper types SQL → types Java/JPA (2 jours)</li>
+<li>Gérer les jointures (FROM table1, table2) (3 jours)</li>
+<li>Tests unitaires (SELECT simple, WHERE, JOIN) (4 jours)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 18 jours</p>
+
+<p>---</p>
+
+<h4>US-1.1.3: Mapper EXEC SQL INSERT/UPDATE/DELETE vers JPA</h4>
+
+<p><strong>En tant que</strong> développeur du convertisseur
+<strong>Je veux</strong> convertir INSERT/UPDATE/DELETE en méthodes JPA
+<strong>Afin de</strong> gérer les opérations d'écriture en base</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> INSERT → repository.save()</li>
+<li><input type="checkbox" disabled> UPDATE → repository.save() avec entité existante</li>
+<li><input type="checkbox" disabled> DELETE → repository.deleteById() ou delete()</li>
+<li><input type="checkbox" disabled> Gestion des erreurs SQL (SQLCODE) → exceptions Java</li>
+<li><input type="checkbox" disabled> Support des transactions</li>
+</ul></p>
+
+<p><strong>Exemple:</strong></p>
+
+<p><pre><code class="language-cobol">EXEC SQL
+  INSERT INTO CUSTOMER (CUST_ID, CUST_NAME, CUST_STATUS)
+  VALUES (:WS-CUST-ID, :WS-CUST-NAME, :WS-STATUS)
+END-EXEC.
+
+IF SQLCODE NOT = 0
+   MOVE 'ERROR' TO WS-ERROR-FLAG
+END-IF.
+</code></pre></p>
+
+<p>→</p>
+
+<p><pre><code class="language-java">try {
+    Customer newCustomer = new Customer();
+    newCustomer.setCustId(record.getWsCustId());
+    newCustomer.setCustName(record.getWsCustName());
+    newCustomer.setStatus(record.getWsStatus());
+
+    customerRepository.save(newCustomer);
+
+} catch (DataAccessException e) {
+    record.setWsErrorFlag("ERROR");
+    logger.error("Failed to insert customer: {}", e.getMessage());
+}
+</code></pre></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Implémenter traduction INSERT (3 jours)</li>
+<li>Implémenter traduction UPDATE (3 jours)</li>
+<li>Implémenter traduction DELETE (2 jours)</li>
+<li>Gestion des erreurs SQLCODE → exceptions (2 jours)</li>
+<li>Tests unitaires (CRUD complet) (3 jours)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 13 jours</p>
+
+<p>---</p>
+
+<h4>US-1.1.4: Gérer les curseurs EXEC SQL</h4>
+
+<p><strong>En tant que</strong> développeur du convertisseur
+<strong>Je veux</strong> convertir les curseurs SQL en streams/itérateurs Java
+<strong>Afin de</strong> gérer les ensembles de résultats volumineux</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> DECLARE CURSOR → définition de query</li>
+<li><input type="checkbox" disabled> OPEN CURSOR → exécution de la query</li>
+<li><input type="checkbox" disabled> FETCH CURSOR → itération sur les résultats</li>
+<li><input type="checkbox" disabled> CLOSE CURSOR → libération des ressources</li>
+<li><input type="checkbox" disabled> Support curseurs avec paramètres</li>
+</ul></p>
+
+<p><strong>Exemple:</strong></p>
+
+<p><pre><code class="language-cobol">EXEC SQL
+  DECLARE C1 CURSOR FOR
+  SELECT CUST_ID, CUST_NAME
+  FROM CUSTOMER
+  WHERE CUST_STATUS = :WS-STATUS
+END-EXEC.
+
+EXEC SQL OPEN C1 END-EXEC.
+
+PERFORM UNTIL SQLCODE NOT = 0
+   EXEC SQL
+      FETCH C1 INTO :WS-CUST-ID, :WS-CUST-NAME
+   END-EXEC
+
+   IF SQLCODE = 0
+      PERFORM PROCESS-CUSTOMER
+   END-IF
+END-PERFORM.
+
+EXEC SQL CLOSE C1 END-EXEC.
+</code></pre></p>
+
+<p>→</p>
+
+<p><pre><code class="language-java">// Utilisation de Stream pour curseur
+try (Stream&lt;Customer&gt; customerStream = customerRepository.findByStatusStream(record.getWsStatus())) {
+    customerStream.forEach(customer -&gt; {
+        record.setWsCustId(customer.getCustId());
+        record.setWsCustName(customer.getCustName());
+        processCustomer(record);
+    });
+}
+</code></pre></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Détecter et parser DECLARE/OPEN/FETCH/CLOSE (3 jours)</li>
+<li>Générer Stream API pour curseurs (4 jours)</li>
+<li>Gérer fin de curseur (SQLCODE = 100) (2 jours)</li>
+<li>Tests unitaires (curseurs simples, avec paramètres) (3 jours)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 12 jours</p>
+
+<p>---</p>
+
+<h4>Résumé EPIC 1.1</h4>
+
+<p><strong>Stories:</strong> 4
+<strong>Effort total:</strong> 55 jours (optimisé à 40 jours avec parallélisation)
+<strong>Tests:</strong> 13 jours inclus</p>
+
+<p>---</p>
+
+<h2>EPIC 1.2: Support EXEC CICS → REST API Spring MVC</h2>
+
+<p><strong>Priorité:</strong> 🔴 CRITIQUE
+<strong>Impact:</strong> +8 à +10% conversion
+<strong>Effort:</strong> 40 jours
+<strong>Complexité:</strong> Très élevée</p>
+
+<h3>Contexte</h3>
+
+<p>CICS (Customer Information Control System) est le moniteur transactionnel mainframe standard. Les programmes COBOL CICS gèrent les transactions online (écrans 3270, API).</p>
+
+<p><strong>Changement de paradigme:</strong>
+<ul>
+<li>COBOL CICS: Application terminal-based synchrone</li>
+<li>Java: Application REST API asynchrone (microservices)</li>
+</ul></p>
+
+<h3>Objectifs</h3>
+
+<ul>
+<li>Parser les commandes EXEC CICS</li>
+<li>Mapper CICS READ/WRITE vers REST GET/POST/PUT/DELETE</li>
+<li>Générer des Controllers Spring MVC</li>
+<li>Gérer les transactions et sessions</li>
+</ul>
+
+<h3>User Stories</h3>
+
+<h4>US-1.2.1: Parser EXEC CICS dans COBOL</h4>
+
+<p><strong>En tant que</strong> développeur du convertisseur
+<strong>Je veux</strong> parser les blocs EXEC CICS dans les programmes COBOL
+<strong>Afin de</strong> extraire les opérations transactionnelles</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> Extension grammaire ANTLR pour EXEC CICS</li>
+<li><input type="checkbox" disabled> Support commandes: READ, WRITE, REWRITE, DELETE, SEND, RECEIVE</li>
+<li><input type="checkbox" disabled> Support gestion d'erreurs: RESP, HANDLE CONDITION</li>
+<li><input type="checkbox" disabled> Support transactions: SYNCPOINT, SYNCPOINT ROLLBACK</li>
+<li><input type="checkbox" disabled> Extraction des noms de fichiers/queues</li>
+</ul></p>
+
+<p><strong>Tests:</strong>
+<pre><code class="language-cobol">EXEC CICS READ
+  FILE('CUSTFILE')
+  INTO(WS-CUSTOMER-RECORD)
+  RIDFLD(WS-CUST-ID)
+  RESP(WS-RESP-CODE)
+END-EXEC.
+</code></pre></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Créer grammaire ANTLR EXEC CICS (5 jours)</li>
+<li>Implémenter <code>ExecCicsASTBuilder</code> (4 jours)</li>
+<li>Modèle AST pour commandes CICS (3 jours)</li>
+<li>Tests unitaires (READ, WRITE, SEND, etc.) (4 jours)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 16 jours</p>
+
+<p>---</p>
+
+<h4>US-1.2.2: Mapper EXEC CICS FILE vers REST API</h4>
+
+<p><strong>En tant que</strong> développeur du convertisseur
+<strong>Je veux</strong> convertir les opérations CICS FILE en endpoints REST
+<strong>Afin de</strong> remplacer les accès fichiers VSAM par des API RESTful</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> CICS READ → GET /api/{resource}/{id}</li>
+<li><input type="checkbox" disabled> CICS WRITE → POST /api/{resource}</li>
+<li><input type="checkbox" disabled> CICS REWRITE → PUT /api/{resource}/{id}</li>
+<li><input type="checkbox" disabled> CICS DELETE → DELETE /api/{resource}/{id}</li>
+<li><input type="checkbox" disabled> Gestion des codes retour RESP → HTTP status codes</li>
+<li><input type="checkbox" disabled> Génération de DTOs à partir des records COBOL</li>
+</ul></p>
+
+<p><strong>Exemple:</strong></p>
+
+<p><pre><code class="language-cobol">EXEC CICS READ
+  FILE('CUSTFILE')
+  INTO(WS-CUSTOMER-RECORD)
+  RIDFLD(WS-CUST-ID)
+  RESP(WS-RESP-CODE)
+END-EXEC.
+
+IF WS-RESP-CODE = DFHRESP(NORMAL)
+   MOVE 'OK' TO WS-STATUS
+ELSE
+   MOVE 'ERROR' TO WS-STATUS
+END-IF.
+</code></pre></p>
+
+<p>→</p>
+
+<p><pre><code class="language-java">@RestController
+@RequestMapping("/api/customers")
+public class CustomerController {
+
+    @Autowired
+    private CustomerService customerService;
+
+    @GetMapping("/{id}")
+    public ResponseEntity&lt;CustomerDto&gt; getCustomer(@PathVariable String id) {
+        try {
+            CustomerDto customer = customerService.findById(id);
+            return ResponseEntity.ok(customer);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity&lt;CustomerDto&gt; createCustomer(@RequestBody CustomerDto customer) {
+        CustomerDto created = customerService.create(customer);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity&lt;CustomerDto&gt; updateCustomer(
+            @PathVariable String id,
+            @RequestBody CustomerDto customer) {
+        CustomerDto updated = customerService.update(id, customer);
+        return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity&lt;Void&gt; deleteCustomer(@PathVariable String id) {
+        customerService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+}
+</code></pre></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Créer <code>CicsToRestTranslator</code> (5 jours)</li>
+<li>Créer <code>RestControllerGenerator</code> (5 jours)</li>
+<li>Créer <code>DtoGenerator</code> à partir de records COBOL (3 jours)</li>
+<li>Mapper codes RESP CICS → HTTP status (2 jours)</li>
+<li>Tests unitaires (CRUD complet) (4 jours)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 19 jours</p>
+
+<p>---</p>
+
+<h4>US-1.2.3: Mapper EXEC CICS SEND/RECEIVE vers API REST</h4>
+
+<p><strong>En tant que</strong> développeur du convertisseur
+<strong>Je veux</strong> convertir les écrans CICS (SEND MAP, RECEIVE MAP) en API REST
+<strong>Afin de</strong> remplacer les terminaux 3270 par des interfaces web/mobile</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> SEND MAP → Response JSON</li>
+<li><input type="checkbox" disabled> RECEIVE MAP → Request JSON</li>
+<li><input type="checkbox" disabled> Mapping des champs BMS (Basic Mapping Support) → DTOs</li>
+<li><input type="checkbox" disabled> Génération de documentation OpenAPI/Swagger</li>
+</ul></p>
+
+<p><strong>Exemple:</strong></p>
+
+<p><pre><code class="language-cobol">EXEC CICS SEND MAP('CUSTMAP')
+  MAPSET('CUSTSET')
+  FROM(WS-CUSTOMER-SCREEN)
+  ERASE
+END-EXEC.
+
+EXEC CICS RECEIVE MAP('CUSTMAP')
+  MAPSET('CUSTSET')
+  INTO(WS-CUSTOMER-SCREEN)
+END-EXEC.
+</code></pre></p>
+
+<p>→</p>
+
+<p><pre><code class="language-java">// Endpoint pour envoyer les données
+@GetMapping("/screen/customer")
+public CustomerScreenDto getCustomerScreen(@RequestParam String custId) {
+    Customer customer = customerService.findById(custId);
+    return mapToScreenDto(customer);
+}
+
+// Endpoint pour recevoir les données
+@PostMapping("/screen/customer")
+public ResponseEntity&lt;Void&gt; submitCustomerScreen(
+        @RequestBody CustomerScreenDto screenData) {
+    customerService.processScreenInput(screenData);
+    return ResponseEntity.ok().build();
+}
+
+// DTO généré à partir du BMS
+public class CustomerScreenDto {
+    private String custId;
+    private String custName;
+    private String custAddress;
+    // ... autres champs de l'écran
+}
+</code></pre></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Parser définitions BMS (mapsets) (4 jours)</li>
+<li>Générer DTOs à partir des maps (3 jours)</li>
+<li>Créer endpoints SEND/RECEIVE (3 jours)</li>
+<li>Générer documentation Swagger (2 jours)</li>
+<li>Tests unitaires (3 jours)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 15 jours</p>
+
+<p>---</p>
+
+<h4>US-1.2.4: Gérer les transactions CICS</h4>
+
+<p><strong>En tant que</strong> développeur du convertisseur
+<strong>Je veux</strong> convertir les transactions CICS en transactions Spring
+<strong>Afin de</strong> garantir la cohérence des données</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> SYNCPOINT → @Transactional commit</li>
+<li><input type="checkbox" disabled> SYNCPOINT ROLLBACK → @Transactional rollback</li>
+<li><input type="checkbox" disabled> Gestion des unités de travail (UOW)</li>
+<li><input type="checkbox" disabled> Configuration isolation levels</li>
+</ul></p>
+
+<p><strong>Exemple:</strong></p>
+
+<p><pre><code class="language-cobol">EXEC CICS WRITE
+  FILE('CUSTFILE')
+  FROM(WS-CUSTOMER-RECORD)
+  RIDFLD(WS-CUST-ID)
+END-EXEC.
+
+IF SQLCODE = 0
+   EXEC CICS SYNCPOINT END-EXEC
+ELSE
+   EXEC CICS SYNCPOINT ROLLBACK END-EXEC
+END-IF.
+</code></pre></p>
+
+<p>→</p>
+
+<p><pre><code class="language-java">@Service
+public class CustomerService {
+
+    @Transactional
+    public void createCustomer(CustomerDto customerDto) {
+        try {
+            Customer customer = mapToEntity(customerDto);
+            customerRepository.save(customer);
+            // Commit automatique si pas d'exception
+        } catch (Exception e) {
+            // Rollback automatique sur exception
+            throw new BusinessException("Failed to create customer", e);
+        }
+    }
+}
+</code></pre></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Détecter SYNCPOINT/ROLLBACK (2 jours)</li>
+<li>Générer annotations @Transactional (2 jours)</li>
+<li>Configurer isolation levels (2 jours)</li>
+<li>Tests unitaires (transactions, rollback) (3 jours)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 9 jours</p>
+
+<p>---</p>
+
+<h4>Résumé EPIC 1.2</h4>
+
+<p><strong>Stories:</strong> 4
+<strong>Effort total:</strong> 59 jours (optimisé à 40 jours avec parallélisation)
+<strong>Tests:</strong> 14 jours inclus</p>
+
+<p>---</p>
+
+<h2>EPIC 1.3: Résolution de Tous les TODOs</h2>
+
+<p><strong>Priorité:</strong> 🔴 CRITIQUE
+<strong>Impact:</strong> +5 à +8% conversion
+<strong>Effort:</strong> 30 jours
+<strong>Complexité:</strong> Moyenne</p>
+
+<h3>Contexte</h3>
+
+<p>Le code contient actuellement <strong>105 TODOs</strong> qui représentent des fonctionnalités non implémentées ou des cas limites non gérés.</p>
+
+<h3>Répartition des TODOs</h3>
+
+<p>| Composant | TODOs | Priorité |
+|-----------|-------|----------|
+| BusinessLogicTranslator | 33 | 🔴 Haute |
+| JobConfigGenerator | 4 | 🟡 Moyenne |
+| JCLSpringBatchGenerator | 2 | 🟡 Moyenne |
+| BusinessRuleGenerator | 3 | 🟢 Basse |
+| Autres | 63 | Variable |</p>
+
+<h3>User Stories</h3>
+
+<h4>US-1.3.1: Compléter BusinessLogicTranslator</h4>
+
+<p><strong>En tant que</strong> développeur du convertisseur
+<strong>Je veux</strong> résoudre les 33 TODOs dans BusinessLogicTranslator
+<strong>Afin de</strong> générer du code Java complet et fonctionnel</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> Tous les statements invalides génèrent du code valide ou lèvent une exception explicite</li>
+<li><input type="checkbox" disabled> Parser TALLYING clause complètement implémenté</li>
+<li><input type="checkbox" disabled> Parser REPLACING clause complètement implémenté</li>
+<li><input type="checkbox" disabled> Gestion des cas limites (null, empty, invalid)</li>
+<li><input type="checkbox" disabled> Actions WHEN complètes pour SEARCH/EVALUATE</li>
+<li><input type="checkbox" disabled> Validation de tous les statements avant génération</li>
+</ul></p>
+
+<p><strong>TODOs à résoudre:</strong></p>
+
+<ol>
+<li><strong>Validation des statements</strong></li>
+</ol>
+<pre><code class="language-java">// TODO: Invalid EVALUATE statement
+// TODO: Invalid MOVE - missing source or target
+// TODO: Invalid COMPUTE - missing target or expression
+// TODO: PERFORM statement without paragraph name
+</code></pre>
+
+<p><strong>Solution:</strong>
+<pre><code class="language-java">private String validateStatement(Statement stmt, String... requiredFields) {
+    if (stmt == null) {
+        throw new TranslationException("Statement cannot be null");
+    }
+
+    for (String field : requiredFields) {
+        if (field == null || field.trim().isEmpty()) {
+            throw new TranslationException(
+                String.format("Required field missing in %s statement", stmt.getType())
+            );
+        }
+    }
+    return null; // Valid
+}
+</code></pre></p>
+
+<ol>
+<li><strong>Parser INSPECT TALLYING/REPLACING</strong></li>
+</ol>
+<pre><code class="language-java">// TODO: Parse TALLYING clause properly
+// TODO: Parse REPLACING clause properly
+</code></pre>
+
+<p><strong>Solution:</strong> Créer parser dédié avec regex ou ANTLR pour extraire:
+<ul>
+<li>Mode (ALL, LEADING, FIRST)</li>
+<li>Caractère à compter/remplacer</li>
+<li>Variable compteur</li>
+</ul></p>
+
+<ol>
+<li><strong>Actions SEARCH/EVALUATE</strong></li>
+</ol>
+<pre><code class="language-java">// TODO: Add action when found
+// TODO: Add action when NOT found
+// TODO: Add WHEN condition
+</code></pre>
+
+<p><strong>Solution:</strong> Générer blocs if/else avec actions par défaut ou placeholder commenté</p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Audit complet des 33 TODOs (2 jours)</li>
+<li>Implémenter validation stricte statements (3 jours)</li>
+<li>Parser INSPECT avancé (3 jours)</li>
+<li>Compléter actions SEARCH/EVALUATE (2 jours)</li>
+<li>Gestion erreurs et exceptions (2 jours)</li>
+<li>Tests unitaires pour chaque TODO résolu (5 jours)</li>
+<li>Tests d'intégration (3 jours)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 20 jours</p>
+
+<p>---</p>
+
+<h4>US-1.3.2: Compléter les autres générateurs</h4>
+
+<p><strong>En tant que</strong> développeur du convertisseur
+<strong>Je veux</strong> résoudre les TODOs dans JobConfigGenerator, JCLSpringBatchGenerator, BusinessRuleGenerator
+<strong>Afin de</strong> générer des projets Spring Batch complets</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> JobConfigGenerator implémente la logique métier des paragraphes</li>
+<li><input type="checkbox" disabled> JCLSpringBatchGenerator génère tous les Step beans</li>
+<li><input type="checkbox" disabled> BusinessRuleGenerator ajoute les validations métier</li>
+</ul></p>
+
+<p><strong>TODOs à résoudre:</strong></p>
+
+<ol>
+<li><strong>JobConfigGenerator</strong></li>
+</ol>
+<pre><code class="language-java">// TODO: Implement logic from COBOL paragraph
+// TODO: Format audit trail record
+// TODO: Format error report record
+</code></pre>
+
+<p><strong>Solution:</strong> Utiliser BusinessLogicTranslator pour générer la logique</p>
+
+<ol>
+<li><strong>JCLSpringBatchGenerator</strong></li>
+</ol>
+<pre><code class="language-java">// TODO: Implement Step beans
+// TODO: Implement business logic from COBOL program
+</code></pre>
+
+<p><strong>Solution:</strong> Générer Step complets avec reader/processor/writer</p>
+
+<ol>
+<li><strong>BusinessRuleGenerator</strong></li>
+</ol>
+<pre><code class="language-java">// TODO: Add account status validation
+// TODO: Implement validation methods based on COBOL logic
+</code></pre>
+
+<p><strong>Solution:</strong> Extraire règles métier du COBOL et générer validators</p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Audit TODOs JobConfigGenerator (1 jour)</li>
+<li>Implémenter génération logique paragraphes (3 jours)</li>
+<li>Audit TODOs JCLSpringBatchGenerator (1 jour)</li>
+<li>Implémenter génération Step complets (3 jours)</li>
+<li>Audit TODOs BusinessRuleGenerator (1 jour)</li>
+<li>Implémenter génération validators (2 jours)</li>
+<li>Tests unitaires (4 jours)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 15 jours</p>
+
+<p>---</p>
+
+<h4>Résumé EPIC 1.3</h4>
+
+<p><strong>Stories:</strong> 2
+<strong>Effort total:</strong> 35 jours (optimisé à 30 jours)
+<strong>Tests:</strong> 9 jours inclus</p>
+
+<p>---</p>
+
+<h2>EPIC 1.4: Support REDEFINES Complexes</h2>
+
+<p><strong>Priorité:</strong> 🔴 CRITIQUE
+<strong>Impact:</strong> +3 à +5% conversion
+<strong>Effort:</strong> 20 jours
+<strong>Complexité:</strong> Élevée</p>
+
+<h3>Contexte</h3>
+
+<p>REDEFINES en COBOL permet de créer des vues multiples sur la même zone mémoire (union types). Le support actuel ne gère que la première redéfinition.</p>
+
+<h3>Objectifs</h3>
+
+<ul>
+<li>Détecter toutes les redéfinitions (multiples) d'un même champ</li>
+<li>Générer des classes wrapper avec vues multiples</li>
+<li>Optimiser l'accès mémoire</li>
+</ul>
+
+<h3>User Stories</h3>
+
+<h4>US-1.4.1: Analyser les redéfinitions multiples</h4>
+
+<p><strong>En tant que</strong> développeur du convertisseur
+<strong>Je veux</strong> détecter toutes les clauses REDEFINES sur un même champ
+<strong>Afin de</strong> générer du code Java gérant toutes les vues</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> Détection de redéfinitions en chaîne</li>
+<li><input type="checkbox" disabled> Détection de redéfinitions hiérarchiques</li>
+<li><input type="checkbox" disabled> Analyse de compatibilité des types</li>
+<li><input type="checkbox" disabled> Rapport d'incompatibilités</li>
+</ul></p>
+
+<p><strong>Exemple:</strong>
+<pre><code class="language-cobol">01 WS-DATA.
+   05 WS-FIELD-1   PIC X(10).
+   05 WS-FIELD-2 REDEFINES WS-FIELD-1 PIC 9(10).
+   05 WS-FIELD-3 REDEFINES WS-FIELD-1.
+      10 WS-SUB-1  PIC X(5).
+      10 WS-SUB-2  PIC X(5).
+</code></pre></p>
+
+<p><strong>Analyse attendue:</strong>
+<pre><code class="language-">WS-FIELD-1 a 2 redéfinitions:
+  - WS-FIELD-2 (numeric, 10 digits)
+  - WS-FIELD-3 (structured, 2 sub-fields)
+</code></pre></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Créer <code>RedefinesAnalyzer</code> (3 jours)</li>
+<li>Implémenter détection chaînée (2 jours)</li>
+<li>Analyser compatibilité types (2 jours)</li>
+<li>Tests unitaires (2 jours)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 9 jours</p>
+
+<p>---</p>
+
+<h4>US-1.4.2: Générer classes wrapper pour unions</h4>
+
+<p><strong>En tant que</strong> développeur du convertisseur
+<strong>Je veux</strong> générer des classes Java avec vues multiples sur les données
+<strong>Afin de</strong> émuler le comportement REDEFINES</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> Classe wrapper avec stockage byte[] brut</li>
+<li><input type="checkbox" disabled> Méthodes getter/setter pour chaque vue</li>
+<li><input type="checkbox" disabled> Conversion automatique entre types</li>
+<li><input type="checkbox" disabled> Documentation des vues disponibles</li>
+</ul></p>
+
+<p><strong>Exemple généré:</strong></p>
+
+<p><pre><code class="language-java">/**
+ * Wrapper for COBOL REDEFINES: WS-FIELD-1
+ *
+ * Available views:
+ * - asString(): View as WS-FIELD-1 (PIC X(10))
+ * - asNumeric(): View as WS-FIELD-2 (PIC 9(10))
+ * - asStructured(): View as WS-FIELD-3 (structured)
+ */
+public class WsDataWrapper {
+
+    // Stockage brut (10 bytes)
+    private byte[] rawData = new byte[10];
+
+    // Vue 1: String (WS-FIELD-1)
+    public String asString() {
+        return new String(rawData, StandardCharsets.UTF_8).trim();
+    }
+
+    public void setAsString(String value) {
+        byte[] bytes = value.getBytes(StandardCharsets.UTF_8);
+        System.arraycopy(bytes, 0, rawData, 0, Math.min(bytes.length, 10));
+    }
+
+    // Vue 2: Numeric (WS-FIELD-2)
+    public BigDecimal asNumeric() {
+        String numStr = new String(rawData, StandardCharsets.UTF_8).trim();
+        return new BigDecimal(numStr);
+    }
+
+    public void setAsNumeric(BigDecimal value) {
+        String numStr = String.format("%010d", value.longValue());
+        setAsString(numStr);
+    }
+
+    // Vue 3: Structured (WS-FIELD-3)
+    public WsField3Structured asStructured() {
+        String sub1 = new String(rawData, 0, 5, StandardCharsets.UTF_8).trim();
+        String sub2 = new String(rawData, 5, 5, StandardCharsets.UTF_8).trim();
+        return new WsField3Structured(sub1, sub2);
+    }
+
+    public void setAsStructured(WsField3Structured value) {
+        byte[] bytes1 = value.getWsSub1().getBytes(StandardCharsets.UTF_8);
+        byte[] bytes2 = value.getWsSub2().getBytes(StandardCharsets.UTF_8);
+        System.arraycopy(bytes1, 0, rawData, 0, Math.min(bytes1.length, 5));
+        System.arraycopy(bytes2, 0, rawData, 5, Math.min(bytes2.length, 5));
+    }
+}
+
+// Classe pour vue structurée
+public class WsField3Structured {
+    private String wsSub1;
+    private String wsSub2;
+
+    // Constructor, getters, setters
+}
+</code></pre></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Créer <code>UnionTypeGenerator</code> (4 jours)</li>
+<li>Implémenter génération vues multiples (3 jours)</li>
+<li>Gérer conversions de types (2 jours)</li>
+<li>Tests unitaires (3 jours)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 12 jours</p>
+
+<p>---</p>
+
+<h4>US-1.4.3: Optimiser accès mémoire</h4>
+
+<p><strong>En tant que</strong> développeur du convertisseur
+<strong>Je veux</strong> optimiser les conversions entre vues
+<strong>Afin de</strong> minimiser l'impact performance</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> Cache des conversions coûteuses</li>
+<li><input type="checkbox" disabled> Lazy loading des vues</li>
+<li><input type="checkbox" disabled> Détection des vues inutilisées</li>
+</ul></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Créer <code>RedefinesOptimizer</code> (2 jours)</li>
+<li>Implémenter cache conversions (1 jour)</li>
+<li>Tests performance (2 jours)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 5 jours</p>
+
+<p>---</p>
+
+<h4>Résumé EPIC 1.4</h4>
+
+<p><strong>Stories:</strong> 3
+<strong>Effort total:</strong> 26 jours (optimisé à 20 jours)
+<strong>Tests:</strong> 7 jours inclus</p>
+
+<p>---</p>
+
+<h2>Résumé Phase 1</h2>
+
+<p>| EPIC | Effort | Impact |
+|------|--------|--------|
+| 1.1 - EXEC SQL | 40 jours | +10-12% |
+| 1.2 - EXEC CICS | 40 jours | +8-10% |
+| 1.3 - TODOs | 30 jours | +5-8% |
+| 1.4 - REDEFINES | 20 jours | +3-5% |
+| <strong>TOTAL</strong> | <strong>130 jours</strong> | <strong>+26-35%</strong> |</p>
+
+<p><strong>Gain conversion:</strong> 82% → 92-95%
+<strong>Durée avec 3 devs:</strong> 3 mois</p>
+
+<p>---</p>
+
+<h1>🟡 PHASE 2: ROBUSTESSE & QUALITÉ</h1>
+
+<p><strong>Durée:</strong> 2 mois
+<strong>Équipe:</strong> 2 développeurs
+<strong>Objectif:</strong> Passer de 92-95% à 97-98% de conversion</p>
+
+<p>---</p>
+
+<h2>EPIC 2.1: Support OCCURS DEPENDING ON Dynamique</h2>
+
+<p><strong>Priorité:</strong> 🟡 HAUTE
+<strong>Impact:</strong> +2 à +3% conversion
+<strong>Effort:</strong> 10 jours
+<strong>Complexité:</strong> Moyenne</p>
+
+<h3>User Stories</h3>
+
+<h4>US-2.1.1: Détecter OCCURS DEPENDING ON</h4>
+
+<p><strong>En tant que</strong> développeur du convertisseur
+<strong>Je veux</strong> détecter les tableaux avec taille dynamique
+<strong>Afin de</strong> générer des collections Java dynamiques</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> Détection clause OCCURS ... TO ... DEPENDING ON</li>
+<li><input type="checkbox" disabled> Extraction de la variable de taille</li>
+<li><input type="checkbox" disabled> Détection des limites min/max</li>
+</ul></p>
+
+<p><strong>Exemple:</strong>
+<pre><code class="language-cobol">01 WS-TABLE.
+   05 WS-COUNT    PIC 99.
+   05 WS-ITEMS OCCURS 1 TO 100 TIMES DEPENDING ON WS-COUNT.
+      10 WS-ITEM  PIC X(20).
+</code></pre></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Améliorer parser OCCURS (2 jours)</li>
+<li>Extraire variable DEPENDING ON (1 jour)</li>
+<li>Tests unitaires (1 jour)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 4 jours</p>
+
+<p>---</p>
+
+<h4>US-2.1.2: Générer collections Java dynamiques</h4>
+
+<p><strong>En tant que</strong> développeur du convertisseur
+<strong>Je veux</strong> générer List<T> au lieu de T[] pour tableaux dynamiques
+<strong>Afin de</strong> supporter la taille variable</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> OCCURS DEPENDING ON → List<Type></li>
+<li><input type="checkbox" disabled> Méthodes add/remove/size générées</li>
+<li><input type="checkbox" disabled> Synchronisation avec variable compteur</li>
+</ul></p>
+
+<p><strong>Code généré:</strong>
+<pre><code class="language-java">public class WsTable {
+    private int wsCount = 0;
+    private List&lt;String&gt; wsItems = new ArrayList&lt;&gt;(100); // Capacité initiale
+
+    public void addWsItem(String item) {
+        if (wsItems.size() &lt; 100) { // Max 100
+            wsItems.add(item);
+            wsCount = wsItems.size();
+        } else {
+            throw new IllegalStateException("Table full (max 100 items)");
+        }
+    }
+
+    public void removeWsItem(int index) {
+        if (index &gt;= 0 && index &lt; wsItems.size()) {
+            wsItems.remove(index);
+            wsCount = wsItems.size();
+        }
+    }
+
+    public int getWsCount() {
+        return wsCount;
+    }
+
+    public List&lt;String&gt; getWsItems() {
+        return Collections.unmodifiableList(wsItems);
+    }
+}
+</code></pre></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Modifier EntityGenerator pour List<T> (2 jours)</li>
+<li>Générer méthodes add/remove (1 jour)</li>
+<li>Synchroniser variable compteur (1 jour)</li>
+<li>Tests unitaires (2 jours)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 6 jours</p>
+
+<p>---</p>
+
+<h4>Résumé EPIC 2.1</h4>
+
+<p><strong>Stories:</strong> 2
+<strong>Effort total:</strong> 10 jours
+<strong>Tests:</strong> 3 jours inclus</p>
+
+<p>---</p>
+
+<h2>EPIC 2.2: EVALUATE ALSO Avancé</h2>
+
+<p><strong>Priorité:</strong> 🟡 HAUTE
+<strong>Impact:</strong> +1 à +2% conversion
+<strong>Effort:</strong> 8 jours
+<strong>Complexité:</strong> Moyenne</p>
+
+<h3>User Stories</h3>
+
+<h4>US-2.2.1: Support EVALUATE ALSO avec >2 expressions</h4>
+
+<p><strong>En tant que</strong> développeur du convertisseur
+<strong>Je veux</strong> supporter EVALUATE avec 3+ expressions combinées
+<strong>Afin de</strong> générer des conditions complexes correctement</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> EVALUATE expr1 ALSO expr2 ALSO expr3 ... ALSO exprN</li>
+<li><input type="checkbox" disabled> Génération de conditions AND combinées</li>
+<li><input type="checkbox" disabled> Support ANY pour expressions wildcards</li>
+</ul></p>
+
+<p><strong>Exemple:</strong>
+<pre><code class="language-cobol">EVALUATE STATUS ALSO ERROR-CODE ALSO REGION
+   WHEN 'A' ALSO '01' ALSO 'EAST'
+      PERFORM PROCESS-EAST-ACTIVE
+   WHEN 'I' ALSO ANY ALSO 'WEST'
+      PERFORM PROCESS-WEST-INACTIVE
+   WHEN OTHER
+      PERFORM PROCESS-DEFAULT
+END-EVALUATE.
+</code></pre></p>
+
+<p><strong>Code généré:</strong>
+<pre><code class="language-java">// COBOL: EVALUATE STATUS ALSO ERROR-CODE ALSO REGION
+if (record.getStatus().equals("A") &&
+    record.getErrorCode().equals("01") &&
+    record.getRegion().equals("EAST")) {
+
+    processEastActive(record);
+
+} else if (record.getStatus().equals("I") &&
+           record.getRegion().equals("WEST")) {
+    // ANY pour ERROR-CODE: pas de condition
+    processWestInactive(record);
+
+} else {
+    processDefault(record);
+}
+</code></pre></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Parser EVALUATE ALSO avec N expressions (2 jours)</li>
+<li>Générer conditions AND multiples (2 jours)</li>
+<li>Gérer ANY (wildcards) (1 jour)</li>
+<li>Tests unitaires (2 jours)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 7 jours</p>
+
+<p>---</p>
+
+<h4>Résumé EPIC 2.2</h4>
+
+<p><strong>Stories:</strong> 1
+<strong>Effort total:</strong> 7 jours (arrondi à 8 jours)
+<strong>Tests:</strong> 2 jours inclus</p>
+
+<p>---</p>
+
+<h2>EPIC 2.3: INSPECT Combiné (TALLYING + REPLACING)</h2>
+
+<p><strong>Priorité:</strong> 🟡 HAUTE
+<strong>Impact:</strong> +1 à +2% conversion
+<strong>Effort:</strong> 5 jours
+<strong>Complexité:</strong> Moyenne</p>
+
+<h3>User Stories</h3>
+
+<h4>US-2.3.1: Support INSPECT avec opérations multiples</h4>
+
+<p><strong>En tant que</strong> développeur du convertisseur
+<strong>Je veux</strong> supporter INSPECT avec TALLYING et REPLACING combinés
+<strong>Afin de</strong> générer du code Java effectuant les deux opérations</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> INSPECT field TALLYING ... REPLACING ...</li>
+<li><input type="checkbox" disabled> Exécution séquentielle des opérations</li>
+<li><input type="checkbox" disabled> Gestion des modes (ALL, LEADING, FIRST)</li>
+</ul></p>
+
+<p><strong>Exemple:</strong>
+<pre><code class="language-cobol">INSPECT WS-INPUT
+   TALLYING WS-COUNT FOR ALL 'A'
+   REPLACING ALL 'B' BY 'C'
+   REPLACING LEADING SPACES BY ZEROS.
+</code></pre></p>
+
+<p><strong>Code généré:</strong>
+<pre><code class="language-java">// COBOL: INSPECT WS-INPUT
+String inspectStr = record.getWsInput();
+
+// TALLYING FOR ALL 'A'
+int tallyCount = 0;
+for (int i = 0; i &lt; inspectStr.length(); i++) {
+    if (inspectStr.charAt(i) == 'A') {
+        tallyCount++;
+    }
+}
+record.setWsCount(String.valueOf(tallyCount));
+
+// REPLACING ALL 'B' BY 'C'
+inspectStr = inspectStr.replace('B', 'C');
+
+// REPLACING LEADING SPACES BY ZEROS
+StringBuilder sb = new StringBuilder(inspectStr);
+for (int i = 0; i &lt; sb.length(); i++) {
+    if (sb.charAt(i) == ' ') {
+        sb.setCharAt(i, '0');
+    } else {
+        break; // Stop at first non-space
+    }
+}
+inspectStr = sb.toString();
+
+record.setWsInput(inspectStr);
+</code></pre></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Parser INSPECT avec multiples clauses (2 jours)</li>
+<li>Générer code séquentiel (2 jours)</li>
+<li>Tests unitaires (combinaisons) (2 jours)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 6 jours (arrondi à 5 jours avec optimisation)</p>
+
+<p>---</p>
+
+<h4>Résumé EPIC 2.3</h4>
+
+<p><strong>Stories:</strong> 1
+<strong>Effort total:</strong> 5 jours
+<strong>Tests:</strong> 2 jours inclus</p>
+
+<p>---</p>
+
+<h2>EPIC 2.4: SORT Gros Volumes (External Sort)</h2>
+
+<p><strong>Priorité:</strong> 🟡 HAUTE
+<strong>Impact:</strong> +2 à +3% conversion
+<strong>Effort:</strong> 12 jours
+<strong>Complexité:</strong> Élevée</p>
+
+<h3>User Stories</h3>
+
+<h4>US-2.4.1: Détecter SORT et analyser volumes</h4>
+
+<p><strong>En tant que</strong> développeur du convertisseur
+<strong>Je veux</strong> détecter les SORT statements et estimer les volumes
+<strong>Afin de</strong> choisir la stratégie de tri appropriée</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> Détection SORT statements</li>
+<li><input type="checkbox" disabled> Extraction des clés de tri</li>
+<li><input type="checkbox" disabled> Estimation de la taille des fichiers (commentaires/métadonnées)</li>
+</ul></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Améliorer parser SORT (1 jour)</li>
+<li>Extraire clés de tri (1 jour)</li>
+<li>Tests unitaires (1 jour)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 3 jours</p>
+
+<p>---</p>
+
+<h4>US-2.4.2: Implémenter tri par chunks (external sort)</h4>
+
+<p><strong>En tant que</strong> développeur du convertisseur
+<strong>Je veux</strong> générer du code de tri par chunks pour gros volumes
+<strong>Afin d'</strong> éviter les OutOfMemoryError</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> Tri en mémoire pour petits fichiers (<10K records)</li>
+<li><input type="checkbox" disabled> Tri par chunks pour gros fichiers (>10K records)</li>
+<li><input type="checkbox" disabled> Utilisation de fichiers temporaires</li>
+<li><input type="checkbox" disabled> Merge final des chunks triés</li>
+</ul></p>
+
+<p><strong>Code généré:</strong>
+<pre><code class="language-java">@Bean
+public Step sortStep(JobRepository jobRepository,
+                    PlatformTransactionManager transactionManager) {
+    return new StepBuilder("sortStep", jobRepository)
+        .&lt;CustomerRecord, CustomerRecord&gt;chunk(1000, transactionManager)
+        .reader(unsortedFileReader())
+        .processor(new ItemProcessor&lt;CustomerRecord, CustomerRecord&gt;() {
+            private List&lt;CustomerRecord&gt; buffer = new ArrayList&lt;&gt;(1000);
+
+            @Override
+            public CustomerRecord process(CustomerRecord item) throws Exception {
+                buffer.add(item);
+
+                // Tri du buffer quand plein
+                if (buffer.size() &gt;= 1000) {
+                    buffer.sort(Comparator.comparing(CustomerRecord::getCustId));
+                    writeToTempFile(buffer);
+                    buffer.clear();
+                }
+
+                return null; // Pas d'écriture directe
+            }
+        })
+        .writer(items -&gt; {}) // No-op writer
+        .build();
+}
+
+@Bean
+public Step mergeStep(JobRepository jobRepository,
+                     PlatformTransactionManager transactionManager) {
+    // Merge des fichiers temporaires triés
+    return new StepBuilder("mergeStep", jobRepository)
+        .tasklet((contribution, chunkContext) -&gt; {
+            mergeSortedTempFiles();
+            return RepeatStatus.FINISHED;
+        })
+        .build();
+}
+</code></pre></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Créer <code>ExternalSortGenerator</code> (3 jours)</li>
+<li>Implémenter stratégie de tri (chunk-based) (3 jours)</li>
+<li>Implémenter merge de chunks (2 jours)</li>
+<li>Tests unitaires (petits et gros volumes) (3 jours)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 11 jours (arrondi à 12 jours)</p>
+
+<p>---</p>
+
+<h4>Résumé EPIC 2.4</h4>
+
+<p><strong>Stories:</strong> 2
+<strong>Effort total:</strong> 14 jours (optimisé à 12 jours)
+<strong>Tests:</strong> 4 jours inclus</p>
+
+<p>---</p>
+
+<h2>EPIC 2.5: Suite de Tests Complète</h2>
+
+<p><strong>Priorité:</strong> 🟡 HAUTE
+<strong>Impact:</strong> Qualité & Robustesse
+<strong>Effort:</strong> 26 jours
+<strong>Complexité:</strong> Élevée</p>
+
+<h3>User Stories</h3>
+
+<h4>US-2.5.1: Tests unitaires ProjectGenerator</h4>
+
+<p><strong>En tant que</strong> développeur
+<strong>Je veux</strong> des tests unitaires pour ProjectGenerator
+<strong>Afin de</strong> garantir la génération correcte de la structure Maven</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> Tests de génération pom.xml</li>
+<li><input type="checkbox" disabled> Tests de génération application.properties</li>
+<li><input type="checkbox" disabled> Tests de génération structure de répertoires</li>
+<li><input type="checkbox" disabled> Tests de génération README, .gitignore</li>
+</ul></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Créer <code>ProjectGeneratorTest</code> (3 jours)</li>
+<li>Tests génération pom.xml (2 jours)</li>
+<li>Tests génération fichiers config (2 jours)</li>
+<li>Tests génération structure (2 jours)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 9 jours</p>
+
+<p>---</p>
+
+<h4>US-2.5.2: Tests d'intégration Web Controller</h4>
+
+<p><strong>En tant que</strong> développeur
+<strong>Je veux</strong> des tests d'intégration pour le contrôleur web
+<strong>Afin de</strong> valider l'API de conversion</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> Tests upload fichier COBOL</li>
+<li><input type="checkbox" disabled> Tests conversion et récupération code Java</li>
+<li><input type="checkbox" disabled> Tests téléchargement projet ZIP</li>
+<li><input type="checkbox" disabled> Tests gestion d'erreurs</li>
+</ul></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Créer <code>ConversionControllerIntegrationTest</code> (2 jours)</li>
+<li>Tests upload et conversion (2 jours)</li>
+<li>Tests download ZIP (1 jour)</li>
+<li>Tests gestion erreurs (1 jour)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 6 jours</p>
+
+<p>---</p>
+
+<h4>US-2.5.3: Tests End-to-End</h4>
+
+<p><strong>En tant que</strong> développeur
+<strong>Je veux</strong> des tests E2E complets (COBOL → Java → exécution)
+<strong>Afin de</strong> valider le processus complet de conversion</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> 10+ programmes COBOL réels testés</li>
+<li><input type="checkbox" disabled> Compilation du code Java généré</li>
+<li><input type="checkbox" disabled> Exécution des jobs Spring Batch</li>
+<li><input type="checkbox" disabled> Validation des résultats de sortie</li>
+</ul></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Collecter 10 programmes COBOL réels (1 jour)</li>
+<li>Créer framework de tests E2E (2 jours)</li>
+<li>Implémenter tests conversion complète (3 jours)</li>
+<li>Validation des résultats (2 jours)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 8 jours</p>
+
+<p>---</p>
+
+<h4>US-2.5.4: Tests de Performance</h4>
+
+<p><strong>En tant que</strong> développeur
+<strong>Je veux</strong> des tests de performance et de charge
+<strong>Afin de</strong> valider le comportement sur gros volumes</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> Tests conversion de gros programmes COBOL (>10K lignes)</li>
+<li><input type="checkbox" disabled> Tests de charge (100+ fichiers en parallèle)</li>
+<li><input type="checkbox" disabled> Mesure de la vitesse de conversion</li>
+<li><input type="checkbox" disabled> Profiling mémoire</li>
+</ul></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Créer framework de tests performance (2 jours)</li>
+<li>Tests gros programmes (1 jour)</li>
+<li>Tests de charge (1 jour)</li>
+<li>Profiling et optimisation (2 jours)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 6 jours</p>
+
+<p>---</p>
+
+<h4>Résumé EPIC 2.5</h4>
+
+<p><strong>Stories:</strong> 4
+<strong>Effort total:</strong> 29 jours (optimisé à 26 jours)</p>
+
+<p>---</p>
+
+<h2>Résumé Phase 2</h2>
+
+<p>| EPIC | Effort | Impact |
+|------|--------|--------|
+| 2.1 - OCCURS DEPENDING ON | 10 jours | +2-3% |
+| 2.2 - EVALUATE ALSO | 8 jours | +1-2% |
+| 2.3 - INSPECT Combiné | 5 jours | +1-2% |
+| 2.4 - SORT Gros Volumes | 12 jours | +2-3% |
+| 2.5 - Tests Complets | 26 jours | Qualité |
+| <strong>TOTAL</strong> | <strong>61 jours</strong> | <strong>+6-10%</strong> |</p>
+
+<p><strong>Gain conversion:</strong> 92-95% → 97-98%
+<strong>Durée avec 2 devs:</strong> 2 mois</p>
+
+<p>---</p>
+
+<h1>🟢 PHASE 3: EXCELLENCE & OPTIMISATION</h1>
+
+<p><strong>Durée:</strong> 1.5 mois
+<strong>Équipe:</strong> 2 développeurs
+<strong>Objectif:</strong> Passer de 97-98% à 99-100% de conversion</p>
+
+<p>---</p>
+
+<h2>EPIC 3.1: Refactorisation Automatique GO TO</h2>
+
+<p><strong>Priorité:</strong> 🟢 MOYENNE
+<strong>Impact:</strong> +1 à +2% conversion
+<strong>Effort:</strong> 15 jours
+<strong>Complexité:</strong> Très élevée</p>
+
+<h3>User Stories</h3>
+
+<h4>US-3.1.1: Analyser flux de contrôle</h4>
+
+<p><strong>En tant que</strong> développeur du convertisseur
+<strong>Je veux</strong> analyser le flux de contrôle des programmes COBOL
+<strong>Afin de</strong> détecter les patterns GO TO refactorisables</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> Détection de tous les GO TO statements</li>
+<li><input type="checkbox" disabled> Construction du graphe de flux de contrôle (CFG)</li>
+<li><input type="checkbox" disabled> Identification des patterns (if-then-goto, goto-chain, etc.)</li>
+<li><input type="checkbox" disabled> Rapport des GO TO non refactorisables</li>
+</ul></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Créer <code>ControlFlowAnalyzer</code> (3 jours)</li>
+<li>Construire CFG (Control Flow Graph) (3 jours)</li>
+<li>Détecter patterns GO TO (2 jours)</li>
+<li>Tests unitaires (2 jours)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 10 jours</p>
+
+<p>---</p>
+
+<h4>US-3.1.2: Refactoriser GO TO en structures de contrôle</h4>
+
+<p><strong>En tant que</strong> développeur du convertisseur
+<strong>Je veux</strong> transformer les GO TO en if/else/while
+<strong>Afin de</strong> générer du code Java structuré</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> Pattern IF-THEN-GOTO → if-else</li>
+<li><input type="checkbox" disabled> Pattern GOTO-CHAIN → méthodes séquentielles</li>
+<li><input type="checkbox" disabled> Pattern GOTO-LOOP → while/for loops</li>
+<li><input type="checkbox" disabled> Préservation de la sémantique</li>
+</ul></p>
+
+<p><strong>Exemple:</strong></p>
+
+<p><pre><code class="language-cobol">PARA-010.
+   IF CONDITION-1
+      GO TO PARA-030
+   END-IF.
+   PERFORM PARA-020.
+   GO TO PARA-040.
+
+PARA-020.
+   MOVE X TO Y.
+
+PARA-030.
+   MOVE A TO B.
+
+PARA-040.
+   STOP RUN.
+</code></pre></p>
+
+<p><strong>Code refactorisé:</strong>
+<pre><code class="language-java">public void para010() {
+    if (condition1) {
+        para030Logic(); // Inline de PARA-030
+    } else {
+        para020Logic(); // Inline de PARA-020
+    }
+    para040Logic(); // Inline de PARA-040
+}
+
+private void para020Logic() {
+    record.setY(record.getX());
+}
+
+private void para030Logic() {
+    record.setB(record.getA());
+}
+
+private void para040Logic() {
+    // STOP RUN
+}
+</code></pre></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Créer <code>GotoRefactorer</code> (3 jours)</li>
+<li>Implémenter patterns de refactoring (4 jours)</li>
+<li>Valider préservation sémantique (2 jours)</li>
+<li>Tests unitaires (3 jours)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 12 jours</p>
+
+<p>---</p>
+
+<h4>Résumé EPIC 3.1</h4>
+
+<p><strong>Stories:</strong> 2
+<strong>Effort total:</strong> 22 jours (optimisé à 15 jours avec simplification)
+<strong>Tests:</strong> 5 jours inclus</p>
+
+<p>---</p>
+
+<h2>EPIC 3.2: Génération Améliorée</h2>
+
+<p><strong>Priorité:</strong> 🟢 MOYENNE
+<strong>Impact:</strong> Qualité du code généré
+<strong>Effort:</strong> 25 jours
+<strong>Complexité:</strong> Moyenne</p>
+
+<h3>User Stories</h3>
+
+<h4>US-3.2.1: Validation JPA et Relations</h4>
+
+<p><strong>En tant que</strong> développeur du convertisseur
+<strong>Je veux</strong> générer des entités JPA avec validation et relations
+<strong>Afin de</strong> produire du code conforme aux best practices</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> Annotations de validation (@NotNull, @Size, @Pattern, etc.)</li>
+<li><input type="checkbox" disabled> Relations entre entités (@OneToMany, @ManyToOne, etc.)</li>
+<li><input type="checkbox" disabled> Audit trail (Hibernate Envers)</li>
+<li><input type="checkbox" disabled> Contraintes de base de données (@UniqueConstraint, etc.)</li>
+</ul></p>
+
+<p><strong>Code généré amélioré:</strong>
+<pre><code class="language-java">@Entity
+@Table(name = "CUSTOMER",
+       uniqueConstraints = @UniqueConstraint(columnNames = {"custEmail"}),
+       indexes = {
+           @Index(name = "idx_cust_name", columnList = "custName")
+       })
+@Audited // Hibernate Envers
+public class Customer {
+
+    @Id
+    @Column(name = "cust_id", length = 10, nullable = false)
+    @NotNull(message = "Customer ID cannot be null")
+    @Size(min = 1, max = 10, message = "Customer ID must be 1-10 characters")
+    private String custId;
+
+    @Column(name = "cust_name", length = 30, nullable = false)
+    @NotBlank(message = "Customer name is required")
+    @Size(max = 30)
+    private String custName;
+
+    @Column(name = "cust_email", length = 50, unique = true)
+    @Email(message = "Invalid email format")
+    private String custEmail;
+
+    @Column(name = "cust_balance", precision = 15, scale = 2)
+    @DecimalMin(value = "0.0", message = "Balance cannot be negative")
+    private BigDecimal custBalance;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "cust_status", length = 1)
+    @Pattern(regexp = "[AIPS]", message = "Status must be A, I, P, or S")
+    private String custStatus;
+
+    // Relations
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    private List&lt;Order&gt; orders = new ArrayList&lt;&gt;();
+
+    // Audit fields (Envers)
+    @CreatedDate
+    @Column(name = "created_date", nullable = false, updatable = false)
+    private LocalDateTime createdDate;
+
+    @LastModifiedDate
+    @Column(name = "modified_date")
+    private LocalDateTime modifiedDate;
+
+    // Getters/Setters
+}
+</code></pre></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Améliorer EntityGenerator (validation) (3 jours)</li>
+<li>Détecter relations entre records COBOL (3 jours)</li>
+<li>Générer relations JPA (2 jours)</li>
+<li>Support Hibernate Envers (2 jours)</li>
+<li>Tests unitaires (2 jours)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 12 jours</p>
+
+<p>---</p>
+
+<h4>US-3.2.2: Job Configuration Avancée</h4>
+
+<p><strong>En tant que</strong> développeur du convertisseur
+<strong>Je veux</strong> générer des configurations Spring Batch avancées
+<strong>Afin de</strong> produire des jobs robustes et performants</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> Job parameters dynamiques</li>
+<li><input type="checkbox" disabled> Chunk size adaptatif</li>
+<li><input type="checkbox" disabled> Partitioning et parallel steps</li>
+<li><input type="checkbox" disabled> Retry/Skip policies avancées</li>
+<li><input type="checkbox" disabled> Job listeners avec métriques</li>
+</ul></p>
+
+<p><strong>Code généré amélioré:</strong>
+<pre><code class="language-java">@Configuration
+public class CustomerJobConfig {
+
+    @Value("${app.batch.chunk-size:100}")
+    private int chunkSize;
+
+    @Bean
+    public Job customerJob(JobRepository jobRepository,
+                          Step customerStep,
+                          Step reportStep) {
+        return new JobBuilder("customerJob", jobRepository)
+            .start(customerStep)
+            .next(reportStep)
+            .listener(jobExecutionListener())
+            .build();
+    }
+
+    @Bean
+    public Step customerStep(JobRepository jobRepository,
+                            PlatformTransactionManager transactionManager,
+                            FlatFileItemReader&lt;CustomerRecord&gt; reader,
+                            CustomerProcessor processor,
+                            FlatFileItemWriter&lt;CustomerRecord&gt; writer) {
+        return new StepBuilder("customerStep", jobRepository)
+            .&lt;CustomerRecord, CustomerRecord&gt;chunk(chunkSize, transactionManager)
+            .reader(reader)
+            .processor(processor)
+            .writer(writer)
+            .faultTolerant()
+            .skipLimit(10)
+            .skip(ValidationException.class)
+            .retryLimit(3)
+            .retry(DeadlockLoserDataAccessException.class)
+            .listener(stepExecutionListener())
+            .build();
+    }
+
+    // Partitioning pour parallélisation
+    @Bean
+    public Step partitionedStep(JobRepository jobRepository,
+                               Step customerStep,
+                               Partitioner partitioner) {
+        return new StepBuilder("partitionedStep", jobRepository)
+            .partitioner("customerStep", partitioner)
+            .step(customerStep)
+            .gridSize(4) // 4 threads
+            .taskExecutor(taskExecutor())
+            .build();
+    }
+
+    @Bean
+    public JobExecutionListener jobExecutionListener() {
+        return new JobExecutionListener() {
+            @Override
+            public void beforeJob(JobExecution jobExecution) {
+                logger.info("Job started: {}", jobExecution.getJobInstance().getJobName());
+            }
+
+            @Override
+            public void afterJob(JobExecution jobExecution) {
+                logger.info("Job completed: {} in {} ms",
+                    jobExecution.getStatus(),
+                    jobExecution.getEndTime().getTime() - jobExecution.getStartTime().getTime());
+            }
+        };
+    }
+}
+</code></pre></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Améliorer JobConfigGenerator (parameters) (2 jours)</li>
+<li>Support chunk size adaptatif (2 jours)</li>
+<li>Générer partitioning/parallel steps (3 jours)</li>
+<li>Retry/Skip policies (2 jours)</li>
+<li>Job listeners et métriques (2 jours)</li>
+<li>Tests unitaires (2 jours)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 13 jours</p>
+
+<p>---</p>
+
+<h4>US-3.2.3: Tests Améliorés</h4>
+
+<p><strong>En tant que</strong> développeur du convertisseur
+<strong>Je veux</strong> générer des tests complets et réalistes
+<strong>Afin de</strong> faciliter la validation du code généré</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> Tests d'intégration avec base de données réelle</li>
+<li><input type="checkbox" disabled> Tests de charge (JMeter/Gatling)</li>
+<li><input type="checkbox" disabled> Mocks de dépendances externes</li>
+<li><input type="checkbox" disabled> Tests de scénarios métier complets</li>
+</ul></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Améliorer TestGenerator (tests DB) (2 jours)</li>
+<li>Générer tests de charge (2 jours)</li>
+<li>Générer mocks (1 jour)</li>
+<li>Tests unitaires (1 jour)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 6 jours</p>
+
+<p>---</p>
+
+<h4>Résumé EPIC 3.2</h4>
+
+<p><strong>Stories:</strong> 3
+<strong>Effort total:</strong> 31 jours (optimisé à 25 jours)
+<strong>Tests:</strong> 5 jours inclus</p>
+
+<p>---</p>
+
+<h2>EPIC 3.3: Support CI/CD</h2>
+
+<p><strong>Priorité:</strong> 🟢 MOYENNE
+<strong>Impact:</strong> DevOps & Automatisation
+<strong>Effort:</strong> 10 jours
+<strong>Complexité:</strong> Moyenne</p>
+
+<h3>User Stories</h3>
+
+<h4>US-3.3.1: Générer workflows CI/CD</h4>
+
+<p><strong>En tant que</strong> développeur du convertisseur
+<strong>Je veux</strong> générer des workflows CI/CD pour les projets
+<strong>Afin de</strong> automatiser build, tests, et déploiement</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> GitHub Actions workflow</li>
+<li><input type="checkbox" disabled> GitLab CI pipeline</li>
+<li><input type="checkbox" disabled> Jenkins pipeline</li>
+<li><input type="checkbox" disabled> Docker Compose pour environnements de test</li>
+</ul></p>
+
+<p><strong>Exemple GitHub Actions généré:</strong>
+<pre><code class="language-yaml"># .github/workflows/build.yml
+name: Build and Test
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: testdb
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+        options: &gt;-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Build with Maven
+      run: mvn clean install -DskipTests
+
+    - name: Run unit tests
+      run: mvn test
+
+    - name: Run integration tests
+      run: mvn verify -Pintegration-tests
+      env:
+        SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/testdb
+        SPRING_DATASOURCE_USERNAME: test
+        SPRING_DATASOURCE_PASSWORD: test
+
+    - name: Build Docker image
+      run: docker build -t customer-batch:${{ github.sha }} .
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./target/site/jacoco/jacoco.xml
+</code></pre></p>
+
+<p><strong>Exemple GitLab CI généré:</strong>
+<pre><code class="language-yaml"># .gitlab-ci.yml
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
+
+cache:
+  paths:
+    - .m2/repository
+
+build:
+  stage: build
+  image: maven:3.9-openjdk-17
+  script:
+    - mvn clean compile
+  artifacts:
+    paths:
+      - target/
+
+test:
+  stage: test
+  image: maven:3.9-openjdk-17
+  services:
+    - postgres:15
+  variables:
+    POSTGRES_DB: testdb
+    POSTGRES_USER: test
+    POSTGRES_PASSWORD: test
+    SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/testdb
+  script:
+    - mvn test
+    - mvn verify -Pintegration-tests
+  coverage: '/Total.*?([0-9]{1,3})%/'
+  artifacts:
+    reports:
+      junit:
+        - target/surefire-reports/TEST-*.xml
+        - target/failsafe-reports/TEST-*.xml
+
+deploy:
+  stage: deploy
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker build -t customer-batch:$CI_COMMIT_SHA .
+    - docker tag customer-batch:$CI_COMMIT_SHA customer-batch:latest
+  only:
+    - main
+</code></pre></p>
+
+<p><strong>Exemple Docker Compose généré:</strong>
+<pre><code class="language-yaml"># docker-compose.yml
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: batchdb
+      POSTGRES_USER: batch
+      POSTGRES_PASSWORD: batch123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U batch"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/batchdb
+      SPRING_DATASOURCE_USERNAME: batch
+      SPRING_DATASOURCE_PASSWORD: batch123
+      SPRING_BATCH_JOB_ENABLED: "true"
+    volumes:
+      - ./data:/app/data
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:
+</code></pre></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Créer <code>CiCdGenerator</code> (2 jours)</li>
+<li>Générer GitHub Actions (2 jours)</li>
+<li>Générer GitLab CI (2 jours)</li>
+<li>Générer Jenkins pipeline (2 jours)</li>
+<li>Générer Docker Compose (1 jour)</li>
+<li>Tests (1 jour)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 10 jours</p>
+
+<p>---</p>
+
+<h4>Résumé EPIC 3.3</h4>
+
+<p><strong>Stories:</strong> 1
+<strong>Effort total:</strong> 10 jours
+<strong>Tests:</strong> 1 jour inclus</p>
+
+<p>---</p>
+
+<h2>EPIC 3.4: UI Web Améliorée</h2>
+
+<p><strong>Priorité:</strong> 🟢 BASSE
+<strong>Impact:</strong> Expérience Utilisateur
+<strong>Effort:</strong> 15 jours
+<strong>Complexité:</strong> Moyenne</p>
+
+<h3>User Stories</h3>
+
+<h4>US-3.4.1: Upload multiple fichiers (drag & drop)</h4>
+
+<p><strong>En tant qu'</strong> utilisateur
+<strong>Je veux</strong> uploader plusieurs fichiers COBOL en drag & drop
+<strong>Afin de</strong> convertir un batch de programmes rapidement</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> Drag & drop de fichiers</li>
+<li><input type="checkbox" disabled> Upload multiple simultané</li>
+<li><input type="checkbox" disabled> Barre de progression</li>
+<li><input type="checkbox" disabled> Aperçu des fichiers avant conversion</li>
+</ul></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Frontend: Zone drag & drop (2 jours)</li>
+<li>Backend: Endpoint upload multiple (1 jour)</li>
+<li>Tests (1 jour)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 4 jours</p>
+
+<p>---</p>
+
+<h4>US-3.4.2: Conversion en temps réel (WebSocket)</h4>
+
+<p><strong>En tant qu'</strong> utilisateur
+<strong>Je veux</strong> voir la progression de la conversion en temps réel
+<strong>Afin de</strong> suivre l'avancement</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> WebSocket pour communication temps réel</li>
+<li><input type="checkbox" disabled> Affichage progression (%)</li>
+<li><input type="checkbox" disabled> Logs de conversion en direct</li>
+<li><input type="checkbox" disabled> Notification de fin</li>
+</ul></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Backend: WebSocket configuration (2 jours)</li>
+<li>Frontend: Affichage temps réel (2 jours)</li>
+<li>Tests (1 jour)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 5 jours</p>
+
+<p>---</p>
+
+<h4>US-3.4.3: Comparaison COBOL/Java côte à côte</h4>
+
+<p><strong>En tant qu'</strong> utilisateur
+<strong>Je veux</strong> comparer le code COBOL et Java côte à côte
+<strong>Afin de</strong> valider la conversion</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> Affichage côte à côte (split view)</li>
+<li><input type="checkbox" disabled> Synchronisation du scroll</li>
+<li><input type="checkbox" disabled> Coloration syntaxique</li>
+<li><input type="checkbox" disabled> Highlighting des blocs correspondants</li>
+</ul></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Frontend: Split view editor (2 jours)</li>
+<li>Backend: Mapping COBOL↔Java (1 jour)</li>
+<li>Tests (1 jour)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 4 jours</p>
+
+<p>---</p>
+
+<h4>US-3.4.4: Export et historique</h4>
+
+<p><strong>En tant qu'</strong> utilisateur
+<strong>Je veux</strong> télécharger les projets et consulter l'historique
+<strong>Afin de</strong> retrouver mes conversions précédentes</p>
+
+<p><strong>Critères d'acceptation:</strong>
+<ul>
+<li><input type="checkbox" disabled> Export projet complet en ZIP</li>
+<li><input type="checkbox" disabled> Export code Java uniquement</li>
+<li><input type="checkbox" disabled> Historique des conversions</li>
+<li><input type="checkbox" disabled> Recherche dans l'historique</li>
+</ul></p>
+
+<p><strong>Tâches techniques:</strong>
+<ol>
+<li>Backend: Génération ZIP (1 jour)</li>
+<li>Backend: Sauvegarde historique (1 jour)</li>
+<li>Frontend: Interface historique (2 jours)</li>
+<li>Tests (1 jour)</li>
+</ol></p>
+
+<p><strong>Estimation:</strong> 5 jours</p>
+
+<p>---</p>
+
+<h4>Résumé EPIC 3.4</h4>
+
+<p><strong>Stories:</strong> 4
+<strong>Effort total:</strong> 18 jours (optimisé à 15 jours)
+<strong>Tests:</strong> 4 jours inclus</p>
+
+<p>---</p>
+
+<h2>Résumé Phase 3</h2>
+
+<p>| EPIC | Effort | Impact |
+|------|--------|--------|
+| 3.1 - Refactoring GO TO | 15 jours | +1-2% |
+| 3.2 - Génération Améliorée | 25 jours | Qualité |
+| 3.3 - Support CI/CD | 10 jours | DevOps |
+| 3.4 - UI Web Améliorée | 15 jours | UX |
+| <strong>TOTAL</strong> | <strong>65 jours</strong> | <strong>+1-2%</strong> |</p>
+
+<p><strong>Gain conversion:</strong> 97-98% → 99-100%
+<strong>Durée avec 2 devs:</strong> 1.5 mois</p>
+
+<p>---</p>
+
+<h1>📊 RÉCAPITULATIF GLOBAL</h1>
+
+<h2>Métriques Finales Attendues</h2>
+
+<p>| Métrique | Actuel | Après Phase 1 | Après Phase 2 | Après Phase 3 |
+|----------|--------|---------------|---------------|---------------|
+| <strong>Taux conversion</strong> | 76-82% | 92-95% | 97-98% | 99-100% |
+| <strong>Support EXEC SQL</strong> | 0% | 95% | 95% | 95% |
+| <strong>Support EXEC CICS</strong> | 0% | 90% | 90% | 90% |
+| <strong>TODOs</strong> | 105 | 0 | 0 | 0 |
+| <strong>REDEFINES complexes</strong> | 70% | 95% | 95% | 95% |
+| <strong>Couverture tests</strong> | 80% | 85% | 95% | 98% |
+| <strong>Tests E2E</strong> | 0 | 10+ | 50+ | 100+ |</p>
+
+<h2>Effort et Planning</h2>
+
+<h3>Vue d'ensemble</h3>
+
+<p>| Phase | Durée | Équipe | Effort Total | Gain Conversion |
+|-------|-------|--------|--------------|-----------------|
+| <strong>Phase 1</strong> | 3 mois | 2-3 devs | 130 jours | +10 à +13% |
+| <strong>Phase 2</strong> | 2 mois | 2 devs | 61 jours | +5 à +6% |
+| <strong>Phase 3</strong> | 1.5 mois | 2 devs | 65 jours | +2 à +3% |
+| <strong>TOTAL</strong> | <strong>6.5 mois</strong> | | <strong>256 jours</strong> | <strong>+17 à +22%</strong> |</p>
+
+<h3>Planning Gantt (Simplifié)</h3>
+
+<p><pre><code class="language-">Mois 1-3: PHASE 1 (Fondations Critiques)
+├─ EPIC 1.1: EXEC SQL → JPA (40j)
+├─ EPIC 1.2: EXEC CICS → REST (40j) [parallèle]
+├─ EPIC 1.3: TODOs (30j)
+└─ EPIC 1.4: REDEFINES (20j) [parallèle avec 1.3]
+
+Mois 4-5: PHASE 2 (Robustesse & Qualité)
+├─ EPIC 2.1: OCCURS DEPENDING ON (10j)
+├─ EPIC 2.2: EVALUATE ALSO (8j) [parallèle]
+├─ EPIC 2.3: INSPECT Combiné (5j)
+├─ EPIC 2.4: SORT (12j) [parallèle]
+└─ EPIC 2.5: Tests Complets (26j)
+
+Mois 6-7.5: PHASE 3 (Excellence)
+├─ EPIC 3.1: Refactoring GO TO (15j)
+├─ EPIC 3.2: Génération Améliorée (25j)
+├─ EPIC 3.3: CI/CD (10j) [parallèle]
+└─ EPIC 3.4: UI Web (15j) [parallèle]
+</code></pre></p>
+
+<h2>Dépendances Entre EPICs</h2>
+
+<p><pre><code class="language-">EPIC 1.1 (EXEC SQL)
+  └─&gt; Requis pour: Tests E2E (EPIC 2.5)
+
+EPIC 1.2 (EXEC CICS)
+  └─&gt; Requis pour: Tests E2E (EPIC 2.5)
+
+EPIC 1.3 (TODOs)
+  └─&gt; Requis pour: Tous les autres EPICs
+
+EPIC 1.4 (REDEFINES)
+  └─&gt; Requis pour: Génération Améliorée (EPIC 3.2)
+
+EPIC 2.5 (Tests Complets)
+  └─&gt; Requis pour: Validation de tous les EPICs
+
+EPIC 3.1 (Refactoring GO TO)
+  └─&gt; Optionnel, indépendant
+
+EPIC 3.2 (Génération Améliorée)
+  └─&gt; Dépend de: EPIC 1.4
+
+EPIC 3.3 (CI/CD)
+  └─&gt; Indépendant, peut être fait en parallèle
+
+EPIC 3.4 (UI Web)
+  └─&gt; Indépendant, peut être fait en parallèle
+</code></pre></p>
+
+<h2>Risques et Mitigation</h2>
+
+<p>| Risque | Probabilité | Impact | Mitigation |
+|--------|-------------|--------|------------|
+| Complexité EXEC SQL/CICS sous-estimée | Moyenne | Élevé | Preuve de concept (PoC) dès début Phase 1 |
+| Tests E2E révèlent bugs majeurs | Moyenne | Moyen | Tests incrémentaux dès Phase 1 |
+| Performance insuffisante (SORT) | Faible | Moyen | Profiling et benchmarks pendant Phase 2 |
+| Refactoring GO TO trop complexe | Élevée | Faible | Phase 3 optionnelle, peut être simplifiée |
+| Incompatibilités bases de données | Moyenne | Moyen | Tests multi-DB dès Phase 1 |</p>
+
+<h2>Livrables par Phase</h2>
+
+<h3>Phase 1</h3>
+<ul>
+<li><input type="checkbox" disabled> Module EXEC SQL → JPA fonctionnel</li>
+<li><input type="checkbox" disabled> Module EXEC CICS → REST fonctionnel</li>
+<li><input type="checkbox" disabled> Code sans TODOs</li>
+<li><input type="checkbox" disabled> Support REDEFINES complexes</li>
+<li><input type="checkbox" disabled> Documentation technique mise à jour</li>
+<li><input type="checkbox" disabled> 10+ programmes COBOL de test convertis</li>
+</ul>
+
+<h3>Phase 2</h3>
+<ul>
+<li><input type="checkbox" disabled> Support OCCURS DEPENDING ON</li>
+<li><input type="checkbox" disabled> Support EVALUATE ALSO avancé</li>
+<li><input type="checkbox" disabled> Support INSPECT combiné</li>
+<li><input type="checkbox" disabled> Support SORT gros volumes</li>
+<li><input type="checkbox" disabled> Suite de tests complète (unit, integration, E2E, performance)</li>
+<li><input type="checkbox" disabled> Rapport de couverture 95%+</li>
+<li><input type="checkbox" disabled> 50+ programmes COBOL de test convertis</li>
+</ul>
+
+<h3>Phase 3</h3>
+<ul>
+<li><input type="checkbox" disabled> Module refactoring GO TO</li>
+<li><input type="checkbox" disabled> Génération avancée (validation JPA, relations, audit)</li>
+<li><input type="checkbox" disabled> Workflows CI/CD (GitHub Actions, GitLab CI, Jenkins)</li>
+<li><input type="checkbox" disabled> UI Web améliorée (drag & drop, temps réel, comparaison)</li>
+<li><input type="checkbox" disabled> Documentation utilisateur complète</li>
+<li><input type="checkbox" disabled> 100+ programmes COBOL de test convertis</li>
+<li><input type="checkbox" disabled> Guide de migration COBOL→Java</li>
+</ul>
+
+<h2>Critères de Succès</h2>
+
+<h3>Critères Techniques</h3>
+<ul>
+<li><input type="checkbox" disabled> <strong>Taux de conversion ≥ 99%</strong> sur panel de 100+ programmes COBOL réels</li>
+<li><input type="checkbox" disabled> <strong>Couverture de tests ≥ 95%</strong></li>
+<li><input type="checkbox" disabled> <strong>0 TODOs</strong> dans le code</li>
+<li><input type="checkbox" disabled> <strong>Performance:</strong> Conversion d'un programme COBOL de 10K lignes en <30 secondes</li>
+<li><input type="checkbox" disabled> <strong>Compilation:</strong> 100% du code Java généré compile sans erreur</li>
+<li><input type="checkbox" disabled> <strong>Exécution:</strong> 95%+ des jobs Spring Batch générés s'exécutent avec succès</li>
+</ul>
+
+<h3>Critères Fonctionnels</h3>
+<ul>
+<li><input type="checkbox" disabled> Support EXEC SQL (SELECT, INSERT, UPDATE, DELETE, curseurs)</li>
+<li><input type="checkbox" disabled> Support EXEC CICS (READ, WRITE, REWRITE, DELETE, SEND, RECEIVE)</li>
+<li><input type="checkbox" disabled> Support REDEFINES multiples et complexes</li>
+<li><input type="checkbox" disabled> Support tableaux dynamiques (OCCURS DEPENDING ON)</li>
+<li><input type="checkbox" disabled> Support tri de gros volumes (external sort)</li>
+</ul>
+
+<h3>Critères Qualité</h3>
+<ul>
+<li><input type="checkbox" disabled> Code généré respecte les conventions Java</li>
+<li><input type="checkbox" disabled> Code généré utilise les best practices Spring Boot/Batch</li>
+<li><input type="checkbox" disabled> Documentation complète (technique + utilisateur)</li>
+<li><input type="checkbox" disabled> Processus CI/CD automatisé</li>
+<li><input type="checkbox" disabled> UI web intuitive et réactive</li>
+</ul>
+
+<h2>Recommandations Stratégiques</h2>
+
+<h3>Option 1: Approche Minimale (Phase 1 Uniquement)</h3>
+<strong>Durée:</strong> 3 mois
+<strong>Gain:</strong> 82% → 92-95%
+<strong>Recommandée pour:</strong> Projets avec contraintes de temps/budget
+<strong>Avantages:</strong>
+<ul>
+<li>ROI rapide</li>
+<li>Risque faible</li>
+<li>Couvre 95% des besoins réels</li>
+</ul>
+
+<p><strong>Inconvénients:</strong>
+<ul>
+<li>Pas de support gros volumes (SORT)</li>
+<li>Tests limités</li>
+<li>Pas de CI/CD automatisé</li>
+</ul></p>
+
+<h3>Option 2: Approche Complète (Phases 1+2+3)</h3>
+<strong>Durée:</strong> 6.5 mois
+<strong>Gain:</strong> 82% → 99-100%
+<strong>Recommandée pour:</strong> Projets d'entreprise critiques
+<strong>Avantages:</strong>
+<ul>
+<li>Outil production-ready</li>
+<li>Couverture maximale</li>
+<li>Qualité industrielle</li>
+</ul>
+
+<p><strong>Inconvénients:</strong>
+<ul>
+<li>Investissement important</li>
+<li>Délai plus long</li>
+</ul></p>
+
+<h3>Option 3: Approche Hybride (Phases 1+2)</h3>
+<strong>Durée:</strong> 5 mois
+<strong>Gain:</strong> 82% → 97-98%
+<strong>Recommandée pour:</strong> Équilibre coût/bénéfice
+<strong>Avantages:</strong>
+<ul>
+<li>Excellent taux de conversion</li>
+<li>Tests complets</li>
+<li>Coût maîtrisé</li>
+</ul>
+
+<p><strong>Inconvénients:</strong>
+<ul>
+<li>Pas de refactoring GO TO automatique</li>
+<li>UI web basique</li>
+</ul></p>
+
+<p>---</p>
+
+<h2>📝 CONCLUSION</h2>
+
+<p>Ce plan détaillé permet d'atteindre <strong>99-100% de taux de conversion automatique</strong> en 6.5 mois avec une équipe de 2-3 développeurs.</p>
+
+<p><strong>Prochaines étapes:</strong>
+<ol>
+<li>Valider l'approche stratégique (Option 1, 2, ou 3)</li>
+<li>Constituer l'équipe de développement</li>
+<li>Créer les POCs pour EXEC SQL et EXEC CICS</li>
+<li>Démarrer Phase 1 - EPIC 1.1</li>
+</ol></p>
+
+<p><strong>Contact:</strong>
+Pour questions ou clarifications sur ce plan, contactez l'équipe de développement.</p>
+
+<p>---</p>
+
+<p><strong>Document créé le:</strong> 08 janvier 2026
+<strong>Version:</strong> 1.0
+<strong>Auteur:</strong> Équipe de développement COBOL→Java Translator
+<strong>Prochaine révision:</strong> À la fin de Phase 1</p>
+        </div>
+    </div>
+</body>
+</html>

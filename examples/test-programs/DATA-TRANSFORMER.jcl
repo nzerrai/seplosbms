@@ -1,0 +1,30 @@
+//DATATRAN JOB (ACCT),'DATA TRANSFORMATION',
+//         CLASS=A,
+//         MSGCLASS=X,
+//         MSGLEVEL=(1,1),
+//         NOTIFY=&SYSUID
+//*****************************************************************
+//* JCL POUR DATA TRANSFORMER - TRANSFORMATION DE DONNEES        *
+//*****************************************************************
+//STEP010  EXEC PGM=DATA-TRANSFORMER
+//STEPLIB  DD DSN=PROD.LOADLIB,DISP=SHR
+//SYSPRINT DD SYSOUT=*
+//SYSOUT   DD SYSOUT=*
+//SYSUDUMP DD SYSOUT=*
+//*
+//* INPUT FILE - RAW DATA
+//RAWINPUT DD DSN=PROD.DATA.RAW,
+//            DISP=SHR,
+//            DCB=(RECFM=FB,LRECL=100,BLKSIZE=27900)
+//*
+//* OUTPUT FILE - TRANSFORMED DATA
+//TRANSOUT DD DSN=PROD.DATA.TRANSFORMED,
+//            DISP=(NEW,CATLG,DELETE),
+//            UNIT=SYSDA,
+//            SPACE=(TRK,(15,5),RLSE),
+//            DCB=(RECFM=FB,LRECL=150,BLKSIZE=27900)
+//*
+//* VALIDATION FILE
+//VALIDCOD DD DSN=PROD.REFERENCE.CODES,
+//            DISP=SHR,
+//            DCB=(RECFM=FB,LRECL=40,BLKSIZE=27960)

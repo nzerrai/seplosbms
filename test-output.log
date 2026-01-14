@@ -1,0 +1,99 @@
+[[1;34mINFO[m] Scanning for projects...
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m-----------------< [0;36mcom.cobol:cobol-to-java-translator[0;1m >-----------------[m
+[[1;34mINFO[m] [1mBuilding COBOL to Java Spring Batch Translator 1.0.0-SNAPSHOT[m
+[[1;34mINFO[m]   from pom.xml
+[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mantlr4:4.13.1:antlr4[m [1m(default)[m @ [36mcobol-to-java-translator[0;1m ---[m
+[[1;34mINFO[m] No grammars to process
+[[1;34mINFO[m] ANTLR 4: Processing source directory /home/seplos/projets/cobol-to-java-translator/src/main/antlr4
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mresources:3.3.1:resources[m [1m(default-resources)[m @ [36mcobol-to-java-translator[0;1m ---[m
+[[1;34mINFO[m] Copying 7 resources from src/main/resources to target/classes
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mcompiler:3.11.0:compile[m [1m(default-compile)[m @ [36mcobol-to-java-translator[0;1m ---[m
+[[1;34mINFO[m] Nothing to compile - all classes are up to date
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mresources:3.3.1:testResources[m [1m(default-testResources)[m @ [36mcobol-to-java-translator[0;1m ---[m
+[[1;34mINFO[m] Copying 3 resources from src/test/resources to target/test-classes
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mcompiler:3.11.0:testCompile[m [1m(default-testCompile)[m @ [36mcobol-to-java-translator[0;1m ---[m
+[[1;34mINFO[m] Nothing to compile - all classes are up to date
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32msurefire:3.2.3:test[m [1m(default-test)[m @ [36mcobol-to-java-translator[0;1m ---[m
+[[1;34mINFO[m] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[[1;34mINFO[m] 
+[[1;34mINFO[m] -------------------------------------------------------
+[[1;34mINFO[m]  T E S T S
+[[1;34mINFO[m] -------------------------------------------------------
+[[1;34mINFO[m] Running com.cobol.translator.redefines.[1mRedefinesAnalyzerTest[m
+[[1;31mERROR[m] [1;31mTests [0;1mrun: [0;1m8[m, [1;31mFailures: [0;1;31m1[m, [1;31mErrors: [0;1;31m2[m, Skipped: 0, Time elapsed: 0.042 s[1;31m <<< FAILURE![m -- in com.cobol.translator.redefines.[1mRedefinesAnalyzerTest[m
+[[1;31mERROR[m] com.cobol.translator.redefines.RedefinesAnalyzerTest.testFieldSizeCalculation -- Time elapsed: 0.003 s <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "com.cobol.translator.redefines.RedefinesInfo.getFieldSize()" because "info" is null
+	at com.cobol.translator.redefines.RedefinesAnalyzerTest.testFieldSizeCalculation(RedefinesAnalyzerTest.java:178)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[[1;31mERROR[m] com.cobol.translator.redefines.RedefinesAnalyzerTest.testStructuredView -- Time elapsed: 0.001 s <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "com.cobol.translator.redefines.RedefinesInfo.getRedefinitions()" because "info" is null
+	at com.cobol.translator.redefines.RedefinesAnalyzerTest.testStructuredView(RedefinesAnalyzerTest.java:88)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[[1;31mERROR[m] com.cobol.translator.redefines.RedefinesAnalyzerTest.testMultipleRedefines -- Time elapsed: 0.001 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <2> but was: <1>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:150)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:145)
+	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:531)
+	at com.cobol.translator.redefines.RedefinesAnalyzerTest.testMultipleRedefines(RedefinesAnalyzerTest.java:60)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[[1;34mINFO[m] Running com.cobol.translator.redefines.[1mRedefinesOptimizerTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m13[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.167 s -- in com.cobol.translator.redefines.[1mRedefinesOptimizerTest[m
+[[1;34mINFO[m] Running com.cobol.translator.redefines.[1mUnionTypeGeneratorTest[m
+[[1;31mERROR[m] [1;31mTests [0;1mrun: [0;1m10[m, Failures: 0, [1;31mErrors: [0;1;31m1[m, Skipped: 0, Time elapsed: 0.020 s[1;31m <<< FAILURE![m -- in com.cobol.translator.redefines.[1mUnionTypeGeneratorTest[m
+[[1;31mERROR[m] com.cobol.translator.redefines.UnionTypeGeneratorTest.testGenerateStructuredViewClass -- Time elapsed: 0.002 s <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "com.cobol.translator.redefines.RedefinesInfo.getOriginalFieldName()" because "info" is null
+	at com.cobol.translator.redefines.UnionTypeGenerator.generateWrapperClass(UnionTypeGenerator.java:27)
+	at com.cobol.translator.redefines.UnionTypeGeneratorTest.testGenerateStructuredViewClass(UnionTypeGeneratorTest.java:97)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[[1;34mINFO[m] 
+[[1;34mINFO[m] Results:
+[[1;34mINFO[m] 
+[[1;31mERROR[m] [1;31mFailures: [m
+[[1;31mERROR[m] [1;31m  RedefinesAnalyzerTest.testMultipleRedefines:60 expected: <2> but was: <1>[m
+[[1;31mERROR[m] [1;31mErrors: [m
+[[1;31mERROR[m] [1;31m  RedefinesAnalyzerTest.testFieldSizeCalculation:178 NullPointer Cannot invoke "com.cobol.translator.redefines.RedefinesInfo.getFieldSize()" because "info" is null[m
+[[1;31mERROR[m] [1;31m  RedefinesAnalyzerTest.testStructuredView:88 NullPointer Cannot invoke "com.cobol.translator.redefines.RedefinesInfo.getRedefinitions()" because "info" is null[m
+[[1;31mERROR[m] [1;31m  UnionTypeGeneratorTest.testGenerateStructuredViewClass:97 » NullPointer Cannot invoke "com.cobol.translator.redefines.RedefinesInfo.getOriginalFieldName()" because "info" is null[m
+[[1;34mINFO[m] 
+[[1;31mERROR[m] [1;31mTests run: 31, Failures: 1, Errors: 3, Skipped: 0[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1;31mBUILD FAILURE[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] Total time:  1.149 s
+[[1;34mINFO[m] Finished at: 2026-01-08T13:56:56+01:00
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;31mERROR[m] Failed to execute goal [32morg.apache.maven.plugins:maven-surefire-plugin:3.2.3:test[m [1m(default-test)[m on project [36mcobol-to-java-translator[m: [1;31mThere are test failures.[m
+[[1;31mERROR[m] [1;31m[m
+[[1;31mERROR[m] [1;31mPlease refer to /home/seplos/projets/cobol-to-java-translator/target/surefire-reports for the individual test results.[m
+[[1;31mERROR[m] [1;31mPlease refer to dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.[m
+[[1;31mERROR[m] -> [1m[Help 1][m
+[[1;31mERROR[m] 
+[[1;31mERROR[m] To see the full stack trace of the errors, re-run Maven with the [1m-e[m switch.
+[[1;31mERROR[m] Re-run Maven using the [1m-X[m switch to enable full debug logging.
+[[1;31mERROR[m] 
+[[1;31mERROR[m] For more information about the errors and possible solutions, please read the following articles:
+[[1;31mERROR[m] [1m[Help 1][m http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

@@ -3,16 +3,23 @@ package com.cobol.translator;
 import com.cobol.translator.analyzer.CobolContextAnalyzer;
 import com.cobol.translator.config.TranslationConfig;
 import com.cobol.translator.config.TranslatorConfiguration;
+import com.cobol.translator.copybook.CopybookResolver;
+import com.cobol.translator.diagram.AlgorithmDiagramGenerator;
 import com.cobol.translator.generator.*;
 import com.cobol.translator.jcl.generator.JCLSpringBatchGenerator;
 import com.cobol.translator.jcl.model.JCLJob;
 import com.cobol.translator.jcl.parser.JCLParser;
 import com.cobol.translator.model.CobolProgram;
+import com.cobol.translator.parser.CobolASTParser;
 import com.cobol.translator.parser.CobolParser;
+import com.cobol.translator.ast.ProgramNode;
 import com.cobol.translator.project.ProjectGenerator;
 import com.cobol.translator.report.ConversionReport;
 import com.cobol.translator.report.ReportGenerator;
 import com.cobol.translator.result.TranslationResult;
+import com.cobol.translator.vsam.VsamFileAnalyzer;
+import com.cobol.translator.vsam.VsamFileInfo;
+import com.cobol.translator.vsam.VsamToJdbcMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +29,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Main translator class that orchestrates COBOL to Java Spring Batch translation.
@@ -46,7 +55,11 @@ public class CobolTranslator {
     private final ProcessorGenerator processorGenerator;
     private final JobConfigGenerator jobConfigGenerator;
     private final TestGenerator testGenerator;
+    private final AlgorithmDiagramGenerator diagramGenerator;
     private final TranslatorConfiguration translatorConfig;
+    private final CopybookResolver copybookResolver;
+    private final VsamFileAnalyzer vsamAnalyzer;
+    private final VsamToJdbcMapper vsamMapper;
 
     /**
      * Constructeur par defaut - charge la configuration depuis translator.properties
@@ -65,15 +78,50 @@ public class CobolTranslator {
         this.processorGenerator = new ProcessorGenerator();
         this.jobConfigGenerator = new JobConfigGenerator();
         this.testGenerator = new TestGenerator();
+        this.diagramGenerator = new AlgorithmDiagramGenerator();
+        
+        // Initialize copybook resolver
+        this.copybookResolver = new CopybookResolver();
+        
+        // Initialize VSAM support
+        this.vsamAnalyzer = new VsamFileAnalyzer();
+        this.vsamMapper = new VsamToJdbcMapper(TranslationConfig.builder()
+            .sourceFile("dummy.cob")  // Dummy source file for initialization
+            .outputPackage(translatorConfig.getTargetPackageBase())
+            .build());
 
         logger.info("CobolTranslator initialized with configuration: {}", translatorConfig);
+        logger.info("Copybook resolver and VSAM support enabled");
     }
 
     /**
      * Translates a single COBOL program to Java Spring Batch.
-     *
-     * @param config Translation configuration
-     * @return Translation result with generated files and metrics
+     *0: Resolve copybooks (if any)
+            logger.info("Resolving copybooks...");
+            String cobolSource = readFile(config.getSourceFile());
+            
+            // Configure copybook search paths
+            Path sourceDir = Paths.get(config.getSourceFile()).getParent();
+            if (sourceDir != null) {
+                copybookResolver.addSearchPath(sourceDir);
+                // Also check for copybooks subdirectory
+                Path copybooksDir = sourceDir.resolve("copybooks");
+                if (Files.exists(copybooksDir)) {
+                    copybookResolver.addSearchPath(copybooksDir);
+                }
+            }
+            
+            // Expand copybooks
+            cobolSource = copybookResolver.resolveAllCopybooks(cobolSource);
+            
+            if (!copybookResolver.getResolvedCopybooks().isEmpty()) {
+                logger.info("Resolved {} copybooks: {}", 
+                    copybookResolver.getResolvedCopybooks().size(),
+                    copybookResolver.getResolvedCopybooks());
+            }
+            
+            // Step 1: Parse COBOL program
+            logger.info("Parsing COBOL program..."cs
      */
     public TranslationResult translate(TranslationConfig config) {
         logger.info("Starting translation of: {}", config.getSourceFile());
@@ -87,7 +135,28 @@ public class CobolTranslator {
             // Step 1: Parse COBOL program
             logger.info("Parsing COBOL program...");
             String cobolSource = readFile(config.getSourceFile());
-            CobolProgram program = parser.parse(cobolSource);
+            CobolProgram program = null;
+
+            // First, try the richer ANTLR parser to validate syntax and recover metadata
+            ProgramNode ast = null;
+            try {
+                CobolASTParser astParser = new CobolASTParser();
+                ast = astParser.parseString(cobolSource, config.getSourceFile());
+                if (ast != null && ast.getProgramName() != null && !ast.getProgramName().isEmpty()) {
+                    logger.info("ANTLR parse success - program name: {}", ast.getProgramName());
+                }
+            } catch (Exception e) {
+                logger.warn("ANTLR parse failed, falling back to legacy parser: {}", e.getMessage());
+            }
+
+            program = parser.parse(cobolSource);
+            if (ast != null && ast.getProgramName() != null && !ast.getProgramName().isEmpty()) {
+                // If legacy parser missed the program name, patch it from the AST
+                if (program.getProgramName() == null || program.getProgramName().isEmpty()) {
+                    program.setProgramName(ast.getProgramName());
+                    program.setProgramId(ast.getProgramName());
+                }
+            }
             program.setSourceFile(config.getSourceFile());
             resultBuilder.cobolProgram(program);
 
@@ -110,9 +179,16 @@ public class CobolTranslator {
                     analysisResult.getWarnings().size(),
                     analysisResult.getWarningsByLevel(CobolContextAnalyzer.WarningLevel.HIGH).size());
 
-            // Step 2: Generer le projet cible (si pas deja fait)
+            // Step 2: Ensure target project exists (use configured project path, not per-program)
             logger.info("Ensuring target project exists...");
-            Path projectPath = ensureProjectExists();
+            Path projectPath = translatorConfig.getTargetProjectPath();
+            if (!java.nio.file.Files.exists(projectPath)) {
+                logger.info("Creating new target project at: {}", projectPath);
+                ProjectGenerator projectGen = new ProjectGenerator(translatorConfig);
+                projectGen.generateProject(projectPath);
+            } else {
+                logger.info("Target project already exists: {}", projectPath);
+            }
 
             // Step 3: Creer la structure de packages dans le projet cible
             Path modelDir = createOutputDirectory(projectPath, "model");
@@ -124,17 +200,36 @@ public class CobolTranslator {
                 copyCobolSource(config.getSourceFile(), projectPath, program.getProgramName());
             }
 
-            // Step 5: Generate entity classes
+            // Step 5: Generate entity classes (initial pass with layout-based fields)
             logger.info("Generating entity classes...");
             List<File> entityFiles = entityGenerator.generate(program, config, modelDir);
             resultBuilder.addGeneratedFiles(entityFiles);
 
-            // Step 6: Generate processor
+            // Step 6: Generate processor (includes field inference)
             logger.info("Generating processor...");
-            File processorFile = processorGenerator.generate(program, config, processorDir);
-            resultBuilder.addGeneratedFile(processorFile);
+            ProcessorGenerationResult processorResult = processorGenerator.generate(program, config, processorDir);
+            resultBuilder.addGeneratedFile(processorResult.getProcessorFile());
+            
+            // Step 7: Regenerate entities if processor inferred additional fields
+            if (processorResult.hasInferredFields()) {
+                logger.info("Regenerating entity {} with {} inferred fields", 
+                    processorResult.getInputRecordType(), 
+                    processorResult.getInferredFields().size());
+                
+                Map<String, Map<String, String>> additionalFieldsByFile = new LinkedHashMap<>();
+                additionalFieldsByFile.put(
+                    processorResult.getInputRecordType(), 
+                    processorResult.getInferredFields()
+                );
+                
+                List<File> enrichedEntityFiles = entityGenerator.generate(
+                    program, config, modelDir, additionalFieldsByFile);
+                // Don't add to resultBuilder again - just enriching existing files
+                logger.info("Entity enrichment completed - {} fields added", 
+                    processorResult.getInferredFields().size());
+            }
 
-            // Step 7: Check for corresponding JCL file and translate if found
+            // Step 8: Check for corresponding JCL file and translate if found
             Path jclFile = findCorrespondingJCLFile(config.getSourceFile());
             if (jclFile != null && Files.exists(jclFile)) {
                 logger.info("Found corresponding JCL file: {}", jclFile.getFileName());
@@ -146,7 +241,17 @@ public class CobolTranslator {
             File jobConfigFile = jobConfigGenerator.generate(program, config, configDir);
             resultBuilder.addGeneratedFile(jobConfigFile);
 
-            // Step 9: Generate tests (if enabled)
+            // Step 9: Generate algorithm diagrams
+            logger.info("Generating algorithm diagrams...");
+            Path docsDir = projectPath.resolve("docs");
+            Files.createDirectories(docsDir);
+            List<Path> diagramFiles = diagramGenerator.generateDiagrams(program, docsDir);
+            for (Path diagramFile : diagramFiles) {
+                resultBuilder.addGeneratedFile(diagramFile.toFile());
+            }
+            logger.info("Generated {} diagram files", diagramFiles.size());
+
+            // Step 10: Generate tests (if enabled)
             if (translatorConfig.isGenerateTests()) {
                 logger.info("Generating tests...");
                 Path testDir = projectPath.resolve("src/test/java").resolve(translatorConfig.getTargetPackageBase().replace('.', '/'));
@@ -155,10 +260,10 @@ public class CobolTranslator {
                 resultBuilder.addGeneratedFiles(testFiles);
             }
 
-            // Step 9: Generate conversion report
+            // Step 11: Generate conversion report
             if (translatorConfig.isGenerateReport()) {
                 logger.info("Generating conversion report...");
-                ConversionReport report = generateReport(program, projectPath);
+                ConversionReport report = generateReport(program, projectPath, jclFile);
                 resultBuilder.conversionReport(report);
 
                 logger.info("Conversion rate: {:.1f}%", report.getConversionPercentage());
@@ -372,18 +477,33 @@ public class CobolTranslator {
     /**
      * Generates conversion report and saves it to file.
      */
-    private ConversionReport generateReport(CobolProgram program, Path projectPath) throws IOException {
+    private ConversionReport generateReport(CobolProgram program, Path projectPath, Path jclFile) throws IOException {
         // Generate report
         ReportGenerator reportGen = new ReportGenerator(program);
         ConversionReport report = reportGen.generate();
+        
+        // Add JCL file name if present
+        if (jclFile != null && Files.exists(jclFile)) {
+            report.setJclFile(jclFile.getFileName().toString());
+        }
 
         // Save report to docs/ directory
         String reportFileName = program.getProgramName() + "_CONVERSION_REPORT.txt";
+        String csvFileName = program.getProgramName() + "_TYPE_MAPPING.csv";
         Path docsDir = projectPath.resolve("docs");
         Files.createDirectories(docsDir);
+
+        // Save text report
         Path reportPath = docsDir.resolve(reportFileName);
         Files.writeString(reportPath, report.generateTextReport());
         logger.info("Conversion report saved to: {}", reportPath);
+
+        // Save CSV type mapping if there are mappings
+        if (!report.getTypeMappings().isEmpty()) {
+            Path csvPath = docsDir.resolve(csvFileName);
+            Files.writeString(csvPath, report.generateTypeMappingCSV());
+            logger.info("Type mapping CSV saved to: {}", csvPath);
+        }
 
         return report;
     }

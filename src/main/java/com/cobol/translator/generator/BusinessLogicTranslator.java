@@ -161,7 +161,16 @@ public class BusinessLogicTranslator {
             condition = translateCobolCondition(condition);
         }
 
-        code.append(indent).append("// COBOL: IF ").append(stmt.getOriginalCobol() != null ? stmt.getOriginalCobol() : "").append("\n");
+        // Generate COBOL comment - avoid duplicate "IF IF" by checking if original already contains IF
+        String originalCobol = stmt.getOriginalCobol() != null ? stmt.getOriginalCobol().trim() : "";
+        if (!originalCobol.isEmpty()) {
+            // If original starts with IF, don't add it again
+            if (originalCobol.toUpperCase().startsWith("IF ")) {
+                code.append(indent).append("// COBOL: ").append(originalCobol).append("\n");
+            } else {
+                code.append(indent).append("// COBOL: IF ").append(originalCobol).append("\n");
+            }
+        }
         code.append(indent).append("if (").append(condition).append(") {\n");
 
         // Translate THEN part (children statements)
@@ -469,7 +478,11 @@ public class BusinessLogicTranslator {
 
         String paragraphName = stmt.getParagraphName();
         if (paragraphName == null || paragraphName.trim().isEmpty()) {
-            return indent + "// TODO: PERFORM statement without paragraph name\n";
+            // Provide context about what PERFORM does
+            String originalCobol = stmt.getOriginalCobol() != null ? stmt.getOriginalCobol().trim() : "PERFORM";
+            return indent + "// COBOL: " + originalCobol + "\n" +
+                   indent + "// TODO: PERFORM statement without paragraph name - this might be inline PERFORM\n" +
+                   indent + "// Original COBOL may have conditional logic that should be translated here\n";
         }
 
         String methodName = toJavaMethodName(paragraphName);

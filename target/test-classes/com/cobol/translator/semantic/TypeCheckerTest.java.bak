@@ -1,0 +1,264 @@
+package com.cobol.translator.semantic;
+
+import com.cobol.translator.ast.*;
+import com.cobol.translator.parser.CobolASTParser;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * Tests pour TypeChecker - Validation types et compatibilité
+ */
+public class TypeCheckerTest {
+
+    private TypeChecker typeChecker;
+    private SymbolTable symbolTable;
+    private CobolASTParser parser;
+
+    @BeforeEach
+    public void setUp() {
+        symbolTable = new SymbolTable();
+        typeChecker = new TypeChecker(symbolTable);
+        parser = new CobolASTParser();
+    }
+
+    @Test
+    public void testValidMoveNumericToNumeric() {
+        // Setup: WS-COUNTER (Integer), WS-TOTAL (Integer)
+        symbolTable.addSymbol(new Symbol("WS-COUNTER", SymbolType.VARIABLE,
+                                         "PIC 9(5)", "Integer",
+                                         Scope.WORKING_STORAGE, 1));
+        symbolTable.addSymbol(new Symbol("WS-TOTAL", SymbolType.VARIABLE,
+                                         "PIC 9(7)", "Integer",
+                                         Scope.WORKING_STORAGE, 2));
+
+        // MOVE WS-COUNTER TO WS-TOTAL → Compatible
+        MoveStatementNode move = createMoveStatement("WS-COUNTER", "WS-TOTAL");
+        
+        SemanticErrorCollector errors = new SemanticErrorCollector();
+        typeChecker.checkMoveStatement(move, errors);
+
+        assertTrue(errors.isEmpty(), "MOVE numeric to numeric should be valid");
+    }
+
+    @Test
+    public void testIncompatibleMoveNumericToAlpha() {
+        symbolTable.addSymbol(new Symbol("WS-COUNT", SymbolType.VARIABLE,
+                                         "PIC 9(5)", "Integer",
+                                         Scope.WORKING_STORAGE, 1));
+        symbolTable.addSymbol(new Symbol("WS-NAME", SymbolType.VARIABLE,
+                                         "PIC X(30)", "String",
+                                         Scope.WORKING_STORAGE, 2));
+
+        // MOVE WS-COUNT TO WS-NAME → Incompatible (mais coercible en COBOL)
+        MoveStatementNode move = createMoveStatement("WS-COUNT", "WS-NAME");
+        
+        SemanticErrorCollector errors = new SemanticErrorCollector();
+        typeChecker.checkMoveStatement(move, errors);
+
+        assertFalse(errors.isEmpty(), "MOVE numeric to alpha should warn");
+        assertTrue(errors.hasWarning("type_mismatch"));
+    }
+
+    @Test
+    public void testUndefinedSourceVariable() {
+        symbolTable.addSymbol(new Symbol("WS-DEST", SymbolType.VARIABLE,
+                                         "PIC 9", "Integer",
+                                         Scope.WORKING_STORAGE, 1));
+
+        // MOVE WS-UNDEFINED TO WS-DEST → Source not defined
+        MoveStatementNode move = createMoveStatement("WS-UNDEFINED", "WS-DEST");
+        
+        SemanticErrorCollector errors = new SemanticErrorCollector();
+        typeChecker.checkMoveStatement(move, errors);
+
+        assertTrue(errors.hasError("variable_not_defined"),
+                   "Should detect undefined source variable");
+    }
+
+    @Test
+    public void testUndefinedTargetVariable() {
+        symbolTable.addSymbol(new Symbol("WS-SOURCE", SymbolType.VARIABLE,
+                                         "PIC 9", "Integer",
+                                         Scope.WORKING_STORAGE, 1));
+
+        // MOVE WS-SOURCE TO WS-UNDEFINED → Target not defined
+        MoveStatementNode move = createMoveStatement("WS-SOURCE", "WS-UNDEFINED");
+        
+        SemanticErrorCollector errors = new SemanticErrorCollector();
+        typeChecker.checkMoveStatement(move, errors);
+
+        assertTrue(errors.hasError("variable_not_defined"),
+                   "Should detect undefined target variable");
+    }
+
+    @Test
+    public void testComputeWithUndefinedVariable() {
+        symbolTable.addSymbol(new Symbol("WS-RESULT", SymbolType.VARIABLE,
+                                         "PIC 9(7)V99", "BigDecimal",
+                                         Scope.WORKING_STORAGE, 1));
+
+        // COMPUTE WS-RESULT = WS-A * WS-B (WS-A, WS-B undefined)
+        ComputeStatementNode compute = new ComputeStatementNode();
+        compute.setTarget("WS-RESULT");
+        compute.setExpression("WS-A * WS-B");
+
+        SemanticErrorCollector errors = new SemanticErrorCollector();
+        typeChecker.checkComputeStatement(compute, errors);
+
+        assertFalse(errors.isEmpty(), "Should detect undefined operands");
+    }
+
+    @Test
+    public void testBigDecimalPrecisionCheck() {
+        // WS-PRICE : PIC 9(7)V99 → BigDecimal scale=2
+        symbolTable.addSymbol(new Symbol("WS-PRICE", SymbolType.VARIABLE,
+                                         "PIC 9(7)V99", "BigDecimal",
+                                         Scope.WORKING_STORAGE, 1));
+        
+        // WS-QTY : PIC 9(5) → Integer
+        symbolTable.addSymbol(new Symbol("WS-QTY", SymbolType.VARIABLE,
+                                         "PIC 9(5)", "Integer",
+                                         Scope.WORKING_STORAGE, 2));
+        
+        // WS-TOTAL : PIC 9(9)V99 → BigDecimal scale=2
+        symbolTable.addSymbol(new Symbol("WS-TOTAL", SymbolType.VARIABLE,
+                                         "PIC 9(9)V99", "BigDecimal",
+                                         Scope.WORKING_STORAGE, 3));
+
+        // COMPUTE WS-TOTAL = WS-PRICE * WS-QTY
+        ComputeStatementNode compute = new ComputeStatementNode();
+        compute.setTarget("WS-TOTAL");
+        compute.setExpression("WS-PRICE * WS-QTY");
+
+        SemanticErrorCollector errors = new SemanticErrorCollector();
+        typeChecker.checkComputeStatement(compute, errors);
+
+        assertTrue(errors.isEmpty(), "Valid multiplication should pass");
+    }
+
+    @Test
+    public void testPerformUndefinedParagraph() {
+        // Paragraphe non enregistré
+        PerformStatementNode perform = new PerformStatementNode();
+        perform.setParagraphName("9999-UNDEFINED");
+
+        SemanticErrorCollector errors = new SemanticErrorCollector();
+        typeChecker.checkPerformStatement(perform, errors);
+
+        assertTrue(errors.hasError("paragraph_not_defined"),
+                   "Should detect undefined paragraph");
+    }
+
+    @Test
+    public void testPerformValidParagraph() {
+        // Enregistrer un paragraphe
+        symbolTable.addSymbol(new Symbol("0000-MAIN", SymbolType.PARAGRAPH,
+                                         null, null,
+                                         Scope.PROCEDURE_DIVISION, 10));
+
+        PerformStatementNode perform = new PerformStatementNode();
+        perform.setParagraphName("0000-MAIN");
+
+        SemanticErrorCollector errors = new SemanticErrorCollector();
+        typeChecker.checkPerformStatement(perform, errors);
+
+        assertTrue(errors.isEmpty(), "Valid paragraph reference should pass");
+    }
+
+    @Test
+    public void testIfConditionWithUndefinedVariable() {
+        symbolTable.addSymbol(new Symbol("WS-BALANCE", SymbolType.VARIABLE,
+                                         "PIC 9(9)V99", "BigDecimal",
+                                         Scope.WORKING_STORAGE, 1));
+
+        // IF WS-BALANCE > 1000 AND WS-UNDEFINED = 0
+        IfStatementNode ifStmt = new IfStatementNode();
+        ifStmt.setCondition("WS-BALANCE > 1000 AND WS-UNDEFINED = 0");
+
+        SemanticErrorCollector errors = new SemanticErrorCollector();
+        typeChecker.checkIfStatement(ifStmt, errors);
+
+        assertTrue(errors.hasError("variable_not_defined"),
+                   "Should detect undefined variable in condition");
+    }
+
+    @Test
+    public void testOpenFileNotDefined() {
+        // Fichier non défini
+        OpenStatementNode open = new OpenStatementNode();
+        open.setFileName("UNDEFINED-FILE");
+
+        SemanticErrorCollector errors = new SemanticErrorCollector();
+        typeChecker.checkOpenStatement(open, errors);
+
+        assertTrue(errors.hasError("file_not_defined"));
+    }
+
+    @Test
+    public void testReadFileValidation() {
+        // Enregistrer un fichier
+        symbolTable.addSymbol(new Symbol("CUSTOMER-FILE", SymbolType.FILE,
+                                         "FD", null,
+                                         Scope.FILE_SECTION, 5));
+        
+        // Enregistrer une variable destination
+        symbolTable.addSymbol(new Symbol("CUSTOMER-REC", SymbolType.VARIABLE,
+                                         "01", "CustomerFileRecord",
+                                         Scope.WORKING_STORAGE, 10));
+
+        ReadStatementNode read = new ReadStatementNode();
+        read.setFileName("CUSTOMER-FILE");
+        read.setIntoVariable("CUSTOMER-REC");
+
+        SemanticErrorCollector errors = new SemanticErrorCollector();
+        typeChecker.checkReadStatement(read, errors);
+
+        assertTrue(errors.isEmpty(), "Valid READ should pass");
+    }
+
+    @Test
+    public void testFullProgramValidation() {
+        String cobolCode = """
+            IDENTIFICATION DIVISION.
+            PROGRAM-ID. VALIDATION-TEST.
+            
+            DATA DIVISION.
+            WORKING-STORAGE SECTION.
+            01  WS-COUNTER      PIC 9(5).
+            01  WS-BALANCE      PIC 9(9)V99.
+            
+            PROCEDURE DIVISION.
+            0000-MAIN.
+                MOVE 0 TO WS-COUNTER.
+                MOVE 1000.50 TO WS-BALANCE.
+                PERFORM 100 TIMES
+                    ADD 1 TO WS-COUNTER
+                    ADD 10 TO WS-BALANCE
+                END-PERFORM.
+                STOP RUN.
+            """;
+
+        ProgramNode ast = parser.parseString(cobolCode, "VALIDATION-TEST");
+        
+        // Build symbol table
+        SymbolTableBuilder builder = new SymbolTableBuilder();
+        SymbolTable symTable = builder.buildSymbolTable(ast);
+
+        // Validate entire program
+        SemanticErrorCollector errors = new SemanticErrorCollector();
+        ProgramValidator validator = new ProgramValidator(symTable, typeChecker);
+        validator.validate(ast, errors);
+
+        assertTrue(errors.isEmpty(), "Valid program should have no errors");
+    }
+
+    // Helper methods
+    private MoveStatementNode createMoveStatement(String source, String target) {
+        MoveStatementNode move = new MoveStatementNode();
+        move.setSource(source);
+        move.setTarget(target);
+        return move;
+    }
+}

@@ -47,7 +47,10 @@
       "Bash(for cob_file in examples/test-programs/*.cob)",
       "Bash(done)",
       "Bash(tee:*)",
-      "Bash(for cob in examples/test-programs/*.cob)"
+      "Bash(for cob in examples/test-programs/*.cob)",
+      "Bash(git push:*)",
+      "Bash(ssh-keyscan:*)",
+      "Bash(~/.ssh/known_hosts)"
     ]
   }
 }
